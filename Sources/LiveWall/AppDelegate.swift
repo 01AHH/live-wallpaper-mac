@@ -22,6 +22,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         controller.rebuild()
     }
 
+    /// Re-launching an already-running menu-bar app (double-click in Finder,
+    /// clicking the Dock/Launchpad icon) sends this instead of a fresh launch.
+    /// Reopen and de-minimize the control window rather than appearing to do nothing.
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        showControls(nil)
+        return true
+    }
+
     private func setupStatusItem() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         statusItem.button?.image = NSImage(
@@ -52,6 +60,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             controlWindow = window
         }
         NSApp.activate(ignoringOtherApps: true)
+        if controlWindow?.isMiniaturized == true {
+            controlWindow?.deminiaturize(nil)
+        }
         controlWindow?.makeKeyAndOrderFront(nil)
     }
 }
