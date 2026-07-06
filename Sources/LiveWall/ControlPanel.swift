@@ -9,6 +9,7 @@ struct ControlPanelView: View {
     let onApply: () -> Void
 
     @State private var videos: [URL] = []
+    @State private var watcher = FolderWatcher()
 
     private let columns = [GridItem(.adaptive(minimum: 200), spacing: 14)]
 
@@ -19,8 +20,18 @@ struct ControlPanelView: View {
             grid
         }
         .frame(minWidth: 760, minHeight: 520)
-        .onAppear(perform: reloadVideos)
-        .onChange(of: settings.libraryFolder) { reloadVideos() }
+        .onAppear {
+            reloadVideos()
+            startWatching()
+        }
+        .onChange(of: settings.libraryFolder) {
+            reloadVideos()
+            startWatching()
+        }
+        // The window is created once and only hidden on close, so onAppear
+        // never re-fires; rescan whenever the window comes back to front.
+        .onReceive(NotificationCenter.default.publisher(
+            for: NSWindow.didBecomeKeyNotification)) { _ in reloadVideos() }
         .onChange(of: settings.spanScreens) { onApply() }
         .onChange(of: settings.fillMode) { onApply() }
     }
@@ -84,6 +95,15 @@ struct ControlPanelView: View {
         videos = items
             .filter { exts.contains($0.pathExtension.lowercased()) }
             .sorted { $0.lastPathComponent.localizedStandardCompare($1.lastPathComponent) == .orderedAscending }
+    }
+
+    /// Live-refresh the grid as files land in (or vanish from) the library.
+    private func startWatching() {
+        guard let folder = settings.libraryFolder else {
+            watcher.stop()
+            return
+        }
+        watcher.watch(folder) { reloadVideos() }
     }
 
     private func chooseFolder() {
