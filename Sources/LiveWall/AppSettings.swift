@@ -22,7 +22,7 @@ final class AppSettings: ObservableObject {
     init() {
         // Sensible first-run defaults pointing at the user's wallpaper folder.
         let media = URL(fileURLWithPath: NSHomeDirectory())
-            .appendingPathComponent("Movies/LiveWall", isDirectory: true)
+            .appendingPathComponent("Documents/Projects/LiveWall/Media", isDirectory: true)
 
         libraryFolder = defaults.url(forKey: Keys.libraryFolder) ?? media
         currentVideo  = defaults.url(forKey: Keys.currentVideo)
