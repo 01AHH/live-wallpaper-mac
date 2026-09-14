@@ -54,7 +54,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             let window = NSWindow(contentViewController: NSHostingController(rootView: root))
             window.title = "LiveWall"
             window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
-            window.setContentSize(NSSize(width: 820, height: 560))
+            window.setContentSize(NSSize(width: 1000, height: 620))
             window.center()
             window.isReleasedWhenClosed = false
             controlWindow = window
