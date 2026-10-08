@@ -4,6 +4,8 @@ A lightweight live/video wallpaper app for macOS, built in Swift + AppKit/SwiftU
 Plays looping muted videos behind your desktop icons, with a Wallpaper-Engine-style
 control panel.
 
+![LiveWall control panel](docs/screenshot.png)
+
 ## Features
 - Looping **video wallpapers** rendered at desktop window level (behind icons, click-through)
 - **Multi-monitor**: span one continuous video across all screens, or play per-screen
