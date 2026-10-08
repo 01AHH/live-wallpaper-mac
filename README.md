@@ -51,5 +51,5 @@ the release binary plus `AppIcon.icns` and `Contents/Info.plist`.
 
 ## Roadmap
 - [ ] Launch at login (`SMAppService`)
-- [ ] Pause rendering when a fullscreen app covers the desktop
+- [x] Pause rendering when a fullscreen app covers the desktop (also when windows cover every screen, or displays sleep)
 - [ ] Interactive **web/HTML scenes** via `WKWebView`

@@ -42,10 +42,61 @@ final class WallpaperController {
     private var loadedURL: URL?
     private var hasLoaded = false
     private var readyObservers: [NSKeyValueObservation] = []
+    /// False while every wallpaper is hidden (fullscreen apps, windows
+    /// covering the screens, displays asleep) — playback pauses until it's
+    /// back in view.
+    private var isVisible = true
+    private var displaysAsleep = false
+    private var pendingVisibilityCheck: DispatchWorkItem?
     private let settings: AppSettings
 
     init(settings: AppSettings) {
         self.settings = settings
+
+        // Occlusion covers fullscreen Spaces and covering windows; Space
+        // switches are re-checked too, since that's when it usually changes.
+        let center = NotificationCenter.default
+        center.addObserver(self, selector: #selector(refreshVisibility),
+                           name: NSWindow.didChangeOcclusionStateNotification, object: nil)
+        let workspace = NSWorkspace.shared.notificationCenter
+        workspace.addObserver(self, selector: #selector(refreshVisibility),
+                              name: NSWorkspace.activeSpaceDidChangeNotification, object: nil)
+        workspace.addObserver(self, selector: #selector(displaysDidSleep),
+                              name: NSWorkspace.screensDidSleepNotification, object: nil)
+        workspace.addObserver(self, selector: #selector(displaysDidWake),
+                              name: NSWorkspace.screensDidWakeNotification, object: nil)
+    }
+
+    // MARK: - Visibility
+
+    @objc private func displaysDidSleep() {
+        displaysAsleep = true
+        refreshVisibility()
+    }
+
+    @objc private func displaysDidWake() {
+        displaysAsleep = false
+        refreshVisibility()
+    }
+
+    /// Occlusion flickers for a few hundred milliseconds while windows and
+    /// Spaces settle, so act only once it has held steady.
+    @objc private func refreshVisibility() {
+        pendingVisibilityCheck?.cancel()
+        let check = DispatchWorkItem { [weak self] in self?.applyVisibility() }
+        pendingVisibilityCheck = check
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: check)
+    }
+
+    /// One player feeds every screen, so it only pauses when *all* wallpapers
+    /// are hidden — a fullscreen app on one display leaves the other playing.
+    private func applyVisibility() {
+        let anyVisible = surfaces.contains { $0.window.occlusionState.contains(.visible) }
+        let visible = anyVisible && !displaysAsleep
+        guard visible != isVisible else { return }
+        isVisible = visible
+        NSLog("LiveWall: wallpaper \(visible ? "visible — resuming" : "hidden — pausing")")
+        updateRate()
     }
 
     func rebuild() {
@@ -57,6 +108,7 @@ final class WallpaperController {
             return Surface(window: win, screen: screen)
         }
         apply(animated: false)
+        refreshVisibility()
     }
 
     /// Bring the desktop in line with the current settings.
@@ -177,7 +229,7 @@ final class WallpaperController {
         guard let player else { return }
         let rate = Float(settings.speed(for: settings.currentVideo))
         player.defaultRate = rate
-        player.rate = rate
+        player.rate = isVisible ? rate : 0
     }
 
     // MARK: - Building blocks
