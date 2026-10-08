@@ -31,6 +31,11 @@ final class AppSettings: ObservableObject {
     @Published var currentVideo: URL?  { didSet { persist() } }
     @Published var spanScreens: Bool   { didSet { persist() } }
     @Published var fillMode: FillMode  { didSet { persist() } }
+    /// Playback speed per video, keyed by filename (like categories.json),
+    /// so each wallpaper remembers its own pace. Missing means 1×.
+    @Published private(set) var speeds: [String: Double] { didSet { persist() } }
+
+    static let speedRange: ClosedRange<Double> = 0.25...1.5
 
     private let defaults = UserDefaults.standard
 
@@ -44,6 +49,18 @@ final class AppSettings: ObservableObject {
             ?? media.appendingPathComponent("golden-field.mp4")
         spanScreens   = defaults.object(forKey: Keys.spanScreens) as? Bool ?? true
         fillMode      = FillMode(rawValue: defaults.string(forKey: Keys.fillMode) ?? "") ?? .fill
+        speeds        = defaults.dictionary(forKey: Keys.speeds) as? [String: Double] ?? [:]
+    }
+
+    func speed(for url: URL?) -> Double {
+        guard let url else { return 1 }
+        return speeds[url.lastPathComponent] ?? 1
+    }
+
+    func setSpeed(_ speed: Double, for url: URL) {
+        let clamped = min(max(speed, Self.speedRange.lowerBound), Self.speedRange.upperBound)
+        // Store only non-default speeds so the dictionary stays small.
+        speeds[url.lastPathComponent] = abs(clamped - 1) < 0.001 ? nil : clamped
     }
 
     private func persist() {
@@ -51,6 +68,7 @@ final class AppSettings: ObservableObject {
         defaults.set(currentVideo, forKey: Keys.currentVideo)
         defaults.set(spanScreens, forKey: Keys.spanScreens)
         defaults.set(fillMode.rawValue, forKey: Keys.fillMode)
+        defaults.set(speeds, forKey: Keys.speeds)
     }
 
     private enum Keys {
@@ -58,5 +76,6 @@ final class AppSettings: ObservableObject {
         static let currentVideo  = "currentVideo"
         static let spanScreens   = "spanScreens"
         static let fillMode      = "fillMode"
+        static let speeds        = "videoSpeeds"
     }
 }

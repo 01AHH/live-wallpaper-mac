@@ -36,28 +36,21 @@ enum AmbientPalette {
     }
 }
 
-/// A slowly breathing mesh gradient — the "aurora" behind the whole window.
+/// A soft mesh of the current wallpaper's colours behind the whole window.
+/// Deliberately still: a moving background under a scroll view forces the
+/// entire window to recomposite every frame. It cross-fades when the
+/// wallpaper changes, which is the only time it should draw attention.
 struct AmbientBackground: View {
     let colors: [Color]
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        TimelineView(.animation(paused: reduceMotion)) { timeline in
-            // Keep t small: Float loses sub-second precision on raw dates.
-            let t = Float(timeline.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 3600))
-            MeshGradient(width: 3, height: 3, points: points(t), colors: colors)
-        }
-        .overlay(Color.black.opacity(0.3))
-    }
-
-    private func points(_ t: Float) -> [SIMD2<Float>] {
-        [
-            [0, 0], [0.5 + 0.2 * sin(t * 0.31), 0], [1, 0],
-            [0, 0.5 + 0.2 * sin(t * 0.27 + 1)],
-            [0.5 + 0.18 * sin(t * 0.43 + 2), 0.5 + 0.18 * cos(t * 0.37)],
-            [1, 0.5 + 0.2 * cos(t * 0.29 + 3)],
-            [0, 1], [0.5 + 0.2 * cos(t * 0.33 + 4), 1], [1, 1],
-        ]
+        MeshGradient(width: 3, height: 3, points: [
+            [0, 0], [0.5, 0], [1, 0],
+            [0, 0.5], [0.42, 0.55], [1, 0.5],
+            [0, 1], [0.5, 1], [1, 1],
+        ], colors: colors)
+        .overlay(Color.black.opacity(0.42))
+        .drawingGroup()
     }
 }
 
@@ -96,13 +89,15 @@ struct BlurRevealRenderer: TextRenderer, Animatable {
 struct HoverTracker: ViewModifier {
     @Binding var point: UnitPoint?
     @State private var size: CGSize = .zero
+    @Environment(\.isScrolling) private var isScrolling
 
     func body(content: Content) -> some View {
         content
             .onGeometryChange(for: CGSize.self) { $0.size } action: { size = $0 }
+            .onChange(of: isScrolling) { if isScrolling { point = nil } }
             .onContinuousHover { phase in
                 switch phase {
-                case .active(let location) where size.width > 0 && size.height > 0:
+                case .active(let location) where size.width > 0 && size.height > 0 && !isScrolling:
                     withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 0.75)) {
                         point = UnitPoint(x: location.x / size.width, y: location.y / size.height)
                     }
@@ -145,50 +140,12 @@ struct SpecularHighlight: View {
 
     var body: some View {
         GeometryReader { geo in
-            RadialGradient(colors: [.white.opacity(0.32), .white.opacity(0.06), .clear],
+            RadialGradient(colors: [.white.opacity(0.22), .white.opacity(0.04), .clear],
                            center: point ?? .center, startRadius: 0,
                            endRadius: max(geo.size.width, geo.size.height) * 0.65)
                 .blendMode(.plusLighter)
                 .opacity(point == nil ? 0 : 1)
         }
-        .allowsHitTesting(false)
-    }
-}
-
-// MARK: - Borders & loading
-
-/// A neon border whose colours orbit the shape, with a bloom behind it.
-struct GlowBorder<S: InsettableShape>: View {
-    let shape: S
-    var lineWidth: CGFloat = 2.5
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
-    var body: some View {
-        TimelineView(.animation(paused: reduceMotion)) { timeline in
-            let angle = timeline.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 4) / 4 * 360
-            let gradient = AngularGradient(
-                colors: [.accentColor, .purple, .pink, .orange, .yellow, .mint, .accentColor],
-                center: .center, angle: .degrees(angle))
-            ZStack {
-                shape.strokeBorder(gradient, lineWidth: lineWidth * 3).blur(radius: 12).opacity(0.85)
-                shape.strokeBorder(gradient, lineWidth: lineWidth)
-            }
-        }
-        .allowsHitTesting(false)
-    }
-}
-
-/// A light sweep across a placeholder while its content loads.
-struct Shimmer: View {
-    var body: some View {
-        TimelineView(.animation) { timeline in
-            let p = timeline.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 1.6) / 1.6
-            let x = -0.6 + p * 2.2
-            LinearGradient(colors: [.clear, .white.opacity(0.14), .clear],
-                           startPoint: UnitPoint(x: x - 0.4, y: 0.2),
-                           endPoint: UnitPoint(x: x + 0.4, y: 0.8))
-        }
-        .background(.quaternary)
         .allowsHitTesting(false)
     }
 }

@@ -33,8 +33,9 @@ struct ControlPanelView: View {
     @State private var ambient: [Color] = AmbientPalette.fallback
     @State private var titleProgress: Double = 1
     @State private var heroHover: UnitPoint?
+    @State private var isScrolling = false
 
-    private let columns = [GridItem(.adaptive(minimum: 240), spacing: 20)]
+    private let columns = [GridItem(.adaptive(minimum: 240), spacing: Brand.Spacing.gridColumn)]
 
     var body: some View {
         NavigationSplitView {
@@ -46,6 +47,7 @@ struct ControlPanelView: View {
         .navigationSubtitle("\(filterTitle) · \(filteredVideos.count) wallpaper\(filteredVideos.count == 1 ? "" : "s")")
         .searchable(text: $query, placement: .toolbar, prompt: "Search wallpapers")
         .toolbar { toolbar }
+        .tint(Brand.accent)
         .frame(minWidth: 960, minHeight: 620)
         .onAppear {
             categories.load(folder: settings.libraryFolder)
@@ -64,6 +66,7 @@ struct ControlPanelView: View {
             for: NSWindow.didBecomeKeyNotification)) { _ in reloadVideos() }
         .onChange(of: settings.spanScreens) { onApply() }
         .onChange(of: settings.fillMode) { onApply() }
+        .onChange(of: settings.speeds) { onApply() }
         .alert("New Tag", isPresented: $showNewTag) {
             TextField("Tag name", text: $newTagName)
             Button("Add") { commitNewTag() }
@@ -105,14 +108,12 @@ struct ControlPanelView: View {
     // MARK: - Sidebar
 
     private var sidebar: some View {
-        List(selection: $filter) {
+        List {
             Section("Library") {
-                Label("All Videos", systemImage: "square.grid.2x2")
-                    .badge(videos.count)
-                    .tag(LibraryFilter.all)
-                Label("Untagged", systemImage: "tag.slash")
-                    .badge(categories.untagged(in: videos).count)
-                    .tag(LibraryFilter.untagged)
+                sidebarRow("All Wallpapers", icon: "square.grid.2x2",
+                           count: videos.count, for: .all)
+                sidebarRow("Untagged", icon: "tag.slash",
+                           count: categories.untagged(in: videos).count, for: .untagged)
             }
             Section("Tags") {
                 if categories.tags.isEmpty {
@@ -121,35 +122,68 @@ struct ControlPanelView: View {
                         .font(.callout)
                 }
                 ForEach(categories.tags, id: \.self) { tag in
-                    Label {
-                        Text(tag)
-                    } icon: {
-                        Image(systemName: "circle.fill")
-                            .font(.system(size: 9))
-                            .foregroundStyle(TagPalette.color(for: tag))
-                    }
-                        .badge(categories.count(of: tag, in: videos))
-                        .tag(LibraryFilter.tag(tag))
+                    sidebarRow(tag, icon: "tag",
+                               count: categories.count(of: tag, in: videos), for: .tag(tag))
                         .contextMenu {
                             Button("Rename…") { renameName = tag; renameTarget = tag }
                             Button("Delete", role: .destructive) { deleteTarget = tag }
                         }
                 }
+                Button {
+                    newTagTarget = nil
+                    showNewTag = true
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "plus").frame(width: 18)
+                        Text("New Tag")
+                        Spacer()
+                    }
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 5)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .listRowInsets(EdgeInsets(top: 1, leading: 0, bottom: 1, trailing: 0))
             }
         }
         .listStyle(.sidebar)
-        .safeAreaInset(edge: .bottom) {
-            Button {
-                newTagTarget = nil
-                showNewTag = true
-            } label: {
-                Label("New Tag", systemImage: "plus")
-                    .frame(maxWidth: .infinity)
+    }
+
+    /// A sidebar row with a brand-tinted selection. The system list selection
+    /// always uses the system accent; drawing our own keeps the sidebar in
+    /// the same amber as the rest of the app, the way Music tints its own.
+    private func sidebarRow(_ title: String, icon: String, count: Int,
+                            for target: LibraryFilter) -> some View {
+        let selected = filter == target
+        return Button {
+            withAnimation(Brand.spring) { filter = target }
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: icon)
+                    .foregroundStyle(selected ? Brand.accent : .secondary)
+                    .frame(width: 18)
+                Text(title)
+                    .foregroundStyle(.primary)
+                    .fontWeight(selected ? .semibold : .regular)
+                Spacer(minLength: 4)
+                Text("\(count)")
+                    .font(.caption)
+                    .monospacedDigit()
+                    .foregroundStyle(.secondary)
             }
-            .buttonStyle(.glass)
-            .controlSize(.large)
-            .padding(12)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 5)
+            .background {
+                if selected {
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .fill(Brand.accent.opacity(0.2))
+                }
+            }
+            .contentShape(Rectangle())
         }
+        .buttonStyle(.plain)
+        .listRowInsets(EdgeInsets(top: 1, leading: 0, bottom: 1, trailing: 0))
     }
 
     // MARK: - Detail
@@ -175,6 +209,7 @@ struct ControlPanelView: View {
                 Label("Span Screens", systemImage: "rectangle.split.3x1")
                     .labelStyle(.titleAndIcon)
             }
+            .tint(.gray)
             .help(settings.spanScreens ? "One video spans every display" : "Each display plays the full video")
         }
     }
@@ -183,7 +218,7 @@ struct ControlPanelView: View {
 
     private var detail: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 32) {
+            VStack(alignment: .leading, spacing: Brand.Spacing.section) {
                 if let current = settings.currentVideo, query.isEmpty {
                     hero(for: current)
                         .transition(.asymmetric(
@@ -192,10 +227,12 @@ struct ControlPanelView: View {
                 }
                 grid
             }
-            .padding(24)
-            .animation(.spring(response: 0.5, dampingFraction: 0.85), value: query.isEmpty)
+            .padding(Brand.Spacing.page)
+            .animation(Brand.spring, value: query.isEmpty)
         }
         .scrollEdgeEffectStyle(.soft, for: .top)
+        .onScrollPhaseChange { _, phase in isScrolling = phase.isScrolling }
+        .environment(\.isScrolling, isScrolling)
         .background {
             AmbientBackground(colors: ambient)
                 .backgroundExtensionEffect()
@@ -211,7 +248,7 @@ struct ControlPanelView: View {
             withAnimation(.easeOut(duration: 1.2)) { titleProgress = 1 }
             if let poster {
                 let palette = AmbientPalette.colors(from: poster)
-                withAnimation(.easeInOut(duration: 1.6)) { ambient = palette }
+                withAnimation(.easeInOut(duration: 1.2)) { ambient = palette }
             }
         }
     }
@@ -220,7 +257,7 @@ struct ControlPanelView: View {
     /// Video drifts against the cursor for depth, the card leans in 3D, and it
     /// recedes into a blur as you scroll past it.
     private func hero(for url: URL) -> some View {
-        let shape = RoundedRectangle(cornerRadius: 28, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Brand.Radius.hero, style: .continuous)
         let dx = ((heroHover?.x ?? 0.5) - 0.5) * 2
         let dy = ((heroHover?.y ?? 0.5) - 0.5) * 2
 
@@ -236,13 +273,13 @@ struct ControlPanelView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                     }
-                    LoopingVideoView(url: url)
+                    LoopingVideoView(url: url, rate: settings.speed(for: url))
                         .id(url)
                         .transition(.opacity.animation(.easeInOut(duration: 0.8)))
                 }
             }
-            .scaleEffect(1.12)
-            .offset(x: -dx * 22, y: -dy * 14)
+            .scaleEffect(1.08)
+            .offset(x: -dx * 14, y: -dy * 9)
             .clipped()
 
             LinearGradient(stops: [.init(color: .clear, location: 0.3),
@@ -251,26 +288,29 @@ struct ControlPanelView: View {
 
             HStack(alignment: .bottom, spacing: 16) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Label("Now Playing", systemImage: "dot.radiowaves.left.and.right")
+                    Label("Now Playing", systemImage: "waveform")
                         .symbolEffect(.variableColor.iterative, options: .repeating)
-                        .font(.caption.weight(.bold))
+                        .font(Brand.Font.eyebrow)
                         .textCase(.uppercase)
-                        .tracking(1.2)
-                        .foregroundStyle(.white.opacity(0.75))
+                        .tracking(1.4)
+                        .foregroundStyle(Brand.glow)
                     Text(url.wallpaperName)
-                        .font(.system(size: 40, weight: .heavy, design: .rounded))
+                        .font(Brand.Font.display)
                         .foregroundStyle(.white)
                         .lineLimit(1)
                         .minimumScaleFactor(0.6)
                         .textRenderer(BlurRevealRenderer(progress: titleProgress))
                     let tags = categories.tags(for: url)
                     if !tags.isEmpty {
-                        HStack(spacing: 6) { ForEach(tags, id: \.self) { TagChip(tag: $0) } }
+                        Text(tags.joined(separator: " · "))
+                            .font(Brand.Font.meta)
+                            .foregroundStyle(.white.opacity(0.7))
                             .opacity(titleProgress)
-                            .offset(y: (1 - titleProgress) * 10)
                     }
+                    speedControl(for: url)
+                        .padding(.top, 6)
                 }
-                .offset(x: dx * 6, y: dy * 4)
+                .offset(x: dx * 4, y: dy * 3)
                 Spacer(minLength: 16)
                 GlassEffectContainer(spacing: 10) {
                     HStack(spacing: 10) {
@@ -281,11 +321,13 @@ struct ControlPanelView: View {
                                 .labelStyle(.iconOnly)
                         }
                         .buttonStyle(.glass)
+                        .tint(nil)
                         .help("Show in Finder")
 
                         Button(action: shuffle) {
                             Label("Shuffle", systemImage: "shuffle")
                                 .symbolEffect(.bounce, value: settings.currentVideo)
+                                .fixedSize()
                         }
                         .buttonStyle(.glassProminent)
                         .disabled(filteredVideos.count < 2)
@@ -304,19 +346,42 @@ struct ControlPanelView: View {
         .frame(maxWidth: .infinity)
         .background(.black)
         .clipShape(shape)
-        .overlay { shape.strokeBorder(.white.opacity(0.12)) }
-        .shadow(color: .black.opacity(0.35), radius: 30, y: 16)
-        .tilt(toward: heroHover, maxAngle: 2.5)
+        .overlay { shape.strokeBorder(.white.opacity(0.1)) }
+        .shadow(color: .black.opacity(0.3), radius: 24, y: 12)
         .trackHover($heroHover)
-        .visualEffect { content, proxy in
-            let minY = proxy.frame(in: .scrollView).minY
-            let progress = min(max(-minY / 340, 0), 1)
-            return content
-                .scaleEffect(1 - progress * 0.12, anchor: .bottom)
-                .blur(radius: progress * 16)
-                .opacity(1 - progress * 0.8)
-                .offset(y: max(0, -minY) * 0.45)
+    }
+
+    /// Playback speed for one wallpaper, remembered per video. Changes apply
+    /// to the desktop live while dragging; click the readout to reset to 1×.
+    private func speedControl(for url: URL) -> some View {
+        let speed = Binding(
+            get: { settings.speed(for: url) },
+            set: { settings.setSpeed(($0 * 20).rounded() / 20, for: url) })   // 0.05× steps
+        return HStack(spacing: 8) {
+            Image(systemName: "tortoise.fill")
+                .foregroundStyle(.secondary)
+            Slider(value: speed, in: AppSettings.speedRange)
+                .frame(width: 120)
+                .controlSize(.small)
+            Image(systemName: "hare.fill")
+                .foregroundStyle(.secondary)
+            Button {
+                withAnimation(Brand.spring) { settings.setSpeed(1, for: url) }
+            } label: {
+                Text(speed.wrappedValue.formatted(.number.precision(.fractionLength(0...2))) + "×")
+                    .font(.callout.weight(.semibold))
+                    .monospacedDigit()
+                    .contentTransition(.numericText(value: speed.wrappedValue))
+                    .foregroundStyle(speed.wrappedValue == 1 ? Color.primary : Brand.accent)
+                    .frame(width: 44, alignment: .trailing)
+            }
+            .buttonStyle(.plain)
+            .help("Playback speed for this wallpaper — click to reset to 1×")
         }
+        .font(.caption)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+        .glassEffect(.regular, in: .capsule)
     }
 
     /// A live miniature of the real monitors, so Fill / Fit / Stretch and
@@ -344,7 +409,7 @@ struct ControlPanelView: View {
         }
         .padding(12)
         .frame(width: 250)
-        .glassEffect(.regular, in: .rect(cornerRadius: 18))
+        .glassEffect(.regular, in: .rect(cornerRadius: Brand.Radius.card))
         .environment(\.colorScheme, .dark)
         .animation(.smooth, value: settings.fillMode)
         .animation(.smooth, value: settings.spanScreens)
@@ -418,33 +483,27 @@ struct ControlPanelView: View {
             }
             .padding(.top, 60)
         } else {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 16) {
                 HStack(alignment: .firstTextBaseline) {
                     Text(query.isEmpty ? filterTitle : "Results")
-                        .font(.system(size: 22, weight: .bold, design: .rounded))
+                        .font(Brand.Font.section)
                         .contentTransition(.interpolate)
                     Text("\(filteredVideos.count)")
-                        .font(.system(size: 22, weight: .bold, design: .rounded))
+                        .font(Brand.Font.section)
                         .foregroundStyle(.secondary)
                         .contentTransition(.numericText())
                 }
                 .animation(.smooth, value: filteredVideos.count)
-                LazyVGrid(columns: columns, spacing: 20) {
+                LazyVGrid(columns: columns, spacing: Brand.Spacing.gridRow) {
                     ForEach(Array(filteredVideos.enumerated()), id: \.element) { index, url in
                         VideoTile(url: url,
                                   isSelected: url == settings.currentVideo,
-                                  tags: categories.tags(for: url),
+                                  speed: settings.speed(for: url),
                                   index: index) {
                             settings.currentVideo = url
                             onApply()
                         }
                         .contextMenu { tagMenu(for: url) }
-                        // Tiles ease out of focus as they leave the viewport.
-                        .scrollTransition(.interactive, axis: .vertical) { content, phase in
-                            content
-                                .scaleEffect(phase.isIdentity ? 1 : 0.96)
-                                .opacity(phase.isIdentity ? 1 : 0.6)
-                        }
                     }
                 }
                 // A new filter replays the staggered entrance.

@@ -13,9 +13,13 @@ control panel.
 - Setting changes **morph in place** and new videos **cross-fade** — no restart or black flash
 - Liquid Glass **control panel** (macOS 26) with a live "Now Playing" hero, a miniature
   of your real monitor layout previewing the current scaling, and search
-- Animated library: 3D hover tilt with a cursor-following highlight, hover video
-  previews, an ambient mesh-gradient background tinted from the current wallpaper,
-  and staggered/scroll-driven transitions (respects Reduce Motion)
+- **Per-video playback speed** (0.25×–1.5×), remembered for each wallpaper and
+  applied live; library previews play at the same pace
+- Calm, consistent "golden hour" brand: one amber accent for what's playing,
+  selected or primary; clean artwork tiles in the style of Apple's media apps
+- Hover-only motion: 3D tilt with a cursor-following highlight and live video
+  previews, paused while scrolling so the library scrolls smoothly; an ambient
+  background tinted from the current wallpaper (respects Reduce Motion)
 - **Tags / categories**: a sidebar filters the library by tag; right-click any video to
   tag it (multiple tags per video). Tags live in `categories.json` beside the videos
 - Menu-bar app (no Dock icon); settings persist across launches

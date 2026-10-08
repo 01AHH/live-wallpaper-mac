@@ -66,6 +66,7 @@ final class WallpaperController {
         } else {
             layout(animated: animated)
         }
+        updateRate()
         NSLog("LiveWall: \(surfaces.count) screen(s), span=\(settings.spanScreens), mode=\(settings.fillMode.rawValue), source=\(settings.currentVideo?.lastPathComponent ?? "gradient")")
     }
 
@@ -132,7 +133,7 @@ final class WallpaperController {
             content.layer?.addSublayer(layer)
             surfaces[i].layer = layer
         }
-        newPlayer?.play()
+        updateRate()
 
         let retire = {
             oldLayers.forEach { $0?.removeFromSuperlayer() }
@@ -168,6 +169,15 @@ final class WallpaperController {
         } else {
             fadeIn()
         }
+    }
+
+    /// Apply the current video's speed. `defaultRate` makes the player
+    /// resume at this speed after loops and stalls, not snap back to 1×.
+    private func updateRate() {
+        guard let player else { return }
+        let rate = Float(settings.speed(for: settings.currentVideo))
+        player.defaultRate = rate
+        player.rate = rate
     }
 
     // MARK: - Building blocks

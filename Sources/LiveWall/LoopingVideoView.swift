@@ -6,11 +6,13 @@ import AVFoundation
 /// window is hidden or fully covered, so the closed control panel costs nothing.
 struct LoopingVideoView: NSViewRepresentable {
     let url: URL?
+    var rate: Double = 1
 
     func makeNSView(context: Context) -> PlayerView { PlayerView() }
 
     func updateNSView(_ view: PlayerView, context: Context) {
         view.load(url)
+        view.setRate(Float(rate))
     }
 
     static func dismantleNSView(_ view: PlayerView, coordinator: ()) {
@@ -23,6 +25,7 @@ struct LoopingVideoView: NSViewRepresentable {
         private var looper: AVPlayerLooper?
         private var currentURL: URL?
         private var occlusionObserver: NSObjectProtocol?
+        private var rate: Float = 1
 
         override init(frame: NSRect) {
             super.init(frame: frame)
@@ -41,6 +44,13 @@ struct LoopingVideoView: NSViewRepresentable {
             CATransaction.commit()
         }
 
+        func setRate(_ newRate: Float) {
+            guard newRate != rate else { return }
+            rate = newRate
+            player?.defaultRate = rate
+            updatePlayback()
+        }
+
         func load(_ url: URL?) {
             guard url != currentURL else { return }
             currentURL = url
@@ -52,6 +62,7 @@ struct LoopingVideoView: NSViewRepresentable {
 
             let queue = AVQueuePlayer()
             queue.isMuted = true
+            queue.defaultRate = rate
             looper = AVPlayerLooper(player: queue, templateItem: AVPlayerItem(url: url))
             player = queue
             playerLayer.player = queue
@@ -72,7 +83,7 @@ struct LoopingVideoView: NSViewRepresentable {
 
         private func updatePlayback() {
             let visible = window?.occlusionState.contains(.visible) ?? false
-            if visible { player?.play() } else { player?.pause() }
+            if visible { player?.rate = rate } else { player?.pause() }
         }
 
         deinit {
