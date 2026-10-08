@@ -7,11 +7,19 @@ control panel.
 ## Features
 - Looping **video wallpapers** rendered at desktop window level (behind icons, click-through)
 - **Multi-monitor**: span one continuous video across all screens, or play per-screen
-- **Fill / Fit** scaling (crop-to-fill or letterbox)
-- SwiftUI **control panel** with a thumbnail library — pick any folder of videos
+- **Fill / Fit / Stretch** scaling (crop-to-fill, letterbox, or distort to fit)
+- Setting changes **morph in place** and new videos **cross-fade** — no restart or black flash
+- Liquid Glass **control panel** (macOS 26) with a live "Now Playing" hero, a miniature
+  of your real monitor layout previewing the current scaling, and search
+- Animated library: 3D hover tilt with a cursor-following highlight, hover video
+  previews, an ambient mesh-gradient background tinted from the current wallpaper,
+  and staggered/scroll-driven transitions (respects Reduce Motion)
 - **Tags / categories**: a sidebar filters the library by tag; right-click any video to
   tag it (multiple tags per video). Tags live in `categories.json` beside the videos
 - Menu-bar app (no Dock icon); settings persist across launches
+
+## Requirements
+macOS 26 (Tahoe) or later — the UI uses the Liquid Glass APIs.
 
 ## Build & run
 ```bash

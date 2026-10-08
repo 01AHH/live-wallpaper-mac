@@ -49,12 +49,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func showControls(_ sender: Any?) {
         if controlWindow == nil {
             let root = ControlPanelView(settings: settings) { [weak self] in
-                self?.controller.rebuild()
+                self?.controller.apply()
             }
-            let window = NSWindow(contentViewController: NSHostingController(rootView: root))
+            let hosting = NSHostingController(rootView: root)
+            // Let SwiftUI's .toolbar, .searchable and title reach the window.
+            hosting.sceneBridgingOptions = [.toolbars, .title]
+            let window = NSWindow(contentViewController: hosting)
             window.title = "LiveWall"
-            window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
-            window.setContentSize(NSSize(width: 1000, height: 620))
+            window.styleMask = [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView]
+            window.toolbarStyle = .unified
+            window.titlebarAppearsTransparent = true
+            window.setContentSize(NSSize(width: 1180, height: 780))
+            window.setFrameAutosaveName("LiveWallControls")
             window.center()
             window.isReleasedWhenClosed = false
             controlWindow = window

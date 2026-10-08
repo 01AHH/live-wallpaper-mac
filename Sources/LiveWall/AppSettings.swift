@@ -4,9 +4,24 @@ import Foundation
 enum FillMode: String, CaseIterable, Identifiable, Codable {
     case fill   // resizeAspectFill — no bars, crops overflow
     case fit    // resizeAspect     — whole frame, letterbox bars
+    case stretch // resize          — fills exactly, distorts aspect ratio
 
     var id: String { rawValue }
-    var label: String { self == .fill ? "Fill (crop)" : "Fit (bars)" }
+    var title: String {
+        switch self {
+        case .fill:    return "Fill"
+        case .fit:     return "Fit"
+        case .stretch: return "Stretch"
+        }
+    }
+
+    var label: String {
+        switch self {
+        case .fill:    return "Fill (crop)"
+        case .fit:     return "Fit (bars)"
+        case .stretch: return "Stretch (distort)"
+        }
+    }
 }
 
 /// Observable, persisted app state. Mutating any property writes through to
