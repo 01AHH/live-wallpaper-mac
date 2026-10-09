@@ -48,6 +48,24 @@ final class WallpaperController {
     private var isVisible = true
     private var displaysAsleep = false
     private var pendingVisibilityCheck: DispatchWorkItem?
+
+    /// Paused by the person (from the Dynamic Island or menu), independent of
+    /// the automatic visibility pausing.
+    var userPaused = false {
+        didSet { if userPaused != oldValue { updateRate(); reportPlayback() } }
+    }
+
+    /// Why playback is currently stopped, or nil while it's playing.
+    enum PauseReason { case user, hidden, displaysAsleep }
+    var pauseReason: PauseReason? {
+        if userPaused { return .user }
+        if displaysAsleep { return .displaysAsleep }
+        if !isVisible { return .hidden }
+        return nil
+    }
+    /// Called whenever playback starts or stops, with the reason it stopped.
+    var onPlaybackChange: ((PauseReason?) -> Void)?
+    private func reportPlayback() { onPlaybackChange?(pauseReason) }
     private let settings: AppSettings
 
     init(settings: AppSettings) {
@@ -97,6 +115,7 @@ final class WallpaperController {
         isVisible = visible
         NSLog("LiveWall: wallpaper \(visible ? "visible — resuming" : "hidden — pausing")")
         updateRate()
+        reportPlayback()
     }
 
     func rebuild() {
@@ -229,7 +248,7 @@ final class WallpaperController {
         guard let player else { return }
         let rate = Float(settings.speed(for: settings.currentVideo))
         player.defaultRate = rate
-        player.rate = isVisible ? rate : 0
+        player.rate = (isVisible && !userPaused) ? rate : 0
     }
 
     // MARK: - Building blocks

@@ -35,6 +35,9 @@ final class AppSettings: ObservableObject {
     /// so each wallpaper remembers its own pace. Missing means 1×.
     @Published private(set) var speeds: [String: Double] { didSet { persist() } }
 
+    /// Whether the Dynamic Island is shown at the top of the screen.
+    @Published var showIsland: Bool { didSet { persist() } }
+
     static let speedRange: ClosedRange<Double> = 0.25...1.5
 
     private let defaults = UserDefaults.standard
@@ -50,6 +53,7 @@ final class AppSettings: ObservableObject {
         spanScreens   = defaults.object(forKey: Keys.spanScreens) as? Bool ?? true
         fillMode      = FillMode(rawValue: defaults.string(forKey: Keys.fillMode) ?? "") ?? .fill
         speeds        = defaults.dictionary(forKey: Keys.speeds) as? [String: Double] ?? [:]
+        showIsland    = defaults.object(forKey: Keys.showIsland) as? Bool ?? true
     }
 
     func speed(for url: URL?) -> Double {
@@ -69,6 +73,7 @@ final class AppSettings: ObservableObject {
         defaults.set(spanScreens, forKey: Keys.spanScreens)
         defaults.set(fillMode.rawValue, forKey: Keys.fillMode)
         defaults.set(speeds, forKey: Keys.speeds)
+        defaults.set(showIsland, forKey: Keys.showIsland)
     }
 
     private enum Keys {
@@ -77,5 +82,6 @@ final class AppSettings: ObservableObject {
         static let spanScreens   = "spanScreens"
         static let fillMode      = "fillMode"
         static let speeds        = "videoSpeeds"
+        static let showIsland    = "showDynamicIsland"
     }
 }

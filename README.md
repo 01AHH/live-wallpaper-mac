@@ -24,6 +24,26 @@ control panel.
   tag it (multiple tags per video). Tags live in `categories.json` beside the videos
 - Menu-bar app (no Dock icon); settings persist across launches
 
+## Dynamic Island
+A live-activity pill at the top of the main display: it grows out of the notch on
+a MacBook, and attaches to the top edge like a virtual notch on an external monitor.
+It shows, in priority order:
+
+- **AI activities** — e.g. Claude Code working, needing you, or finished
+- **Music** from Spotify or Apple Music, with artwork and ⏮ ⏯ ⏭ controls
+- **The wallpaper** — now playing, pause/resume, shuffle and speed
+
+Hover it to expand. Toggle it from the menu-bar menu (**Show Dynamic Island**).
+
+Any tool can report an activity with [`scripts/livewall-activity`](scripts/livewall-activity):
+```bash
+scripts/livewall-activity running "Rendering the video" --source "My Tool" --id render
+scripts/livewall-activity done "Render complete" --source "My Tool" --id render
+```
+For Claude Code, point `UserPromptSubmit`, `Notification` and `Stop` hooks at
+[`scripts/livewall-claude-hook`](scripts/livewall-claude-hook) with the argument
+`prompt`, `notify` or `stop` (run them `async`).
+
 ## Wallpaper gallery
 Free, openly licensed 4K wallpapers to download: **https://live-wallpaper-mac-mauve.vercel.app**
 

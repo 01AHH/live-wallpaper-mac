@@ -1,0 +1,22 @@
+#!/usr/bin/osascript -l JavaScript
+// Reports an activity to LiveWall's Dynamic Island.
+//
+//   livewall-activity <running|done|attention> <title> [--detail text] [--source name] [--id key]
+//
+// e.g. livewall-activity running "Refactoring the tests" --source "Claude Code" --id claude
+// Activities with the same --id update one row; "done" clears itself after a few seconds.
+ObjC.import('Foundation');
+
+function run(argv) {
+  if (argv.length < 2) {
+    return 'usage: livewall-activity <running|done|attention> <title> [--detail text] [--source name] [--id key]';
+  }
+  const info = { state: argv[0], title: argv[1], source: 'Activity' };
+  for (let i = 2; i < argv.length - 1; i += 2) {
+    const key = argv[i].replace(/^--/, '');
+    if (['detail', 'source', 'id'].includes(key)) info[key] = argv[i + 1];
+  }
+  if (!info.id) info.id = info.source;
+  $.NSDistributedNotificationCenter.defaultCenter
+    .postNotificationNameObjectUserInfoDeliverImmediately('com.livewall.activity', $(), $(info), true);
+}
