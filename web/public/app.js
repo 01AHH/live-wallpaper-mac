@@ -131,6 +131,25 @@ $('sheet').addEventListener('close', () => {
 });
 $('search').addEventListener('input', (e) => { state.query = e.target.value; renderGrid(); });
 
+// Cosmetic lock screen: any non-empty password unlocks, remembered per browser.
+function gate() {
+  let unlocked = false;
+  try { unlocked = localStorage.getItem('livewall-unlocked') === '1'; } catch {}
+  if (unlocked) return;
+  $('gate').hidden = false;
+  $('gate-input').focus();
+  $('gate-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!$('gate-input').value.trim()) {
+      $('gate').classList.remove('shake'); void $('gate').offsetWidth; $('gate').classList.add('shake');
+      return;
+    }
+    try { localStorage.setItem('livewall-unlocked', '1'); } catch {}
+    $('gate').hidden = true;
+  });
+}
+gate();
+
 load().catch((err) => {
   $('empty').hidden = false;
   $('empty').textContent = 'Couldn’t load the gallery. Please try again.';

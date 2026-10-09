@@ -10,6 +10,16 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- A cosmetic lock screen only: any password opens the gallery. -->
+  <div class="gate" id="gate" hidden>
+    <form class="gate-card" id="gate-form">
+      <img src="icon.png" alt="" width="56" height="56">
+      <h1>LiveWall Gallery</h1>
+      <p>Enter the password to continue.</p>
+      <input id="gate-input" type="password" placeholder="Password" autocomplete="current-password" required>
+      <button class="btn primary wide" type="submit">Unlock</button>
+    </form>
+  </div>
   <header class="topbar">
     <a class="brand" href="/">
       <img src="icon.png" alt="" width="28" height="28">
