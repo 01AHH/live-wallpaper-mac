@@ -8,9 +8,9 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const state = { all: [], tag: 'All', query: '' };
 
 const formatSize = (bytes) => `${(bytes / 1e6).toFixed(0)} MB`;
-// Vercel Blob serves the file as an attachment with ?download=1, which
-// works even though the `download` attribute is ignored cross-origin.
-const downloadURL = (url) => `${url}${url.includes('?') ? '&' : '?'}download=1`;
+// The 4K files are stored with Content-Disposition: attachment, so a plain
+// link downloads them (the `download` attribute is ignored cross-origin).
+const downloadURL = (url) => url;
 
 async function load() {
   const res = await fetch('catalog.json', { cache: 'no-cache' });

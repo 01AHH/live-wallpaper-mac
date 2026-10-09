@@ -1,0 +1,721 @@
+{
+  "note": "Vetted candidates (Oct 2026). Licence checked on each source page; segments checked frame by frame. Cut with ffmpeg (WebM sources), then move into catalog.source.json.",
+  "candidates": [
+    {
+      "id": "algonquin-sunset",
+      "title": "Algonquin Golden Hour",
+      "description": "Static HDR timelapse of clouds turning to sunset over endless boreal forest.",
+      "tags": [
+        "Sky",
+        "Forest",
+        "Timelapse"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/3/34/Algonquin_Sunset_4k.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Algonquin_Sunset_4k.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "Alexander Kondratskiy",
+      "start": 0,
+      "duration": 22,
+      "note": ""
+    },
+    {
+      "id": "athirapally-falls",
+      "title": "Thundering Falls",
+      "description": "Locked-off shot of a wide monsoon waterfall pouring over a forested cliff.",
+      "tags": [
+        "Water",
+        "Nature"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/a/a0/Athirapally_falls.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Athirapally_falls.webm",
+      "licence": {
+        "name": "CC0 1.0",
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "credit": "Shyamal",
+      "start": 0,
+      "duration": 26,
+      "note": ""
+    },
+    {
+      "id": "cumulus-drift",
+      "title": "Cumulus Drift",
+      "description": "Clean timelapse of cumulus clouds building over a low horizon.",
+      "tags": [
+        "Sky",
+        "Timelapse"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Cloud_timelapse.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Cloud_timelapse.webm",
+      "licence": {
+        "name": "CC BY 2.0",
+        "url": "https://creativecommons.org/licenses/by/2.0/"
+      },
+      "credit": "John Fowler (Flickr: snowpeak)",
+      "start": 0,
+      "duration": 29,
+      "note": ""
+    },
+    {
+      "id": "belfort-sky",
+      "title": "Rooftop Sky Drift",
+      "description": "Static timelapse of fair-weather clouds sailing over trees and rooftops.",
+      "tags": [
+        "Sky",
+        "Timelapse"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/1/1b/2018-04-30_Nuages_au_dessus_de_Belfort.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:2018-04-30_Nuages_au_dessus_de_Belfort.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "Thomas Bresson",
+      "start": 8,
+      "duration": 25,
+      "note": ""
+    },
+    {
+      "id": "hof-cloud-parade",
+      "title": "Cloud Parade",
+      "description": "Ultra-high-res timelapse of white clouds forming and dissolving in a deep blue sky.",
+      "tags": [
+        "Sky",
+        "Timelapse"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/3/38/Zeitraffer_%E2%80%93_Wolken_%C3%BCber_Hof_%28Saale%29_kommen_und_gehen_20240523.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Zeitraffer_–_Wolken_über_Hof_(Saale)_kommen_und_gehen_20240523.webm",
+      "licence": {
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "credit": "PantheraLeo1359531",
+      "start": 0,
+      "duration": 33,
+      "note": "crop small dark object at top-centre edge"
+    },
+    {
+      "id": "hof-forest-light",
+      "title": "Spruce Light",
+      "description": "Timelapse down a spruce forest path as sunlight comes and goes.",
+      "tags": [
+        "Forest",
+        "Timelapse"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/d/da/Zeitraffer_im_Wald_bei_Hof_20241116.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Zeitraffer_im_Wald_bei_Hof_20241116.webm",
+      "licence": {
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "credit": "PantheraLeo1359531",
+      "start": 0,
+      "duration": 33,
+      "note": ""
+    },
+    {
+      "id": "spruce-sway",
+      "title": "Spruce Against Blue",
+      "description": "Static real-time shot of a tall spruce moving gently against a clear sky.",
+      "tags": [
+        "Forest",
+        "Sky"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/a/a3/Waldbaum_und_Naturger%C3%A4usche_20250321_C1204.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Waldbaum_und_Naturgeräusche_20250321_C1204.webm",
+      "licence": {
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "credit": "PantheraLeo1359531",
+      "start": 0,
+      "duration": 22,
+      "note": ""
+    },
+    {
+      "id": "lee-point-woodland",
+      "title": "Tropical Woodland",
+      "description": "Locked-off real-time shot of eucalyptus woodland swaying in the breeze.",
+      "tags": [
+        "Forest",
+        "Nature"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Lee_Point_woodland_in_the_Northern_Territory%2C_Australia.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Lee_Point_woodland_in_the_Northern_Territory,_Australia.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "Gary wanders a lot (YouTube)",
+      "start": 60,
+      "duration": 25,
+      "note": ""
+    },
+    {
+      "id": "sitka-snow-forest",
+      "title": "Frosted Spruce Coast",
+      "description": "Slow drone glide over snow-laden Sitka spruce with white peaks behind.",
+      "tags": [
+        "Winter",
+        "Forest",
+        "Mountains"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/5/56/Sitka_Spruce_in_an_Alaskan_Winter.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Sitka_Spruce_in_an_Alaskan_Winter.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "Open Earth",
+      "start": 100,
+      "duration": 24,
+      "note": ""
+    },
+    {
+      "id": "pine-forest-floor",
+      "title": "Snowy Pine Stand",
+      "description": "Slow move through tall pine trunks over a lightly snowed forest floor.",
+      "tags": [
+        "Forest",
+        "Winter"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/6/6c/Forest_For_the_Trees_4K.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Forest_For_the_Trees_4K.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "Open Earth",
+      "start": 140,
+      "duration": 25,
+      "note": "crop ~3% black bars top/bottom"
+    },
+    {
+      "id": "tasmania-cascade",
+      "title": "Mossy Cascade",
+      "description": "Long-exposure-style timelapse of a cascade over moss-covered rocks.",
+      "tags": [
+        "Water",
+        "Forest",
+        "Timelapse"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/d/d2/South_8K.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:South_8K.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "Will Camp",
+      "start": 84,
+      "duration": 18,
+      "note": "2.19:1 — crop to 16:9"
+    },
+    {
+      "id": "tasmania-turquoise",
+      "title": "Turquoise Shallows",
+      "description": "Timelapse of light rippling through clear turquoise water.",
+      "tags": [
+        "Water",
+        "Ocean",
+        "Timelapse"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/d/d2/South_8K.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:South_8K.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "Will Camp",
+      "start": 160,
+      "duration": 16,
+      "note": "2.19:1 — crop to 16:9"
+    },
+    {
+      "id": "sauling-summit",
+      "title": "Alpine Summit Clouds",
+      "description": "Static timelapse from an Alpine summit with clouds streaming over ranges.",
+      "tags": [
+        "Mountains",
+        "Sky",
+        "Timelapse"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/c/c1/S%C3%A4uling-timelapse.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Säuling-timelapse.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "Octagon",
+      "start": 20,
+      "duration": 25,
+      "note": "tiny climbers may appear"
+    },
+    {
+      "id": "blue-ridge-aerial",
+      "title": "Blue Ridge Haze",
+      "description": "Smooth aerial over layered forested ridges fading into haze.",
+      "tags": [
+        "Mountains",
+        "Forest"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Drone_Footage_Black_Balsam_Knob_NC_4k.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Drone_Footage_Black_Balsam_Knob_NC_4k.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "Royalty Free Drone Footage (YouTube)",
+      "start": 12,
+      "duration": 25,
+      "note": ""
+    },
+    {
+      "id": "alaska-glacier",
+      "title": "Glacier Valley Glow",
+      "description": "Low drone flight over a sunlit glacier between steep snowy walls.",
+      "tags": [
+        "Winter",
+        "Mountains"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/2/2d/Nature_drone_video_of_Alaska_%E2%80%93_Where_The_Snow_is_Never_White.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Nature_drone_video_of_Alaska_–_Where_The_Snow_is_Never_White.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "OpenEarth (YouTube)",
+      "start": 18,
+      "duration": 25,
+      "note": ""
+    },
+    {
+      "id": "greenland-ice-cliff",
+      "title": "Ice Cliff Lake",
+      "description": "Near-static view of a towering Greenland ice front above a pale meltwater lake.",
+      "tags": [
+        "Winter",
+        "Water"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Russell_Terminus_UHD_-_NASA.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Russell_Terminus_UHD_-_NASA.webm",
+      "licence": {
+        "name": "Public domain (NASA)",
+        "url": "https://commons.wikimedia.org/wiki/Template:PD-USGov-NASA"
+      },
+      "credit": "NASA Goddard",
+      "start": 162,
+      "duration": 25,
+      "note": ""
+    },
+    {
+      "id": "gold-harbour",
+      "title": "Gold Harbour Dawn",
+      "description": "Timelapse of glacier-topped mountains over a sub-Antarctic beach.",
+      "tags": [
+        "Mountains",
+        "Ocean",
+        "Timelapse"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/7/77/Time-lapse_of_Gold_Harbour%2C_South_Georgia_Island.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Time-lapse_of_Gold_Harbour,_South_Georgia_Island.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "Blagoj Klincharski (YouTube)",
+      "start": 9,
+      "duration": 25,
+      "note": "avoid 0–6s and 66s+ (penguins near camera)"
+    },
+    {
+      "id": "lemaire-channel",
+      "title": "Antarctic Passage",
+      "description": "Timelapse sailing between snowy peaks across calm, ice-flecked water.",
+      "tags": [
+        "Ocean",
+        "Winter",
+        "Timelapse"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/8/85/Time-lapse_of_navigation_through_Lemaire_Channel%2C_Antarctica.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Time-lapse_of_navigation_through_Lemaire_Channel,_Antarctica.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "Blagoj Klincharski (YouTube)",
+      "start": 9,
+      "duration": 25,
+      "note": ""
+    },
+    {
+      "id": "pacific-sunset",
+      "title": "Pacific Sundown",
+      "description": "Sun setting into the Pacific behind gently washing surf and rocks.",
+      "tags": [
+        "Ocean",
+        "Sky"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/3/35/2022-08-06%2C_Pacific_Ocean_sunset_%28Ocean_Shores%2C_Washington%29%2C_01.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:2022-08-06,_Pacific_Ocean_sunset_(Ocean_Shores,_Washington),_01.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "Steven Pavlov (YouTube \"senapa\")",
+      "start": 0,
+      "duration": 15.5,
+      "note": ""
+    },
+    {
+      "id": "whitewater-falls",
+      "title": "Whitewater Falls",
+      "description": "Steady aerial of a tall waterfall cutting through winter forest.",
+      "tags": [
+        "Water",
+        "Forest"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/6/65/Whitewater_Falls_-_Nantahala_National_Forest%2C_North_Carolina_--4K_Drone_--_DJI_Mavic_Pro_2._Footage.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Whitewater_Falls_-_Nantahala_National_Forest,_North_Carolina_--4K_Drone_--_DJI_Mavic_Pro_2._Footage.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "Nature In 4K By: Paul King (YouTube)",
+      "start": 14,
+      "duration": 25,
+      "note": "title 0–10s, logo ~60–72s — segment is clean"
+    },
+    {
+      "id": "misty-river",
+      "title": "Misty River",
+      "description": "Minimal grey fog over still water with a lone tree at the edge.",
+      "tags": [
+        "Water",
+        "Nature"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/3/3d/Misty_river.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Misty_river.webm",
+      "licence": {
+        "name": "CC0 1.0",
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "credit": "Digitura",
+      "start": 10,
+      "duration": 25,
+      "note": "1080p source"
+    },
+    {
+      "id": "iss-aurora",
+      "title": "Aurora From Orbit",
+      "description": "Green and red aurora rippling above Earth's night side, seen from the ISS.",
+      "tags": [
+        "Space",
+        "Night"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/4/49/ISS_views_Aurora_from_the_November_11-13%2C_2025_Geomagnetic_Storm_%28SVS31375%29.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:ISS_views_Aurora_from_the_November_11-13,_2025_Geomagnetic_Storm_(SVS31375).webm",
+      "licence": {
+        "name": "Public domain (NASA)",
+        "url": "https://commons.wikimedia.org/wiki/Template:PD-USGov-NASA"
+      },
+      "credit": "NASA Scientific Visualization Studio / Marit Jentoft-Nilsen",
+      "start": 30,
+      "duration": 25,
+      "note": "AV1 source"
+    },
+    {
+      "id": "blue-planet",
+      "title": "Blue Marble Drift",
+      "description": "Earth's cloud-streaked limb sliding past from the ISS.",
+      "tags": [
+        "Space"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/4/49/Ultra_High_Definition_%284K%29_View_of_Planet_Earth.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Ultra_High_Definition_(4K)_View_of_Planet_Earth.webm",
+      "licence": {
+        "name": "Public domain (NASA)",
+        "url": "https://commons.wikimedia.org/wiki/Template:PD-USGov-NASA"
+      },
+      "credit": "NASA Johnson Space Center",
+      "start": 8,
+      "duration": 25,
+      "note": ""
+    },
+    {
+      "id": "earth-day-orbit",
+      "title": "Desert From Orbit",
+      "description": "Slow orbital pass over cloud-flecked desert terrain.",
+      "tags": [
+        "Space"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Earth_Day_2017_-_4K_Earth_Views_From_Space.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Earth_Day_2017_-_4K_Earth_Views_From_Space.webm",
+      "licence": {
+        "name": "Public domain (NASA)",
+        "url": "https://commons.wikimedia.org/wiki/Template:PD-USGov-NASA"
+      },
+      "credit": "NASA Johnson Space Center",
+      "start": 156,
+      "duration": 24,
+      "note": "letterboxed ~2.4:1 — crop"
+    },
+    {
+      "id": "spruce-woods-aurora",
+      "title": "Violet Aurora",
+      "description": "Vivid purple and green aurora curtains over a silhouetted treeline.",
+      "tags": [
+        "Night",
+        "Sky"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/2/28/Aurora_Borealis_over_Spruce_Woods%2C_Manitoba.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Aurora_Borealis_over_Spruce_Woods,_Manitoba.webm",
+      "licence": {
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "credit": "HachiBoy",
+      "start": 0,
+      "duration": 12,
+      "note": "tents appear from ~13s"
+    },
+    {
+      "id": "nyc-night",
+      "title": "Manhattan After Dark",
+      "description": "High static timelapse of the Manhattan grid glittering at night.",
+      "tags": [
+        "City",
+        "Night",
+        "Timelapse"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/9/97/Time-lapse_of_New_York_City_skyline_July_2023.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Time-lapse_of_New_York_City_skyline_July_2023.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "David Schwab (YouTube)",
+      "start": 120,
+      "duration": 25,
+      "note": "check signage at full res"
+    },
+    {
+      "id": "bangkok-dusk",
+      "title": "Bangkok Blue Hour",
+      "description": "Fisheye timelapse of Bangkok towers as dusk turns to city lights.",
+      "tags": [
+        "City",
+        "Night",
+        "Timelapse"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/8/88/Saladaeng_Sunset_by_Don_Ramey_Logan.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Saladaeng_Sunset_by_Don_Ramey_Logan.webm",
+      "licence": {
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "credit": "Don Ramey Logan",
+      "start": 60,
+      "duration": 25,
+      "note": "dark window edge on left"
+    },
+    {
+      "id": "autumn-river",
+      "title": "Autumn River Run",
+      "description": "Drone over a wide river lined with orange and gold fall foliage.",
+      "tags": [
+        "Forest",
+        "Water"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Fall_foliage_colors_in_Virginia_-_4k_Drone_view.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Fall_foliage_colors_in_Virginia_-_4k_Drone_view.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "Sudeep Gowda (YouTube)",
+      "start": 114,
+      "duration": 25,
+      "note": ""
+    },
+    {
+      "id": "bbb-meadow-dawn",
+      "title": "Pastel Meadow Morning",
+      "description": "Camera drifts down from pink dawn clouds onto a sunny meadow.",
+      "tags": [
+        "Animated",
+        "Fantasy",
+        "Sky"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/c/c0/Big_Buck_Bunny_4K.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Big_Buck_Bunny_4K.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "© 2008 Blender Foundation / www.bigbuckbunny.org",
+      "start": 4.5,
+      "duration": 11,
+      "note": ""
+    },
+    {
+      "id": "bbb-burrow-tree",
+      "title": "Burrow Beneath the Oak",
+      "description": "Static shot of a mossy tree mound and burrow in dappled light.",
+      "tags": [
+        "Animated",
+        "Forest"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/c/c0/Big_Buck_Bunny_4K.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Big_Buck_Bunny_4K.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "© 2008 Blender Foundation / www.bigbuckbunny.org",
+      "start": 27,
+      "duration": 12,
+      "note": ""
+    },
+    {
+      "id": "spring-mountain-lake",
+      "title": "Spirit Peaks Lake",
+      "description": "Moody alpine lake framed by jagged snowy peaks and drifting cloud.",
+      "tags": [
+        "Animated",
+        "Mountains",
+        "Fantasy"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/a/a5/Spring_-_Blender_Open_Movie.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Spring_-_Blender_Open_Movie.webm",
+      "licence": {
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "credit": "© Blender Foundation | cloud.blender.org/spring",
+      "start": 23,
+      "duration": 6.5,
+      "note": "2048x858 — crop"
+    },
+    {
+      "id": "spring-cloud-ridge",
+      "title": "Ridge Above the Clouds",
+      "description": "Sunlit rocky ridge with a sea of cloud rolling past below.",
+      "tags": [
+        "Animated",
+        "Mountains",
+        "Sky"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/a/a5/Spring_-_Blender_Open_Movie.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Spring_-_Blender_Open_Movie.webm",
+      "licence": {
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "credit": "© Blender Foundation | cloud.blender.org/spring",
+      "start": 33,
+      "duration": 9.5,
+      "note": "2048x858 — crop"
+    },
+    {
+      "id": "sintel-glacier-pass",
+      "title": "Glacier Crossing",
+      "description": "Vast blue-white glacier field with a tiny lone traveller far off.",
+      "tags": [
+        "Animated",
+        "Winter",
+        "Mountains"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Sintel_movie_4K.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Sintel_movie_4K.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "© Blender Foundation | durian.blender.org",
+      "start": 23,
+      "duration": 7.5,
+      "note": "2.35:1 — crop"
+    },
+    {
+      "id": "sintel-desert-dunes",
+      "title": "Endless Dunes",
+      "description": "Golden sand dunes rippling under a hazy sun.",
+      "tags": [
+        "Animated",
+        "Desert"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Sintel_movie_4K.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Sintel_movie_4K.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "© Blender Foundation | durian.blender.org",
+      "start": 367.5,
+      "duration": 7,
+      "note": "2.35:1 — crop"
+    },
+    {
+      "id": "sintel-snow-ridge",
+      "title": "Frozen Ridge",
+      "description": "Slow pan along a snow-buried ridge with turquoise ice.",
+      "tags": [
+        "Animated",
+        "Winter"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Sintel_movie_4K.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Sintel_movie_4K.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "© Blender Foundation | durian.blender.org",
+      "start": 406.5,
+      "duration": 8,
+      "note": "2.35:1 — crop"
+    },
+    {
+      "id": "cosmos-green-hills",
+      "title": "Storm Over Green Hills",
+      "description": "Wide green hills under a brooding sky, sheep on the horizon.",
+      "tags": [
+        "Animated",
+        "Nature",
+        "Sky"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/3/36/Cosmos_Laundromat_-_First_Cycle_-_Official_Blender_Foundation_release.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:Cosmos_Laundromat_-_First_Cycle_-_Official_Blender_Foundation_release.webm",
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "credit": "(CC) Blender Foundation | gooseberry.blender.org",
+      "start": 73,
+      "duration": 12.5,
+      "note": "official licence CC BY 3.0 (Commons tags BY-SA)"
+    },
+    {
+      "id": "singularity-planet-birth",
+      "title": "Birth of a Blue World",
+      "description": "A glowing protoplanet cools into a blue Earth-like globe in deep space.",
+      "tags": [
+        "Animated",
+        "Space",
+        "Fantasy"
+      ],
+      "file": "https://upload.wikimedia.org/wikipedia/commons/f/f2/SINGULARITY_-_Blender_Open_Movie-full_movie.webm",
+      "source": "https://commons.wikimedia.org/wiki/File:SINGULARITY_-_Blender_Open_Movie-full_movie.webm",
+      "licence": {
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "credit": "© Blender Foundation - studio.blender.org/singularity",
+      "start": 300,
+      "duration": 15.5,
+      "note": "AV1, 2.39:1 — crop; dissolve ~310s"
+    }
+  ]
+}

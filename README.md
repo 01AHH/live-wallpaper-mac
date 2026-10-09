@@ -47,12 +47,50 @@ For Claude Code, point `UserPromptSubmit`, `Notification` and `Stop` hooks at
 ## Wallpaper gallery
 Free, openly licensed 4K wallpapers to download: **https://live-wallpaper-mac-mauve.vercel.app**
 
-The site lives in [`web/`](web) and is deployed on Vercel; videos are stored in
-Vercel Blob. Only public-domain, CC0, CC BY or own-work content is accepted —
+The site lives in [`web/`](web) and is deployed on Vercel (Arthur's projects →
+`live-wallpaper-mac`, root directory `web`); videos are stored in the Cloudflare R2
+bucket `livewall-media`. The site has a cosmetic password screen — any password
+unlocks it; it is not a security boundary.
+
+Only public-domain, CC0, CC BY or own-work content is accepted —
 `web/scripts/publish.mjs` refuses any entry without an allowed licence, a credit
-and a source. To add wallpapers: cut clips with `web/scripts/clip.swift`, add
-them to `web/catalog.source.json`, then run `npm run publish-catalog` in `web/`.
+and a source. Free stock sites (Pexels, Pixabay, Mixkit…) are excluded: their
+licences forbid redistributing clips on wallpaper sites.
+
+To add wallpapers:
+1. Cut a clip into `web/content/` with `web/scripts/clip.swift` (MP4/MOV sources)
+   or ffmpeg (WebM sources) — a 4K HEVC download, a short 640px preview and a poster.
+2. Add the entry to `web/catalog.source.json`.
+3. Run `npm run publish-catalog` in `web/` (uploads to R2 via `wrangler`, skipping
+   files already there) and commit `web/public/catalog.json`.
+
 The full list is published as [`catalog.json`](https://live-wallpaper-mac-mauve.vercel.app/catalog.json).
+
+## To do
+Where things stand (October 2026). Roadmap features are tracked as issues below.
+
+**Gallery**
+- [ ] Install ffmpeg (`brew install ffmpeg`) — the next clips are WebM, which
+      `clip.swift` (AVFoundation) can't read
+- [ ] Cut and publish the 37 vetted clips in [`web/candidates.json`](web/candidates.json)
+      (Wikimedia Commons + Blender open films; licences and clean segments already
+      checked). 2.35:1 film shots and a few others need cropping — see each `note`
+- [ ] Decide on the 8 CC BY-SA candidates (share-alike) — not yet on the allow-list
+- [ ] Delete the 7 old copies in Vercel Blob now the gallery reads from R2
+- [ ] Give R2 a custom domain — the `r2.dev` address is rate-limited and meant for
+      development
+- [ ] Add a "Browse online" tab to the Mac app that reads `catalog.json`
+
+**Dynamic Island**
+- [ ] Confirm chat tracking in the Claude and ChatGPT desktop apps — the Stop-button
+      labels it looks for are unverified; needs Accessibility permission
+- [ ] Sign the app with a Developer ID — with ad-hoc signing, macOS forgets the
+      Accessibility permission after every reinstall
+- [ ] Pick up music that's already playing when LiveWall launches
+
+**Library**
+- [ ] Decide whether to commit the ~72 new videos in `Media/` (and `categories.json`)
+      or keep them local; anything over 50 MB must stay in `.gitignore`
 
 ## Requirements
 macOS 26 (Tahoe) or later — the UI uses the Liquid Glass APIs.

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-09T05:23:48.108Z",
+  "generated": "2026-10-09T07:35:35.994Z",
   "wallpapers": [
     {
       "id": "blue-horizon",
@@ -21,9 +21,9 @@
       "resolution": "3840x2160",
       "codec": "HEVC",
       "duration": 25,
-      "video": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/blue-horizon/blue-horizon.mp4",
-      "preview": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/blue-horizon/blue-horizon-preview.mp4",
-      "poster": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/blue-horizon/blue-horizon.jpg",
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/blue-horizon/blue-horizon.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/blue-horizon/blue-horizon-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/blue-horizon/blue-horizon.jpg",
       "bytes": 61928267
     },
     {
@@ -45,9 +45,9 @@
       "resolution": "3840x2160",
       "codec": "HEVC",
       "duration": 25,
-      "video": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/snowy-ridge/snowy-ridge.mp4",
-      "preview": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/snowy-ridge/snowy-ridge-preview.mp4",
-      "poster": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/snowy-ridge/snowy-ridge.jpg",
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/snowy-ridge/snowy-ridge.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/snowy-ridge/snowy-ridge-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/snowy-ridge/snowy-ridge.jpg",
       "bytes": 57553262
     },
     {
@@ -69,9 +69,9 @@
       "resolution": "3840x2160",
       "codec": "HEVC",
       "duration": 25,
-      "video": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/desert-plateau/desert-plateau.mp4",
-      "preview": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/desert-plateau/desert-plateau-preview.mp4",
-      "poster": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/desert-plateau/desert-plateau.jpg",
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/desert-plateau/desert-plateau.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/desert-plateau/desert-plateau-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/desert-plateau/desert-plateau.jpg",
       "bytes": 61980012
     },
     {
@@ -93,9 +93,9 @@
       "resolution": "3840x2160",
       "codec": "HEVC",
       "duration": 25,
-      "video": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/cloud-swirl/cloud-swirl.mp4",
-      "preview": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/cloud-swirl/cloud-swirl-preview.mp4",
-      "poster": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/cloud-swirl/cloud-swirl.jpg",
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cloud-swirl/cloud-swirl.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cloud-swirl/cloud-swirl-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cloud-swirl/cloud-swirl.jpg",
       "bytes": 61370857
     },
     {
@@ -116,9 +116,9 @@
       "resolution": "3840x2160",
       "codec": "HEVC",
       "duration": 25,
-      "video": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/solar-wing/solar-wing.mp4",
-      "preview": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/solar-wing/solar-wing-preview.mp4",
-      "poster": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/solar-wing/solar-wing.jpg",
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/solar-wing/solar-wing.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/solar-wing/solar-wing-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/solar-wing/solar-wing.jpg",
       "bytes": 59966299
     },
     {
@@ -140,9 +140,9 @@
       "resolution": "3840x2160",
       "codec": "HEVC",
       "duration": 25,
-      "video": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/station-over-storm/station-over-storm.mp4",
-      "preview": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/station-over-storm/station-over-storm-preview.mp4",
-      "poster": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/station-over-storm/station-over-storm.jpg",
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/station-over-storm/station-over-storm.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/station-over-storm/station-over-storm-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/station-over-storm/station-over-storm.jpg",
       "bytes": 56395950
     },
     {
@@ -164,9 +164,9 @@
       "resolution": "3840x2160",
       "codec": "HEVC",
       "duration": 25,
-      "video": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/winter-limb/winter-limb.mp4",
-      "preview": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/winter-limb/winter-limb-preview.mp4",
-      "poster": "https://crpoviggknt2uuhh.public.blob.vercel-storage.com/wallpapers/winter-limb/winter-limb.jpg",
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/winter-limb/winter-limb.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/winter-limb/winter-limb-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/winter-limb/winter-limb.jpg",
       "bytes": 57539871
     }
   ]
