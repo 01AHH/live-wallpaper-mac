@@ -1,6 +1,7 @@
 import Cocoa
 import SwiftUI
 import Combine
+import ServiceManagement
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
@@ -10,6 +11,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var controlWindow: NSWindow?
     private var island: DynamicIslandController?
     private var islandMenuItem: NSMenuItem?
+    private var loginMenuItem: NSMenuItem?
     private var subscriptions: Set<AnyCancellable> = []
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -21,6 +23,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         setupStatusItem()
         setupIsland()
+        enableLaunchAtLoginOnFirstRun()
         showControls(nil)   // open the panel on launch
     }
 
@@ -118,6 +121,38 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         ChatAppWatcher.requestPermission()
     }
 
+    // MARK: - Launch at login
+
+    /// A wallpaper app should be there when the Mac starts, so turn launch at
+    /// login on the first time LiveWall runs; after that it's the person's
+    /// choice (menu bar, or System Settings → General → Login Items).
+    private func enableLaunchAtLoginOnFirstRun() {
+        let key = "didSetUpLaunchAtLogin"
+        guard !UserDefaults.standard.bool(forKey: key) else { return }
+        // Only an installed app bundle can register; a dev build would fail.
+        guard Bundle.main.bundleIdentifier != nil else { return }
+        UserDefaults.standard.set(true, forKey: key)
+        try? SMAppService.mainApp.register()
+        updateLoginMenuItem()
+    }
+
+    @objc private func toggleLaunchAtLogin(_ sender: Any?) {
+        do {
+            if SMAppService.mainApp.status == .enabled {
+                try SMAppService.mainApp.unregister()
+            } else {
+                try SMAppService.mainApp.register()
+            }
+        } catch {
+            NSLog("LiveWall: launch at login change failed: \(error)")
+        }
+        updateLoginMenuItem()
+    }
+
+    private func updateLoginMenuItem() {
+        loginMenuItem?.state = SMAppService.mainApp.status == .enabled ? .on : .off
+    }
+
     @objc private func toggleIsland(_ sender: Any?) {
         settings.showIsland.toggle()
     }
@@ -151,6 +186,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         islandItem.state = settings.showIsland ? .on : .off
         islandMenuItem = islandItem
         menu.addItem(islandItem)
+        let loginItem = NSMenuItem(title: "Launch at Login",
+                                   action: #selector(toggleLaunchAtLogin(_:)), keyEquivalent: "")
+        loginItem.target = self
+        loginMenuItem = loginItem
+        menu.addItem(loginItem)
+        updateLoginMenuItem()
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "Quit LiveWall",
                                 action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
