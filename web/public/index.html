@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LiveWall Gallery</title>
+  <meta name="description" content="Free, openly licensed live wallpapers for LiveWall on Mac.">
+  <meta name="theme-color" content="#0b0b0d">
+  <link rel="icon" href="icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">
+      <img src="icon.png" alt="" width="28" height="28">
+      <span>LiveWall <em>Gallery</em></span>
+    </a>
+    <label class="search">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8.5 3a5.5 5.5 0 1 0 3.4 9.8l3.6 3.7 1.1-1.1-3.7-3.6A5.5 5.5 0 0 0 8.5 3Zm0 1.5a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"/></svg>
+      <input id="search" type="search" placeholder="Search wallpapers" autocomplete="off">
+    </label>
+    <a class="github" href="https://github.com/01AHH/live-wallpaper-mac">Get the app</a>
+  </header>
+
+  <main>
+    <section class="hero" id="hero" hidden>
+      <video id="hero-video" muted loop playsinline autoplay></video>
+      <div class="hero-scrim"></div>
+      <div class="hero-copy">
+        <p class="eyebrow">Featured</p>
+        <h1 id="hero-title"></h1>
+        <p id="hero-desc" class="hero-desc"></p>
+        <div class="hero-actions">
+          <button class="btn primary" id="hero-open">View wallpaper</button>
+          <span id="hero-credit" class="credit"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="library">
+      <div class="library-head">
+        <h2 id="library-title">All Wallpapers <span id="count"></span></h2>
+        <div class="tags" id="tags" role="tablist" aria-label="Filter by tag"></div>
+      </div>
+      <div class="grid" id="grid" aria-live="polite"></div>
+      <p class="empty" id="empty" hidden>No wallpapers match that search.</p>
+    </section>
+
+    <section class="how">
+      <h2>Use them with LiveWall</h2>
+      <ol>
+        <li><strong>Download</strong> any wallpaper as a 4K HEVC video.</li>
+        <li><strong>Drop it</strong> into your LiveWall library folder (the folder button at the top left of LiveWall shows which one).</li>
+        <li><strong>Click it</strong> in LiveWall. It appears in the library straight away.</li>
+      </ol>
+      <p class="fine">Building something else? The whole gallery is available as <a href="catalog.json">catalog.json</a>.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Every wallpaper here is public domain or openly licensed, and is credited to its source.
+       NASA imagery is used under <a href="https://www.nasa.gov/nasa-brand-center/images-and-media/">NASA's media guidelines</a> and does not imply NASA endorsement.</p>
+  </footer>
+
+  <dialog id="sheet" aria-labelledby="sheet-title">
+    <button class="close" id="sheet-close" aria-label="Close">×</button>
+    <div class="sheet-media"><video id="sheet-video" muted loop playsinline></video></div>
+    <div class="sheet-body">
+      <h3 id="sheet-title"></h3>
+      <p id="sheet-desc"></p>
+      <ul class="chips" id="sheet-tags"></ul>
+      <dl class="meta">
+        <div><dt>Resolution</dt><dd id="sheet-res"></dd></div>
+        <div><dt>Format</dt><dd id="sheet-codec"></dd></div>
+        <div><dt>Length</dt><dd id="sheet-len"></dd></div>
+        <div><dt>Size</dt><dd id="sheet-size"></dd></div>
+      </dl>
+      <a class="btn primary wide" id="sheet-download" href="#">Download 4K</a>
+      <p class="licence">
+        <span id="sheet-credit"></span><br>
+        <a id="sheet-licence" href="#"></a> · <a id="sheet-source" href="#">Original source</a>
+      </p>
+    </div>
+  </dialog>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>

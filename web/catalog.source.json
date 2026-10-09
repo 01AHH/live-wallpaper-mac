@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "wallpapers": [
+    {
+      "id": "blue-horizon",
+      "title": "Blue Horizon",
+      "description": "The thin blue line of atmosphere over a cloud-streaked ocean.",
+      "tags": [
+        "Earth",
+        "Space",
+        "Calm"
+      ],
+      "credit": "NASA Johnson Space Center — 4K Earth Views (Earth Day 2021)",
+      "source": "https://images.nasa.gov/details/jsc2021m000138_4K_Earth_Views_Extended_Cut_for_Earth_Day_%202021_210422-4KMP4",
+      "sourceStart": 605,
+      "licence": {
+        "name": "Public domain (NASA)",
+        "url": "https://www.nasa.gov/nasa-brand-center/images-and-media/"
+      },
+      "resolution": "3840x2160",
+      "codec": "HEVC",
+      "duration": 25
+    },
+    {
+      "id": "snowy-ridge",
+      "title": "Snowy Ridge",
+      "description": "A long mountain range dusted in snow, seen from orbit.",
+      "tags": [
+        "Earth",
+        "Space",
+        "Winter"
+      ],
+      "credit": "NASA Johnson Space Center — 4K Earth Views (Earth Day 2021)",
+      "source": "https://images.nasa.gov/details/jsc2021m000138_4K_Earth_Views_Extended_Cut_for_Earth_Day_%202021_210422-4KMP4",
+      "sourceStart": 965,
+      "licence": {
+        "name": "Public domain (NASA)",
+        "url": "https://www.nasa.gov/nasa-brand-center/images-and-media/"
+      },
+      "resolution": "3840x2160",
+      "codec": "HEVC",
+      "duration": 25
+    },
+    {
+      "id": "desert-plateau",
+      "title": "Desert Plateau",
+      "description": "Ochre desert and wrinkled highlands curving away to the horizon.",
+      "tags": [
+        "Earth",
+        "Space",
+        "Desert"
+      ],
+      "credit": "NASA Johnson Space Center — 4K Earth Views (Earth Day 2021)",
+      "source": "https://images.nasa.gov/details/jsc2021m000138_4K_Earth_Views_Extended_Cut_for_Earth_Day_%202021_210422-4KMP4",
+      "sourceStart": 1325,
+      "licence": {
+        "name": "Public domain (NASA)",
+        "url": "https://www.nasa.gov/nasa-brand-center/images-and-media/"
+      },
+      "resolution": "3840x2160",
+      "codec": "HEVC",
+      "duration": 25
+    },
+    {
+      "id": "cloud-swirl",
+      "title": "Cloud Swirl",
+      "description": "Feathered clouds spiralling over a deep blue coastline.",
+      "tags": [
+        "Earth",
+        "Space",
+        "Ocean"
+      ],
+      "credit": "NASA Johnson Space Center — 4K Earth Views (Earth Day 2021)",
+      "source": "https://images.nasa.gov/details/jsc2021m000138_4K_Earth_Views_Extended_Cut_for_Earth_Day_%202021_210422-4KMP4",
+      "sourceStart": 1565,
+      "licence": {
+        "name": "Public domain (NASA)",
+        "url": "https://www.nasa.gov/nasa-brand-center/images-and-media/"
+      },
+      "resolution": "3840x2160",
+      "codec": "HEVC",
+      "duration": 25
+    },
+    {
+      "id": "solar-wing",
+      "title": "Solar Wing",
+      "description": "A Space Station solar array sweeping over the planet.",
+      "tags": [
+        "Space",
+        "Station"
+      ],
+      "credit": "NASA Johnson Space Center — 4K Earth Views (Earth Day 2021)",
+      "source": "https://images.nasa.gov/details/jsc2021m000138_4K_Earth_Views_Extended_Cut_for_Earth_Day_%202021_210422-4KMP4",
+      "sourceStart": 1805,
+      "licence": {
+        "name": "Public domain (NASA)",
+        "url": "https://www.nasa.gov/nasa-brand-center/images-and-media/"
+      },
+      "resolution": "3840x2160",
+      "codec": "HEVC",
+      "duration": 25
+    },
+    {
+      "id": "station-over-storm",
+      "title": "Station Over the Storm",
+      "description": "Station modules framing a vast white storm system below.",
+      "tags": [
+        "Space",
+        "Station",
+        "Storm"
+      ],
+      "credit": "NASA Johnson Space Center — 4K Earth Views (Earth Day 2021)",
+      "source": "https://images.nasa.gov/details/jsc2021m000138_4K_Earth_Views_Extended_Cut_for_Earth_Day_%202021_210422-4KMP4",
+      "sourceStart": 2045,
+      "licence": {
+        "name": "Public domain (NASA)",
+        "url": "https://www.nasa.gov/nasa-brand-center/images-and-media/"
+      },
+      "resolution": "3840x2160",
+      "codec": "HEVC",
+      "duration": 25
+    },
+    {
+      "id": "winter-limb",
+      "title": "Winter Limb",
+      "description": "Snowfields and cloud banks under the curve of the Earth.",
+      "tags": [
+        "Earth",
+        "Space",
+        "Winter"
+      ],
+      "credit": "NASA Johnson Space Center — 4K Earth Views (Earth Day 2021)",
+      "source": "https://images.nasa.gov/details/jsc2021m000138_4K_Earth_Views_Extended_Cut_for_Earth_Day_%202021_210422-4KMP4",
+      "sourceStart": 2885,
+      "licence": {
+        "name": "Public domain (NASA)",
+        "url": "https://www.nasa.gov/nasa-brand-center/images-and-media/"
+      },
+      "resolution": "3840x2160",
+      "codec": "HEVC",
+      "duration": 25
+    }
+  ]
+}

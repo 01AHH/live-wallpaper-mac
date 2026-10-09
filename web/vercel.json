@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "",
+  "outputDirectory": "public",
+  "headers": [
+    {
+      "source": "/catalog.json",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Cache-Control", "value": "public, max-age=300" }
+      ]
+    }
+  ]
+}

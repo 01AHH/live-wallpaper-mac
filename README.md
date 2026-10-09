@@ -24,6 +24,16 @@ control panel.
   tag it (multiple tags per video). Tags live in `categories.json` beside the videos
 - Menu-bar app (no Dock icon); settings persist across launches
 
+## Wallpaper gallery
+Free, openly licensed 4K wallpapers to download: **https://live-wallpaper-mac-mauve.vercel.app**
+
+The site lives in [`web/`](web) and is deployed on Vercel; videos are stored in
+Vercel Blob. Only public-domain, CC0, CC BY or own-work content is accepted —
+`web/scripts/publish.mjs` refuses any entry without an allowed licence, a credit
+and a source. To add wallpapers: cut clips with `web/scripts/clip.swift`, add
+them to `web/catalog.source.json`, then run `npm run publish-catalog` in `web/`.
+The full list is published as [`catalog.json`](https://live-wallpaper-mac-mauve.vercel.app/catalog.json).
+
 ## Requirements
 macOS 26 (Tahoe) or later — the UI uses the Liquid Glass APIs.
 

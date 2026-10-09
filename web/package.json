@@ -1,0 +1,11 @@
+{
+  "name": "livewall-gallery",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "publish-catalog": "node --env-file=.env.local scripts/publish.mjs"
+  },
+  "dependencies": {
+    "@vercel/blob": "^1.1.1"
+  }
+}

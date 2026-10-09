@@ -1,0 +1,6 @@
+# Rendered clips live in Vercel Blob, not git
+content/
+.vercel
+node_modules/
+.env*
+public/content
