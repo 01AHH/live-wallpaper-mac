@@ -37,6 +37,11 @@ final class AppSettings: ObservableObject {
 
     /// Whether the Dynamic Island is shown at the top of the screen.
     @Published var showIsland: Bool { didSet { persist() } }
+    /// Power rules: pause on battery (off by default — plugged-in desktops and
+    /// most laptop use don't need it), in Low Power Mode, and when hot.
+    @Published var pauseOnBattery: Bool  { didSet { persist() } }
+    @Published var pauseInLowPower: Bool { didSet { persist() } }
+    @Published var pauseWhenHot: Bool    { didSet { persist() } }
     /// Which kinds of activity the island shows.
     @Published var islandSources: Set<IslandSource> { didSet { persist() } }
 
@@ -56,6 +61,9 @@ final class AppSettings: ObservableObject {
         fillMode      = FillMode(rawValue: defaults.string(forKey: Keys.fillMode) ?? "") ?? .fill
         speeds        = defaults.dictionary(forKey: Keys.speeds) as? [String: Double] ?? [:]
         showIsland    = defaults.object(forKey: Keys.showIsland) as? Bool ?? true
+        pauseOnBattery  = defaults.object(forKey: Keys.pauseOnBattery) as? Bool ?? false
+        pauseInLowPower = defaults.object(forKey: Keys.pauseInLowPower) as? Bool ?? true
+        pauseWhenHot    = defaults.object(forKey: Keys.pauseWhenHot) as? Bool ?? true
         islandSources = (defaults.stringArray(forKey: Keys.islandSources)?.compactMap(IslandSource.init(rawValue:)))
             .map(Set.init) ?? Set(IslandSource.allCases)
     }
@@ -78,6 +86,9 @@ final class AppSettings: ObservableObject {
         defaults.set(fillMode.rawValue, forKey: Keys.fillMode)
         defaults.set(speeds, forKey: Keys.speeds)
         defaults.set(showIsland, forKey: Keys.showIsland)
+        defaults.set(pauseOnBattery, forKey: Keys.pauseOnBattery)
+        defaults.set(pauseInLowPower, forKey: Keys.pauseInLowPower)
+        defaults.set(pauseWhenHot, forKey: Keys.pauseWhenHot)
         defaults.set(islandSources.map(\.rawValue).sorted(), forKey: Keys.islandSources)
     }
 
@@ -88,6 +99,9 @@ final class AppSettings: ObservableObject {
         static let fillMode      = "fillMode"
         static let speeds        = "videoSpeeds"
         static let showIsland    = "showDynamicIsland"
+        static let pauseOnBattery  = "pauseOnBattery"
+        static let pauseInLowPower = "pauseInLowPower"
+        static let pauseWhenHot    = "pauseWhenHot"
         static let islandSources = "islandSources"
     }
 }

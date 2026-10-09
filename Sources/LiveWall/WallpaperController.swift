@@ -56,10 +56,17 @@ final class WallpaperController {
     }
 
     /// Why playback is currently stopped, or nil while it's playing.
-    enum PauseReason { case user, hidden, displaysAsleep }
+    enum PauseReason { case user, hidden, displaysAsleep, battery, lowPower, hot }
+
+    /// Set from the power rules (battery, Low Power Mode, heat), or nil.
+    var powerPause: PauseReason? {
+        didSet { if powerPause != oldValue { updateRate(); reportPlayback() } }
+    }
+
     var pauseReason: PauseReason? {
         if userPaused { return .user }
         if displaysAsleep { return .displaysAsleep }
+        if let powerPause { return powerPause }
         if !isVisible { return .hidden }
         return nil
     }
@@ -248,7 +255,7 @@ final class WallpaperController {
         guard let player else { return }
         let rate = Float(settings.speed(for: settings.currentVideo))
         player.defaultRate = rate
-        player.rate = (isVisible && !userPaused) ? rate : 0
+        player.rate = pauseReason == nil ? rate : 0
     }
 
     // MARK: - Building blocks

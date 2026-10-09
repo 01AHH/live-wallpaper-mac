@@ -19,6 +19,10 @@ licensed 4K wallpapers.
 - **Pauses automatically** when the wallpaper can't be seen: a fullscreen app's Space,
   windows covering every screen, or displays asleep (a fullscreen app on one display
   leaves the other playing)
+- **Power saving**: pauses in Low Power Mode and while the Mac is running hot (both on
+  by default), and optionally whenever it's on battery
+- **Menu-bar quick controls**: pause/resume (⌘P), next wallpaper (⌘N), speed, power
+  saving, the Dynamic Island switch and launch at login — no window needed
 - **Launch at login** — on by default, switchable from the menu bar
 
 **Control panel**
@@ -162,13 +166,13 @@ Wallux/Wallspace, Phosphene, Aerial and Plash. Each item is tracked as a
 - [x] Per-video playback speed
 - [x] Dynamic Island with music, AI activities and wallpaper controls
 - [x] Launch at login ([#14](https://github.com/01AHH/live-wallpaper-mac/issues/14))
+- [x] Pause on battery / Low Power Mode ([#1](https://github.com/01AHH/live-wallpaper-mac/issues/1)) — "reduce quality" instead of pausing comes with #9
+- [x] Thermal-state awareness ([#2](https://github.com/01AHH/live-wallpaper-mac/issues/2))
+- [x] Menu-bar quick controls ([#5](https://github.com/01AHH/live-wallpaper-mac/issues/5))
 
 **Must have** — table stakes every serious competitor has
-- [ ] Pause or degrade playback on battery and Low Power Mode ([#1](https://github.com/01AHH/live-wallpaper-mac/issues/1))
-- [ ] Thermal-state awareness ([#2](https://github.com/01AHH/live-wallpaper-mac/issues/2))
 - [ ] Per-screen players and per-screen pause ([#3](https://github.com/01AHH/live-wallpaper-mac/issues/3))
 - [ ] Playlists and rotation ([#4](https://github.com/01AHH/live-wallpaper-mac/issues/4))
-- [ ] Menu-bar quick controls ([#5](https://github.com/01AHH/live-wallpaper-mac/issues/5))
 - [ ] Sync a still frame to the system wallpaper ([#6](https://github.com/01AHH/live-wallpaper-mac/issues/6))
 
 **Should have** — differentiators

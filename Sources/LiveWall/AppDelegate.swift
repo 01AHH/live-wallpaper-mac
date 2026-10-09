@@ -10,9 +10,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
     private var controlWindow: NSWindow?
     private var island: DynamicIslandController?
-    private var islandMenuItem: NSMenuItem?
-    private var loginMenuItem: NSMenuItem?
     private var subscriptions: Set<AnyCancellable> = []
+    private let power = PowerMonitor()
+    private var menuActions: [MenuAction] = []
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         controller.rebuild()
@@ -23,6 +23,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         setupStatusItem()
         setupIsland()
+        setupPowerRules()
         enableLaunchAtLoginOnFirstRun()
         showControls(nil)   // open the panel on launch
     }
@@ -97,7 +98,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         settings.$showIsland
             .sink { [weak self] show in
                 self?.island?.isShown = show
-                self?.islandMenuItem?.state = show ? .on : .off
             }
             .store(in: &subscriptions)
     }
@@ -133,7 +133,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         guard Bundle.main.bundleIdentifier != nil else { return }
         UserDefaults.standard.set(true, forKey: key)
         try? SMAppService.mainApp.register()
-        updateLoginMenuItem()
     }
 
     @objc private func toggleLaunchAtLogin(_ sender: Any?) {
@@ -146,16 +145,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         } catch {
             NSLog("LiveWall: launch at login change failed: \(error)")
         }
-        updateLoginMenuItem()
     }
 
-    private func updateLoginMenuItem() {
-        loginMenuItem?.state = SMAppService.mainApp.status == .enabled ? .on : .off
-    }
 
-    @objc private func toggleIsland(_ sender: Any?) {
-        settings.showIsland.toggle()
-    }
 
     @objc private func screensChanged() {
         controller.rebuild()
@@ -170,32 +162,129 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         return true
     }
 
+    // MARK: - Power rules
+
+    private func setupPowerRules() {
+        power.onChange = { [weak self] in self?.applyPowerRules() }
+        // @Published fires before the value changes, so apply on the next turn.
+        Publishers.Merge3(settings.$pauseOnBattery, settings.$pauseInLowPower, settings.$pauseWhenHot)
+            .sink { [weak self] _ in DispatchQueue.main.async { self?.applyPowerRules() } }
+            .store(in: &subscriptions)
+    }
+
+    /// Heat wins over Low Power Mode, which wins over battery, so the reason
+    /// shown is the most pressing one.
+    private func applyPowerRules() {
+        if settings.pauseWhenHot && power.isHot {
+            controller.powerPause = .hot
+        } else if settings.pauseInLowPower && power.isLowPowerMode {
+            controller.powerPause = .lowPower
+        } else if settings.pauseOnBattery && power.isOnBattery {
+            controller.powerPause = .battery
+        } else {
+            controller.powerPause = nil
+        }
+    }
+
+    // MARK: - Menu bar
+
     private func setupStatusItem() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         statusItem.button?.image = NSImage(
             systemSymbolName: "photo.on.rectangle.angled", accessibilityDescription: "LiveWall")
-
         let menu = NSMenu()
-        let controls = NSMenuItem(title: "Wallpaper Controls…",
-                                  action: #selector(showControls(_:)), keyEquivalent: ",")
-        controls.target = self
-        menu.addItem(controls)
-        let islandItem = NSMenuItem(title: "Show Dynamic Island",
-                                    action: #selector(toggleIsland(_:)), keyEquivalent: "")
-        islandItem.target = self
-        islandItem.state = settings.showIsland ? .on : .off
-        islandMenuItem = islandItem
-        menu.addItem(islandItem)
-        let loginItem = NSMenuItem(title: "Launch at Login",
-                                   action: #selector(toggleLaunchAtLogin(_:)), keyEquivalent: "")
-        loginItem.target = self
-        loginMenuItem = loginItem
-        menu.addItem(loginItem)
-        updateLoginMenuItem()
+        menu.delegate = self
+        statusItem.menu = menu
+    }
+
+    /// Quick controls, rebuilt each time the menu opens so names, checkmarks
+    /// and the pause state are always current.
+    fileprivate func rebuildMenu(_ menu: NSMenu) {
+        menu.removeAllItems()
+        menuActions.removeAll()
+
+        let name = settings.currentVideo?.wallpaperName ?? "No wallpaper"
+        let header = NSMenuItem(title: name, action: nil, keyEquivalent: "")
+        header.isEnabled = false
+        if let reason = controller.pauseReason {
+            header.title = "\(name) — \(Self.describe(reason))"
+        }
+        menu.addItem(header)
+
+        let paused = controller.userPaused
+        menu.addItem(item(paused ? "Resume Wallpaper" : "Pause Wallpaper", key: "p") { [weak self] in
+            self?.controller.userPaused.toggle()
+        })
+        menu.addItem(item("Next Wallpaper", key: "n") { [weak self] in self?.shuffle() })
+
+        let speedMenu = NSMenu()
+        let current = settings.speed(for: settings.currentVideo)
+        for speed in [0.25, 0.5, 0.75, 1.0, 1.25, 1.5] {
+            speedMenu.addItem(item(speed.formatted(.number.precision(.fractionLength(0...2))) + "×",
+                                   checked: abs(speed - current) < 0.001) { [weak self] in
+                guard let self, let url = settings.currentVideo else { return }
+                settings.setSpeed(speed, for: url)
+            })
+        }
+        let speedItem = NSMenuItem(title: "Speed", action: nil, keyEquivalent: "")
+        speedItem.submenu = speedMenu
+        menu.addItem(speedItem)
+
+        menu.addItem(.separator())
+        menu.addItem(item("Wallpaper Controls…", key: ",") { [weak self] in self?.showControls(nil) })
+        menu.addItem(item("Show Dynamic Island", checked: settings.showIsland) { [weak self] in
+            self?.settings.showIsland.toggle()
+        })
+
+        let powerMenu = NSMenu()
+        powerMenu.addItem(item("Pause on Battery", checked: settings.pauseOnBattery) { [weak self] in
+            self?.settings.pauseOnBattery.toggle()
+        })
+        powerMenu.addItem(item("Pause in Low Power Mode", checked: settings.pauseInLowPower) { [weak self] in
+            self?.settings.pauseInLowPower.toggle()
+        })
+        powerMenu.addItem(item("Pause When Mac Is Hot", checked: settings.pauseWhenHot) { [weak self] in
+            self?.settings.pauseWhenHot.toggle()
+        })
+        powerMenu.addItem(.separator())
+        let now = [power.isOnBattery ? "on battery" : "plugged in",
+                   power.isLowPowerMode ? "Low Power Mode" : nil,
+                   power.isHot ? "running hot" : nil].compactMap { $0 }.joined(separator: ", ")
+        let status = NSMenuItem(title: "Now: " + now, action: nil, keyEquivalent: "")
+        status.isEnabled = false
+        powerMenu.addItem(status)
+        let powerItem = NSMenuItem(title: "Power Saving", action: nil, keyEquivalent: "")
+        powerItem.submenu = powerMenu
+        menu.addItem(powerItem)
+
+        menu.addItem(item("Launch at Login", checked: SMAppService.mainApp.status == .enabled) { [weak self] in
+            self?.toggleLaunchAtLogin(nil)
+        })
+
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "Quit LiveWall",
                                 action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
-        statusItem.menu = menu
+    }
+
+    private func item(_ title: String, key: String = "", checked: Bool? = nil,
+                      _ handler: @escaping () -> Void) -> NSMenuItem {
+        let action = MenuAction(handler)
+        menuActions.append(action)
+        let item = NSMenuItem(title: title, action: #selector(MenuAction.run), keyEquivalent: key)
+        item.target = action
+        if let checked { item.state = checked ? .on : .off }
+        return item
+    }
+
+    private static func describe(_ reason: WallpaperController.PauseReason) -> String {
+        switch reason {
+        case .user:           return "Paused"
+        case .hidden:         return "Paused while covered"
+        case .displaysAsleep: return "Paused, displays asleep"
+        case .battery:        return "Paused on battery"
+        case .lowPower:       return "Paused in Low Power Mode"
+        case .hot:            return "Paused while cooling down"
+        }
     }
 
     @objc private func showControls(_ sender: Any?) {
@@ -223,4 +312,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         controlWindow?.makeKeyAndOrderFront(nil)
     }
+}
+
+extension AppDelegate: NSMenuDelegate {
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        rebuildMenu(menu)
+    }
+}
+
+/// Lets a menu item run a closure.
+final class MenuAction: NSObject {
+    private let handler: () -> Void
+    init(_ handler: @escaping () -> Void) { self.handler = handler }
+    @objc func run() { handler() }
 }

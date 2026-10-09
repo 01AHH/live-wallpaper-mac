@@ -431,6 +431,9 @@ struct DynamicIslandView: View {
         case .user:           return "Paused"
         case .hidden:         return "Paused while covered"
         case .displaysAsleep: return "Paused — displays asleep"
+        case .battery:        return "Paused on battery"
+        case .lowPower:       return "Paused — Low Power Mode"
+        case .hot:            return "Paused while your Mac cools down"
         case nil:
             let speed = currentSpeed
             return speed == 1 ? "Playing" : "Playing at \(speed.formatted(.number.precision(.fractionLength(0...2))))×"
