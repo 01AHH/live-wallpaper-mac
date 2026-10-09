@@ -59,6 +59,19 @@ final class ActivityCenter: ObservableObject {
     private var observers: [NSObjectProtocol] = []
     private var artworkKey: String?
 
+    /// Sources the person has switched on. Turning one off clears whatever it
+    /// was showing.
+    var enabledSources: Set<IslandSource> = Set(IslandSource.allCases) {
+        didSet {
+            if !enabledSources.contains(.music) { nowPlaying = nil; artwork = nil; artworkKey = nil }
+            activities.removeAll { !isEnabled(source: $0.source) }
+        }
+    }
+
+    private func isEnabled(source name: String) -> Bool {
+        IslandSource.forActivity(named: name).map(enabledSources.contains) ?? true
+    }
+
     init() {
         let center = DistributedNotificationCenter.default()
         for app in [MusicApp.spotify, .music] {
@@ -69,7 +82,7 @@ final class ActivityCenter: ObservableObject {
         }
         observers.append(center.addObserver(forName: Self.activityNotification, object: nil, queue: .main) { [weak self] note in
             let info = note.userInfo ?? [:]
-            MainActor.assumeIsolated { self?.activityReported(info) }
+            MainActor.assumeIsolated { self?.report(info) }
         })
     }
 
@@ -83,6 +96,7 @@ final class ActivityCenter: ObservableObject {
     // MARK: - Music
 
     private func musicChanged(app: MusicApp, info: [AnyHashable: Any]) {
+        guard enabledSources.contains(.music) else { return }
         let state = info["Player State"] as? String ?? "Stopped"
         guard state != "Stopped", let title = info["Name"] as? String else {
             if nowPlaying?.app == app { nowPlaying = nil; artwork = nil }
@@ -160,15 +174,26 @@ final class ActivityCenter: ObservableObject {
 
     // MARK: - Activities
 
-    private func activityReported(_ info: [AnyHashable: Any]) {
-        guard let title = info["title"] as? String else { return }
+    /// Record an activity update — from the distributed notification, or
+    /// from LiveWall's own watchers of the ChatGPT and Claude apps.
+    func report(_ info: [AnyHashable: Any]) {
         let source = info["source"] as? String ?? "Activity"
+        guard isEnabled(source: source) else { return }
         let id = info["id"] as? String ?? source
         let state = LiveActivity.State(rawValue: info["state"] as? String ?? "") ?? .running
-        let activity = LiveActivity(id: id, source: source, title: title,
-                                    detail: info["detail"] as? String, state: state)
-
         let previous = activities.first { $0.id == id }
+
+        // An empty title means "same task, new state" — e.g. Claude Code
+        // carrying on after a permission prompt. Ignore it if there's no
+        // task to carry on, or if nothing actually changed.
+        var title = info["title"] as? String ?? ""
+        if title.isEmpty {
+            guard let previous, previous.state != state else { return }
+            title = previous.title
+        }
+        let activity = LiveActivity(id: id, source: source, title: title,
+                                    detail: info["detail"] as? String ?? previous?.detail, state: state)
+
         activities.removeAll { $0.id == id }
         activities.insert(activity, at: 0)
 

@@ -37,6 +37,8 @@ final class AppSettings: ObservableObject {
 
     /// Whether the Dynamic Island is shown at the top of the screen.
     @Published var showIsland: Bool { didSet { persist() } }
+    /// Which kinds of activity the island shows.
+    @Published var islandSources: Set<IslandSource> { didSet { persist() } }
 
     static let speedRange: ClosedRange<Double> = 0.25...1.5
 
@@ -54,6 +56,8 @@ final class AppSettings: ObservableObject {
         fillMode      = FillMode(rawValue: defaults.string(forKey: Keys.fillMode) ?? "") ?? .fill
         speeds        = defaults.dictionary(forKey: Keys.speeds) as? [String: Double] ?? [:]
         showIsland    = defaults.object(forKey: Keys.showIsland) as? Bool ?? true
+        islandSources = (defaults.stringArray(forKey: Keys.islandSources)?.compactMap(IslandSource.init(rawValue:)))
+            .map(Set.init) ?? Set(IslandSource.allCases)
     }
 
     func speed(for url: URL?) -> Double {
@@ -74,6 +78,7 @@ final class AppSettings: ObservableObject {
         defaults.set(fillMode.rawValue, forKey: Keys.fillMode)
         defaults.set(speeds, forKey: Keys.speeds)
         defaults.set(showIsland, forKey: Keys.showIsland)
+        defaults.set(islandSources.map(\.rawValue).sorted(), forKey: Keys.islandSources)
     }
 
     private enum Keys {
@@ -83,5 +88,6 @@ final class AppSettings: ObservableObject {
         static let fillMode      = "fillMode"
         static let speeds        = "videoSpeeds"
         static let showIsland    = "showDynamicIsland"
+        static let islandSources = "islandSources"
     }
 }

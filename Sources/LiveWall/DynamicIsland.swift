@@ -500,6 +500,8 @@ private struct IslandButton: View {
 final class DynamicIslandController {
     let model: IslandModel
     let activities = ActivityCenter()
+    private let codexWatcher = CodexSessionWatcher()
+    private let chatAppWatcher = ChatAppWatcher()
     private let panel: NSPanel
     private var monitors: [Any] = []
     private static let canvas = CGSize(width: 560, height: 420)
@@ -531,6 +533,9 @@ final class DynamicIslandController {
         panel.contentView = NSHostingView(rootView: DynamicIslandView(model: model))
         panel.setFrame(frame, display: true)
 
+        codexWatcher.onActivity = { [weak activities] in activities?.report($0) }
+        chatAppWatcher.onActivity = { [weak activities] in activities?.report($0) }
+
         let track: (NSEvent) -> Void = { [weak self] _ in self?.trackMouse() }
         if let global = NSEvent.addGlobalMonitorForEvents(matching: .mouseMoved, handler: track) {
             monitors.append(global)
@@ -538,6 +543,19 @@ final class DynamicIslandController {
         if let local = NSEvent.addLocalMonitorForEvents(matching: .mouseMoved, handler: { track($0); return $0 }) {
             monitors.append(local)
         }
+    }
+
+    /// Apply the person's choice of sources: filter what's shown and only run
+    /// the watchers that are needed.
+    func setSources(_ sources: Set<IslandSource>) {
+        activities.enabledSources = sources
+        if sources.contains(.chatGPT) { codexWatcher.start() } else { codexWatcher.stop() }
+
+        var apps: [ChatAppWatcher.App] = []
+        if sources.contains(.chatGPT) { apps.append(.init(bundleID: "com.openai.codex", source: "ChatGPT")) }
+        if sources.contains(.claudeApp) { apps.append(.init(bundleID: "com.anthropic.claudefordesktop", source: "Claude")) }
+        chatAppWatcher.apps = apps
+        if apps.isEmpty { chatAppWatcher.stop() } else { chatAppWatcher.start() }
     }
 
     /// Re-home the island after monitors are plugged in, unplugged or

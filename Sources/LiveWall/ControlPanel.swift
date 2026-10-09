@@ -188,6 +188,36 @@ struct ControlPanelView: View {
 
     // MARK: - Detail
 
+    /// Turn the Dynamic Island on or off, and choose what it shows.
+    private var islandMenu: some View {
+        Menu {
+            Toggle("Show Dynamic Island", isOn: $settings.showIsland)
+            Section("Show activity from") {
+                ForEach(IslandSource.allCases) { source in
+                    Toggle(isOn: Binding(
+                        get: { settings.islandSources.contains(source) },
+                        set: { on in
+                            if on { settings.islandSources.insert(source) } else { settings.islandSources.remove(source) }
+                        })) {
+                        Label(source.label, systemImage: source.icon)
+                    }
+                    .disabled(!settings.showIsland)
+                }
+            }
+            if !ChatAppWatcher.isTrusted {
+                Section {
+                    Button("Allow Accessibility for ChatGPT & Claude chats…") {
+                        ChatAppWatcher.requestPermission()
+                        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
+                    }
+                }
+            }
+        } label: {
+            Label("Dynamic Island", systemImage: settings.showIsland ? "capsule.inset.filled" : "capsule")
+        }
+        .help("Dynamic Island: turn it on or off and choose what it shows")
+    }
+
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
         ToolbarItem(placement: .navigation) {
@@ -212,6 +242,7 @@ struct ControlPanelView: View {
             .tint(.gray)
             .help(settings.spanScreens ? "One video spans every display" : "Each display plays the full video")
         }
+        ToolbarItem(placement: .primaryAction) { islandMenu }
     }
 
     // MARK: - Detail

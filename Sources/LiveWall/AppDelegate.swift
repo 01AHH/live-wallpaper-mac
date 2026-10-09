@@ -80,6 +80,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
             .store(in: &subscriptions)
 
+        settings.$islandSources
+            .sink { [weak self] sources in
+                self?.island?.setSources(sources)
+                // Watching the chat apps needs Accessibility permission; ask
+                // once, when a source that needs it is on.
+                if !sources.isDisjoint(with: [.chatGPT, .claudeApp]) && !ChatAppWatcher.isTrusted {
+                    self?.requestAccessibilityOnce()
+                }
+            }
+            .store(in: &subscriptions)
+
         settings.$showIsland
             .sink { [weak self] show in
                 self?.island?.isShown = show
@@ -98,6 +109,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         guard let next = pool.randomElement() else { return }
         settings.currentVideo = next
         controller.apply()
+    }
+
+    private func requestAccessibilityOnce() {
+        let key = "askedForAccessibility"
+        guard !UserDefaults.standard.bool(forKey: key) else { return }
+        UserDefaults.standard.set(true, forKey: key)
+        ChatAppWatcher.requestPermission()
     }
 
     @objc private func toggleIsland(_ sender: Any?) {

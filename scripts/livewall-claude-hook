@@ -2,6 +2,8 @@
 # Claude Code hook → LiveWall's Dynamic Island. Reads the hook's JSON on stdin.
 #   livewall-claude-hook prompt   (UserPromptSubmit) → "working" with the prompt
 #   livewall-claude-hook notify   (Notification)     → "needs you" with the message
+#   livewall-claude-hook resume   (PostToolUse)      → back to "working" after
+#                                                    a permission prompt
 #   livewall-claude-hook stop     (Stop)             → "finished"
 # Always exits 0 so it can never block or fail Claude Code.
 event="$1"
@@ -17,11 +19,13 @@ case "$event" in
           title=$(jq -r '.prompt // ""' <<<"$input" 2>/dev/null | tr '\n' ' ' | cut -c1-70) ;;
   notify) state=attention
           title=$(jq -r '.message // "Needs your input"' <<<"$input" 2>/dev/null) ;;
+  resume) state=running
+          title="" ;;   # empty keeps the title the island already shows
   stop)   state=done
           title="Done${project:+ in $project}" ;;
   *)      exit 0 ;;
 esac
-[ -z "$title" ] && title="Working"
+[ -z "$title" ] && [ "$event" != resume ] && title="Working"
 
 "$dir/livewall-activity" "$state" "$title" --source "Claude Code" --id "$id" \
   ${project:+--detail "$project"} >/dev/null 2>&1
