@@ -25,8 +25,12 @@ struct OnboardingView: View {
     @State private var chosenFile: URL?
     @State private var downloading: String?
     @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
+    /// Set as the welcome opens: the amber glow rises behind the title.
+    @State private var glowing = false
     /// Set once the opening is over: the wallpaper rises out of the black.
     @State private var dawned = false
+    /// ← and → step through the welcome, like its Back and Continue buttons.
+    @State private var arrowMonitor: Any?
     /// Set while finishing: everything but the wallpaper fades away.
     @State private var leaving = false
 
@@ -54,6 +58,8 @@ struct OnboardingView: View {
         .ignoresSafeArea()
         .environment(\.colorScheme, .dark)
         .task { await runWelcome() }
+        .onAppear { installArrowKeys() }
+        .onDisappear { if let arrowMonitor { NSEvent.removeMonitor(arrowMonitor) } }
         .task { await gallery.load() }   // early, so the wallpaper is ready to dawn
     }
 
@@ -67,6 +73,12 @@ struct OnboardingView: View {
     private var background: some View {
         ZStack {
             Color.black
+            // The website's amber glow behind the opening type; it gives way
+            // to the wallpaper as that dawns.
+            GlowBands()
+                .opacity(glowing && !(dawned && ambientVideo != nil) ? 1 : 0)
+                .animation(.easeInOut(duration: 2.4), value: glowing)
+                .animation(.easeInOut(duration: 2.4), value: dawned)
             if let ambientVideo {
                 LoopingVideoView(url: ambientVideo)
                     .id(ambientVideo)   // a fresh player per wallpaper, so they cross-fade
@@ -344,7 +356,7 @@ struct OnboardingView: View {
                     // Close first — the browser would otherwise open behind
                     // the full-screen welcome.
                     finish {
-                        NSWorkspace.shared.open(URL(string: "https://livewallpapermac.vercel.app")!)
+                        NSWorkspace.shared.open(URL(string: "https://livewallpapermac.vercel.app/gallery")!)
                     }
                 }
                 primaryButton("Open LiveWall") {
@@ -401,12 +413,38 @@ struct OnboardingView: View {
     /// The opening: the title sharpens in letter by letter, then the second
     /// line rises, then the button.
     private func runWelcome() async {
+        glowing = true
         try? await Task.sleep(for: .milliseconds(600))
         withAnimation(.easeOut(duration: 1.8)) { titleProgress = 1 }
         try? await Task.sleep(for: .milliseconds(1900))
         withAnimation(.easeOut(duration: 1.1)) { showSecondLine = true }
         try? await Task.sleep(for: .milliseconds(1300))
         withAnimation(Brand.spring) { showBegin = true }
+    }
+
+    /// → does what the step's main button does (except on the last step,
+    /// which only closes on purpose); ← goes back wherever Back is shown.
+    private func installArrowKeys() {
+        guard arrowMonitor == nil else { return }
+        arrowMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
+            guard !leaving, event.modifierFlags.intersection([.command, .option, .control]).isEmpty else { return event }
+            switch event.keyCode {
+            case 124:   // →
+                switch step {
+                case .welcome:    begin()
+                case .wallpaper:  go(.island)
+                case .island:     go(.effortless)
+                case .effortless: go(.done)
+                case .done:       return event
+                }
+            case 123:   // ←
+                guard step != .welcome, step != .done else { return event }
+                go(Step(rawValue: step.rawValue - 1) ?? .welcome)
+            default:
+                return event
+            }
+            return nil
+        }
     }
 
     /// Out of the black: the wallpaper slowly rises and settles as the

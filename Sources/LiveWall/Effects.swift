@@ -54,6 +54,61 @@ struct AmbientBackground: View {
     }
 }
 
+// MARK: - Glow bands
+
+/// The website hero's backdrop: soft amber bands lying diagonally across a
+/// black stage, drifting slowly, fading out towards the edges. Same stops and
+/// proportions as `.glow-bands` in web/public/landing.css.
+struct GlowBands: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        TimelineView(.animation(paused: reduceMotion)) { context in
+            // One band's width of drift every 18 s, so it loops seamlessly.
+            let phase = reduceMotion ? 0 : context.date.timeIntervalSinceReferenceDate
+                .truncatingRemainder(dividingBy: 18) / 18
+            GlowBandsCanvas(phase: phase)
+        }
+    }
+}
+
+struct GlowBandsCanvas: View {
+    /// 0…1: how far the bands have drifted through one period.
+    var phase: Double
+
+    private static let stops: [Gradient.Stop] = [
+        .init(color: .clear, location: 0),
+        .init(color: Color(red: 0.96, green: 0.62, blue: 0.22).opacity(0.85), location: 0.25),
+        .init(color: Color(red: 1.0, green: 0.77, blue: 0.43).opacity(0.95), location: 0.44),
+        .init(color: Color(red: 0.84, green: 0.36, blue: 0.12).opacity(0.8), location: 0.66),
+        .init(color: .clear, location: 1),
+    ]
+
+    var body: some View {
+        Canvas { ctx, size in
+            let period = max(size.width, size.height) * 0.21
+            let reach = hypot(size.width, size.height)
+            ctx.addFilter(.blur(radius: period * 0.09))
+            ctx.translateBy(x: size.width / 2, y: size.height / 2)
+            ctx.rotate(by: .degrees(45))
+            let shift = CGFloat(phase) * period
+            var x = -reach / 2 - period + shift
+            while x < reach / 2 + period {
+                // Each period: clear, then a 160/300-wide band of light.
+                let band = CGRect(x: x + period * 0.233, y: -reach / 2, width: period * 0.533, height: reach)
+                ctx.fill(Path(band), with: .linearGradient(
+                    Gradient(stops: Self.stops),
+                    startPoint: CGPoint(x: band.minX, y: 0), endPoint: CGPoint(x: band.maxX, y: 0)))
+                x += period
+            }
+        }
+        .mask(EllipticalGradient(stops: [.init(color: .black, location: 0.3), .init(color: .clear, location: 0.75)],
+                                 center: UnitPoint(x: 0.5, y: 0.45), endRadiusFraction: 0.6))
+        .saturation(1.2)
+        .allowsHitTesting(false)
+    }
+}
+
 // MARK: - Text
 
 /// Reveals text glyph by glyph: each one rises, sharpens out of a blur and
