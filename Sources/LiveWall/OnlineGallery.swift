@@ -2,7 +2,7 @@ import SwiftUI
 
 /// One wallpaper from the online gallery's `catalog.json`.
 struct GalleryWallpaper: Decodable, Identifiable, Hashable {
-    struct Licence: Decodable, Hashable { let name: String; let url: URL }
+    struct Licence: Decodable, Hashable { let name: String; let url: URL? }
 
     let id: String
     let title: String
@@ -13,6 +13,10 @@ struct GalleryWallpaper: Decodable, Identifiable, Hashable {
     let video: URL
     let poster: URL
     let bytes: Int
+    /// The licence hasn't been checked — shown with a warning.
+    let unverified: Bool?
+
+    var isUnverified: Bool { unverified == true }
 
     /// The file name it's saved under in the library.
     var fileName: String { "\(id).mp4" }
@@ -160,11 +164,18 @@ struct OnlineGalleryView: View {
                 .overlay(alignment: .bottomTrailing) { action(for: w, inLibrary: inLibrary).padding(10) }
 
             Text(w.title).font(Brand.Font.tileTitle).lineLimit(1)
-            Text("\(w.credit) · \(w.licence.name)")
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
-                .help("\(w.credit) — \(w.licence.name)")
+            if w.isUnverified {
+                Label("Licence unverified", systemImage: "exclamationmark.triangle.fill")
+                    .font(.caption2.weight(.medium))
+                    .foregroundStyle(Brand.accent)
+                    .help("This wallpaper's source and licence haven't been checked — you may need a licence to use it.")
+            } else {
+                Text("\(w.credit) · \(w.licence.name)")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .help("\(w.credit) — \(w.licence.name)")
+            }
         }
     }
 

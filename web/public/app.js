@@ -108,6 +108,13 @@ function tile(w) {
   const video = el.querySelector('video');
   img.src = w.poster;
   el.querySelector('.tile-title').textContent = w.title;
+  if (w.unverified) {
+    const flag = document.createElement('span');
+    flag.className = 'flag';
+    flag.textContent = 'Licence unverified';
+    flag.title = 'Source and licence not checked — you may need a licence to use this wallpaper.';
+    el.querySelector('.art').append(flag);
+  }
   el.setAttribute('aria-label', `${w.title}, view details`);
 
   // Hover preview after a short pause, so sweeping across the grid doesn't
@@ -143,9 +150,13 @@ function openSheet(w) {
   $('sheet-size').textContent = formatSize(w.bytes);
   $('sheet-download').href = downloadURL(w.video);
   $('sheet-add').onclick = (e) => { e.preventDefault(); openInApp([w.id]); };
-  $('sheet-credit').textContent = w.credit;
-  Object.assign($('sheet-licence'), { href: w.licence.url, textContent: w.licence.name });
-  $('sheet-source').href = w.source;
+  $('sheet-unverified').hidden = !w.unverified;
+  $('sheet-licence-line').hidden = !!w.unverified;
+  if (!w.unverified) {
+    $('sheet-credit').textContent = w.credit;
+    Object.assign($('sheet-licence'), { href: w.licence.url, textContent: w.licence.name });
+    $('sheet-source').href = w.source;
+  }
   history.replaceState(null, '', `#${w.id}`);
   $('sheet').showModal();
 }

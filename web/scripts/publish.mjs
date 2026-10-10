@@ -27,8 +27,16 @@ const ALLOWED_LICENCES = new Set([
 const root = new URL('..', import.meta.url).pathname;
 const source = JSON.parse(await readFile(join(root, 'catalog.source.json'), 'utf8'));
 
+// Wallpapers whose licence hasn't been checked are allowed only when they
+// say so explicitly ("unverified": true), and are flagged on the site.
 const problems = [];
+const unverified = [];
 for (const w of source.wallpapers) {
+  if (w.unverified) {
+    if (w.licence?.name !== 'Unverified') problems.push(`${w.id}: unverified entries must use licence "Unverified"`);
+    unverified.push(w.id);
+    continue;
+  }
   if (!ALLOWED_LICENCES.has(w.licence?.name)) problems.push(`${w.id}: licence "${w.licence?.name}" is not on the allow-list`);
   if (!w.credit) problems.push(`${w.id}: missing credit`);
   if (!w.source) problems.push(`${w.id}: missing source URL`);
@@ -36,6 +44,10 @@ for (const w of source.wallpapers) {
 if (problems.length) {
   console.error('Refusing to publish:\n  ' + problems.join('\n  '));
   process.exit(1);
+}
+if (unverified.length) {
+  console.warn(`⚠ Publishing ${unverified.length} wallpapers with an UNVERIFIED licence — ` +
+               'they may need a licence to be shared. They are flagged on the site.');
 }
 
 const files = (id) => ({
