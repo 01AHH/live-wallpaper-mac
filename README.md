@@ -444,10 +444,10 @@ Prioritised from a review of Wallpaper Engine, Lively, Backdrop, Wallper, Wallux
 - [ ] Interactive web/HTML scenes ([#15](https://github.com/01AHH/live-wallpaper-mac/issues/15)) and other nice-to-haves ([#16](https://github.com/01AHH/live-wallpaper-mac/issues/16))
 
 **Housekeeping**
-- [ ] Apple Developer ID signing and notarization (removes *Open Anyway*, keeps permissions across updates)
-- [ ] Automatic updates (Sparkle) reading `releases/latest.json`; a universal (Intel) build
+- [ ] Apple Developer ID signing and notarization (removes *Open Anyway*, keeps permissions across updates). `release.sh` is ready: enrol, install the certificate, and set `LIVEWALL_SIGN_IDENTITY` and `LIVEWALL_NOTARY_PROFILE`
+- [ ] Publish the first release with Sparkle updates and the universal (Intel) build (built and committed; the Intel build is untested on real hardware)
 - [ ] Cut and publish the 37 vetted clips in `web/candidates.json`; decide on the 8 CC BY-SA candidates
-- [ ] Custom domain for R2 (the `r2.dev` address is rate-limited); delete the 7 old copies in Vercel Blob
+- [ ] Custom domain for R2 (the `r2.dev` address is rate-limited): connect one in Cloudflare, then run `scripts/switch-media-domain.sh https://media.example.com`
 - [ ] Confirm Claude/ChatGPT app chat detection on real windows
 
 ## License
