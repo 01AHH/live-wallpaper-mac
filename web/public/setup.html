@@ -54,7 +54,7 @@
     <section id="install">
       <h2>1. Install</h2>
       <ol class="steps">
-        <li><a class="btn primary" id="download-app" href="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/releases/LiveWall.dmg">Download LiveWall for Mac</a></li>
+        <li><a class="btn primary" href="download.html">Download LiveWall for Mac</a></li>
         <li>Open the downloaded <code>LiveWall-….dmg</code> from your Downloads folder.</li>
         <li>Drag <strong>LiveWall</strong> onto the <strong>Applications</strong> folder shortcut beside it.</li>
         <li>Eject the LiveWall disk (click ⏏ next to it in Finder's sidebar). You can delete the <code>.dmg</code>.</li>
@@ -228,12 +228,5 @@
   </footer>
 
   <script src="gate.js"></script>
-  <script>
-    // Point the download button at the latest release when it's published.
-    fetch('https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/releases/latest.json', { cache: 'no-cache' })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((release) => { if (release) document.getElementById('download-app').href = release.url; })
-      .catch(() => {});
-  </script>
 </body>
 </html>

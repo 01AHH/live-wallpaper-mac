@@ -128,6 +128,12 @@ final class CategoryStore: ObservableObject {
         save()
     }
 
+    /// Forget a video's tags (when it's removed from the library).
+    func forget(_ url: URL) {
+        guard assignments.removeValue(forKey: url.lastPathComponent) != nil else { return }
+        save()
+    }
+
     /// Remove the tag everywhere. Videos left with no tags become untagged.
     func delete(_ tag: String) {
         tags.removeAll { $0 == tag }

@@ -326,3 +326,85 @@ dialog::backdrop { background: rgba(0,0,0,0.55); backdrop-filter: blur(6px); }
 .faq dt { font-weight: 600; margin-top: 16px; }
 .faq dd { margin: 4px 0 0; color: var(--muted); }
 .guide a:not(.btn) { color: var(--accent); }
+
+/* Download page */
+.dl { max-width: 1120px; }
+.dl-hero { text-align: center; padding: 40px 0 8px; position: relative; }
+.dl-hero[hidden] { display: none; }
+.dl-hero::before {
+  content: ""; position: absolute; left: 50%; top: 10px; width: 420px; height: 260px; transform: translateX(-50%);
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 35%, transparent), transparent);
+  filter: blur(20px); z-index: -1; pointer-events: none;
+}
+.dl-icon { margin: 0 auto 18px; border-radius: 22px; box-shadow: 0 20px 50px rgba(0,0,0,0.35); }
+.dl-hero h1 { margin: 0 0 10px; font-size: clamp(30px, 5vw, 44px); letter-spacing: -0.02em; }
+.dl-status, .dl-sub { font-size: 17px; margin: 0 0 6px; display: inline-flex; align-items: center; gap: 10px; }
+.dl-sub { display: block; color: var(--muted); }
+.dl-meta { color: var(--muted); font-size: 13px; margin: 8px 0 4px; }
+.dl-retry { font-size: 13px; color: var(--muted); margin: 0; }
+.dl-retry a, .dl-next a:not(.btn), footer a { color: var(--accent); }
+.dl-spinner { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--line); border-top-color: var(--accent); animation: spin 0.8s linear infinite; }
+.dl-check { width: 20px; height: 20px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 12px; font-weight: 700; background: var(--accent); color: var(--accent-ink); }
+@keyframes spin { to { transform: rotate(360deg); } }
+.dl-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+
+.dl-steps { list-style: none; padding: 0; margin: 44px 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; counter-reset: step; }
+.dl-step {
+  position: relative; padding: 18px 18px 22px; border-radius: var(--radius-card);
+  background: var(--surface); border: 1px solid var(--line);
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 0.6s var(--spring), transform 0.6s var(--spring), border-color 0.2s;
+}
+.steps-ready .dl-step { opacity: 1; transform: none; }
+.steps-ready .dl-step:nth-child(2) { transition-delay: 0.12s; }
+.steps-ready .dl-step:nth-child(3) { transition-delay: 0.24s; }
+.dl-step:hover { border-color: color-mix(in srgb, var(--accent) 55%, transparent); }
+.dl-visual {
+  height: 180px; border-radius: 12px; margin-bottom: 16px; overflow: hidden;
+  display: grid; place-items: center; padding: 14px;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 14%, var(--bg)), var(--bg));
+}
+.dl-visual img { max-width: 100%; max-height: 100%; border-radius: 8px; box-shadow: 0 12px 30px rgba(0,0,0,0.35); }
+.dl-num {
+  position: absolute; top: 28px; left: 28px; width: 26px; height: 26px; border-radius: 50%;
+  display: grid; place-items: center; font-size: 13px; font-weight: 700;
+  background: var(--accent); color: var(--accent-ink); box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.dl-step h2 { font-size: 17px; margin: 0 0 6px; }
+.dl-step p { margin: 0; font-size: 14px; color: var(--muted); }
+.dl-step p strong { color: var(--text); }
+
+/* Step 1 mock: a browser download row */
+.mock-download {
+  width: 100%; max-width: 280px; display: flex; align-items: center; gap: 12px; padding: 12px;
+  border-radius: 12px; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+}
+.mock-dmg { width: 40px; height: 48px; border-radius: 6px; display: grid; place-items: end center; padding-bottom: 6px;
+  background: linear-gradient(#e9e9ee, #c9c9d2); color: #555; font-size: 9px; font-weight: 800; flex: none; }
+.mock-file { display: grid; flex: 1; min-width: 0; font-size: 13px; }
+.mock-file span { font-size: 11px; color: var(--muted); }
+.mock-open { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); }
+
+/* Step 3 mock: the Privacy & Security row */
+.mock-settings { width: 100%; max-width: 300px; border-radius: 12px; overflow: hidden; background: var(--surface);
+  border: 1px solid var(--line); box-shadow: 0 12px 30px rgba(0,0,0,0.3); font-size: 12px; }
+.mock-settings-head { padding: 9px 12px; font-weight: 600; border-bottom: 1px solid var(--line); }
+.mock-settings-row { padding: 12px; display: flex; align-items: center; gap: 10px; justify-content: space-between; }
+.mock-settings-row span:first-child { color: var(--muted); }
+.mock-anyway { flex: none; padding: 5px 10px; border-radius: 7px; font-weight: 600; background: var(--bg); border: 1px solid var(--line);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 70%, transparent); animation: nudge 2.4s ease-out infinite; }
+@keyframes nudge { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 70%, transparent); } 70%, 100% { box-shadow: 0 0 0 10px transparent; } }
+
+.dl-terminal { all: unset; cursor: pointer; margin-top: 12px; display: flex; align-items: center; gap: 8px; width: 100%; box-sizing: border-box;
+  padding: 8px 10px; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); }
+.dl-terminal code { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: var(--muted); }
+.dl-terminal span { font-size: 11px; font-weight: 600; color: var(--accent); }
+.dl-terminal:hover { border-color: var(--accent); }
+
+.dl-next { margin: 32px 0 24px; padding: 24px 28px; border-radius: var(--radius-card); display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 16%, var(--surface)), var(--surface)); border: 1px solid var(--line); }
+.dl-next h2 { margin: 0 0 4px; font-size: 20px; }
+.dl-next p { margin: 0; color: var(--muted); }
+.dl-next .dl-actions { margin: 0; }
+
+@media (max-width: 860px) { .dl-steps { grid-template-columns: 1fr; } }

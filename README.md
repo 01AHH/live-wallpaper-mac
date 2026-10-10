@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://livewallpapermac.vercel.app/#download"><img src="https://img.shields.io/badge/download-latest-f59e38" alt="Download"></a>
+  <a href="https://livewallpapermac.vercel.app/download.html"><img src="https://img.shields.io/badge/download-latest-f59e38" alt="Download"></a>
   <img src="https://img.shields.io/badge/macOS-26%2B-black" alt="macOS 26+">
   <img src="https://img.shields.io/badge/Apple%20silicon-required-black" alt="Apple silicon">
   <img src="https://img.shields.io/badge/Swift-6-orange" alt="Swift 6">
@@ -63,6 +63,7 @@
 **Library**
 - Any folder of `.mp4` / `.mov` / `.m4v` files; new files appear immediately
 - **Tags** with a sidebar filter, search, live hover previews
+- **Remove wallpapers** with *Move to Trash* (right-click) — recoverable, and its tags, speed and display choices are cleaned up
 - **Online Gallery** in the sidebar — download free 4K wallpapers straight into the library
 - **Add from the website** — pick wallpapers on the gallery site and click *Add to LiveWall*
 
@@ -103,7 +104,7 @@
 
 ## Install
 
-1. Download **LiveWall.dmg** from **[livewallpapermac.vercel.app](https://livewallpapermac.vercel.app/#download)**.
+1. Download LiveWall from **[livewallpapermac.vercel.app/download.html](https://livewallpapermac.vercel.app/download.html)** — the download starts automatically and the page walks you through the next steps.
 2. Open it and drag **LiveWall** onto **Applications**.
 3. Open LiveWall from Applications.
 
@@ -140,7 +141,7 @@ Download the new `.dmg`, quit LiveWall from its menu-bar icon, and replace the a
 | Toolbar | Library folder, **Fill / Fit / Stretch**, **Span Screens**, the **Dynamic Island** menu, and search |
 | Now Playing banner | The current wallpaper playing live, its tags, the **speed** slider, Show in Finder and **Shuffle** |
 | *Your desktop* card | A miniature of your monitors showing exactly how the wallpaper will be laid out |
-| Grid | Your library — click to use, hover to preview, right-click to tag |
+| Grid | Your library — click to use, hover to preview, right-click to tag, show in Finder or **Move to Trash** |
 
 Closing the window doesn't quit LiveWall; reopen it from the menu-bar icon (**Wallpaper Controls…**).
 
@@ -149,6 +150,10 @@ Closing the window doesn't quit LiveWall; reopen it from the menu-bar icon (**Wa
 - **Online Gallery** (sidebar): free 4K wallpapers; *Get* downloads one into your library with its tags.
 - **Website**: tick wallpapers on [the gallery](https://livewallpapermac.vercel.app) and click **Add to LiveWall**. The browser opens LiveWall through a `livewall://add?ids=…` link and the wallpapers download with progress in the Dynamic Island.
 - **Your own videos**: drop files into the library folder (`~/Movies/LiveWall` by default) or choose another folder with the toolbar's folder button.
+
+### Removing wallpapers
+
+Right-click a wallpaper → **Move to Trash…** (or, in the Online Gallery, **Remove from Library…**). After you confirm, the file goes to the Trash — restore it from there if you change your mind — and its tags, speed and per-display choices are removed. If it was playing, the next wallpaper in your library takes over.
 
 ### Multiple displays
 
@@ -381,7 +386,7 @@ docs/                    icon and screenshots
    - builds the app, bundles the helper scripts and ad-hoc signs it;
    - makes a styled `.dmg` (app, arrow to Applications, install steps) with `create-dmg`;
    - uploads `releases/LiveWall-<version>.dmg`, `releases/LiveWall.dmg` and `releases/latest.json` to R2.
-2. The website reads `latest.json` for the version and download link — no redeploy needed.
+2. The website's download page (`web/public/download.html`) reads `latest.json` for the version, size and link — no redeploy needed. It starts the download on Apple silicon Macs and explains the requirements to everyone else; add `?preview` to view it without downloading.
 
 Uploading needs `npx wrangler login` once (Cloudflare account with R2).
 

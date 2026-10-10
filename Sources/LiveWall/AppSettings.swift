@@ -95,6 +95,14 @@ final class AppSettings: ObservableObject {
         }
     }
 
+    /// Clean up after a wallpaper is removed: drop its speed, any display
+    /// using it, and — if it was the main wallpaper — switch to `replacement`.
+    func forget(_ url: URL, replacement: URL?) {
+        speeds[url.lastPathComponent] = nil
+        screenVideos = screenVideos.filter { $0.value != url }
+        if currentVideo == url { currentVideo = replacement }
+    }
+
     func speed(for url: URL?) -> Double {
         guard let url else { return 1 }
         return speeds[url.lastPathComponent] ?? 1

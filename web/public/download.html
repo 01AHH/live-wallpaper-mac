@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Download LiveWall — Live Wallpaper App for Mac</title>
+  <meta name="description" content="Download LiveWall, the free live wallpaper app for Mac. Install it in three steps and add 4K live wallpapers to your macOS desktop.">
+  <link rel="canonical" href="https://livewallpapermac.vercel.app/download.html">
+  <meta name="theme-color" content="#0b0b0d">
+  <link rel="icon" href="icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="download-page">
+  <div class="gate" id="gate" hidden>
+    <form class="gate-card" id="gate-form">
+      <img src="icon.png" alt="" width="56" height="56">
+      <p class="gate-title">Live Wallpaper Mac</p>
+      <p>Enter the password to continue.</p>
+      <input id="gate-input" type="password" placeholder="Password" autocomplete="current-password" required>
+      <button class="btn primary wide" type="submit">Unlock</button>
+    </form>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="/">
+      <img src="icon.png" alt="" width="28" height="28">
+      <span>Live Wallpaper <em>Mac</em></span>
+    </a>
+    <a class="github" href="/" style="margin-left:auto">Wallpaper gallery</a>
+  </header>
+
+  <main class="dl">
+    <!-- Shown on a Mac: the download starts and the steps follow. -->
+    <section class="dl-hero" id="dl-mac">
+      <img class="dl-icon" src="icon.png" alt="" width="96" height="96">
+      <h1>Thanks for downloading LiveWall</h1>
+      <p class="dl-status" id="dl-status">
+        <span class="dl-spinner" aria-hidden="true"></span>
+        Your download is starting…
+      </p>
+      <p class="dl-meta" id="dl-meta">Free · Requires macOS 26 on an Apple silicon Mac</p>
+      <p class="dl-retry">Didn't start? <a id="dl-again" href="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/releases/LiveWall.dmg">Download again</a></p>
+    </section>
+
+    <!-- Shown on anything that can't run LiveWall. -->
+    <section class="dl-hero" id="dl-other" hidden>
+      <img class="dl-icon" src="icon.png" alt="" width="96" height="96">
+      <h1>LiveWall is for Mac</h1>
+      <p class="dl-sub" id="dl-other-reason">It needs macOS 26 (Tahoe) on an Apple silicon Mac (M1 or newer).</p>
+      <div class="dl-actions">
+        <button class="btn primary" id="dl-copy" type="button">Copy link for your Mac</button>
+        <a class="btn secondary" id="dl-anyway" href="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/releases/LiveWall.dmg">Download anyway</a>
+      </div>
+    </section>
+
+    <ol class="dl-steps" id="dl-steps">
+      <li class="dl-step">
+        <div class="dl-visual">
+          <div class="mock-download">
+            <div class="mock-dmg" aria-hidden="true"><span>DMG</span></div>
+            <div class="mock-file">
+              <strong>LiveWall.dmg</strong>
+              <span id="mock-size">Downloads</span>
+            </div>
+            <span class="mock-open">Open</span>
+          </div>
+        </div>
+        <span class="dl-num">1</span>
+        <h2>Open the download</h2>
+        <p>Click <strong>LiveWall.dmg</strong> in your browser's downloads, or find it in your Downloads folder.</p>
+      </li>
+
+      <li class="dl-step">
+        <div class="dl-visual">
+          <img src="img/install-window.png" alt="The LiveWall installer window: the LiveWall icon with an arrow pointing to the Applications folder, and three numbered install steps underneath." loading="lazy">
+        </div>
+        <span class="dl-num">2</span>
+        <h2>Drag to Applications</h2>
+        <p>Drag the <strong>LiveWall</strong> icon onto the <strong>Applications</strong> folder, then open LiveWall from Applications.</p>
+      </li>
+
+      <li class="dl-step">
+        <div class="dl-visual">
+          <div class="mock-settings">
+            <div class="mock-settings-head"><span class="mock-lock" aria-hidden="true">🔒</span> Privacy &amp; Security</div>
+            <div class="mock-settings-row">
+              <span>"LiveWall" was blocked to protect your Mac.</span>
+              <span class="mock-anyway">Open Anyway</span>
+            </div>
+          </div>
+        </div>
+        <span class="dl-num">3</span>
+        <h2>Open Anyway — once</h2>
+        <p>macOS can't verify free apps without a paid Apple certificate. Click <strong>Done</strong>, open
+          <strong>System Settings → Privacy &amp; Security</strong>, and click <strong>Open Anyway</strong>.</p>
+        <button class="dl-terminal" id="dl-terminal" type="button" title="Copy the Terminal command">
+          <code>xattr -dr com.apple.quarantine /Applications/LiveWall.app</code>
+          <span id="dl-terminal-label">Copy</span>
+        </button>
+      </li>
+    </ol>
+
+    <section class="dl-next">
+      <div>
+        <h2>You're all set</h2>
+        <p>LiveWall lives in your menu bar. Fill your library from the gallery — tick wallpapers and click <strong>Add to LiveWall</strong>.</p>
+      </div>
+      <div class="dl-actions">
+        <a class="btn primary" href="/">Browse wallpapers</a>
+        <a class="btn secondary" href="setup.html">Full setup guide</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>LiveWall is free. Questions? See <a href="setup.html#help">troubleshooting</a>.</p>
+  </footer>
+
+  <script src="gate.js"></script>
+  <script src="download.js"></script>
+</body>
+</html>

@@ -292,7 +292,6 @@ fetch(`${RELEASES}/latest.json`, { cache: 'no-cache' })
     if (!release) return;
     $('release-meta').textContent =
       `Version ${release.version} · ${Math.max(1, Math.round(release.bytes / 1e6))} MB · Requires macOS 26 (Tahoe) on an Apple silicon Mac.`;
-    $('download-app').href = release.url;
   })
   .catch(() => {});
 

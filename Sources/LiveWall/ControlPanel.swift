@@ -32,6 +32,8 @@ struct ControlPanelView: View {
     @State private var renameTarget: String?
     @State private var renameName = ""
     @State private var deleteTarget: String?
+    /// A wallpaper waiting for "Move to Trash" confirmation.
+    @State private var removeTarget: URL?
     @State private var query = ""
     @State private var heroPoster: NSImage?
     @State private var ambient: [Color] = AmbientPalette.fallback
@@ -96,6 +98,18 @@ struct ControlPanelView: View {
                 renameTarget = nil
             }
             Button("Cancel", role: .cancel) { renameTarget = nil }
+        }
+        .confirmationDialog(
+            "Move “\(removeTarget?.wallpaperName ?? "")” to the Trash?",
+            isPresented: Binding(get: { removeTarget != nil }, set: { if !$0 { removeTarget = nil } }),
+            presenting: removeTarget
+        ) { url in
+            Button("Move to Trash", role: .destructive) { remove(url) }
+            Button("Cancel", role: .cancel) { removeTarget = nil }
+        } message: { url in
+            Text(url == settings.currentVideo
+                 ? "It's playing now, so LiveWall will switch to another wallpaper. You can restore it from the Trash."
+                 : "It's removed from your library along with its tags and speed. You can restore it from the Trash.")
         }
         .confirmationDialog(
             "Delete “\(deleteTarget ?? "")”?",
@@ -597,7 +611,11 @@ struct ControlPanelView: View {
             OnlineGalleryView(store: gallery,
                               libraryFiles: Set(videos.map(\.lastPathComponent)),
                               onDownload: download,
-                              onUse: use)
+                              onUse: use,
+                              onRemove: { wallpaper in
+                                  guard let folder = settings.libraryFolder else { return }
+                                  removeTarget = folder.appendingPathComponent(wallpaper.fileName)
+                              })
         } else if videos.isEmpty {
             ContentUnavailableView {
                 Label("Your library is empty", systemImage: "film.stack")
@@ -672,6 +690,28 @@ struct ControlPanelView: View {
             newTagTarget = url
             showNewTag = true
         }
+        Divider()
+        Button("Show in Finder") { NSWorkspace.shared.activateFileViewerSelecting([url]) }
+        Button("Move to Trash…", role: .destructive) { removeTarget = url }
+    }
+
+    /// Remove a wallpaper from the library: to the Trash (recoverable), with
+    /// its tags, speed and display choices cleaned up. If it's on screen, a
+    /// neighbour takes over first so the desktop never goes blank.
+    private func remove(_ url: URL) {
+        removeTarget = nil
+        let others = videos.filter { $0 != url }
+        let index = videos.firstIndex(of: url) ?? 0
+        let replacement = others.isEmpty ? nil : others[min(index, others.count - 1)]
+        settings.forget(url, replacement: replacement)
+        onApply()
+        categories.forget(url)
+        do {
+            try FileManager.default.trashItem(at: url, resultingItemURL: nil)
+        } catch {
+            NSLog("LiveWall: couldn't move \(url.lastPathComponent) to the Trash: \(error)")
+        }
+        withAnimation(Brand.spring) { reloadVideos() }
     }
 
     private func commitNewTag() {

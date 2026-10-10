@@ -125,6 +125,8 @@ struct OnlineGalleryView: View {
     let libraryFiles: Set<String>
     let onDownload: (GalleryWallpaper) -> Void
     let onUse: (GalleryWallpaper) -> Void
+    /// Remove a downloaded wallpaper from the library.
+    let onRemove: (GalleryWallpaper) -> Void
 
     private let columns = [GridItem(.adaptive(minimum: 240), spacing: Brand.Spacing.gridColumn)]
 
@@ -152,6 +154,14 @@ struct OnlineGalleryView: View {
                 LazyVGrid(columns: columns, spacing: Brand.Spacing.gridRow) {
                     ForEach(store.wallpapers) { wallpaper in
                         tile(wallpaper)
+                            .contextMenu {
+                                if libraryFiles.contains(wallpaper.fileName) {
+                                    Button("Use as Wallpaper") { onUse(wallpaper) }
+                                    Button("Remove from Library…", role: .destructive) { onRemove(wallpaper) }
+                                } else {
+                                    Button("Download to Library") { onDownload(wallpaper) }
+                                }
+                            }
                     }
                 }
             }
