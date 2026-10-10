@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-10T04:17:52.361Z",
+  "generated": "2026-10-10T06:30:39.839Z",
   "wallpapers": [
     {
       "id": "blue-horizon",
@@ -715,6 +715,1101 @@
       "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/whispers-of-the-japanese-garden-tranquil-temple/whispers-of-the-japanese-garden-tranquil-temple-preview.mp4",
       "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/whispers-of-the-japanese-garden-tranquil-temple/whispers-of-the-japanese-garden-tranquil-temple.jpg",
       "bytes": 37762667
+    },
+    {
+      "id": "lo-fi-mood-rain-and-coffee",
+      "title": "Lo Fi Mood Rain And Coffee",
+      "description": "Lo Fi Mood Rain And Coffee — a Lofi live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Lofi"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 16,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/lo-fi-mood-rain-and-coffee/lo-fi-mood-rain-and-coffee.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/lo-fi-mood-rain-and-coffee/lo-fi-mood-rain-and-coffee-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/lo-fi-mood-rain-and-coffee/lo-fi-mood-rain-and-coffee.jpg",
+      "bytes": 62961161
+    },
+    {
+      "id": "lofi-camping-night",
+      "title": "Lofi Camping Night",
+      "description": "Lofi Camping Night — a Lofi live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Lofi",
+        "Night"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "1920x1080",
+      "codec": "H.264",
+      "duration": 29,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/lofi-camping-night/lofi-camping-night.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/lofi-camping-night/lofi-camping-night-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/lofi-camping-night/lofi-camping-night.jpg",
+      "bytes": 32937938
+    },
+    {
+      "id": "lofi-cat-anime-kitten-live-wallpaper",
+      "title": "Lofi Cat Anime Kitten",
+      "description": "Lofi Cat Anime Kitten — a Lofi live wallpaper.",
+      "tags": [
+        "Animals",
+        "Anime",
+        "Cozy",
+        "Lofi"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 13,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/lofi-cat-anime-kitten-live-wallpaper/lofi-cat-anime-kitten-live-wallpaper.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/lofi-cat-anime-kitten-live-wallpaper/lofi-cat-anime-kitten-live-wallpaper-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/lofi-cat-anime-kitten-live-wallpaper/lofi-cat-anime-kitten-live-wallpaper.jpg",
+      "bytes": 12801967
+    },
+    {
+      "id": "spring-lofi",
+      "title": "Spring Lofi",
+      "description": "Spring Lofi — a Lofi live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Lofi"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 16,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/spring-lofi/spring-lofi.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/spring-lofi/spring-lofi-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/spring-lofi/spring-lofi.jpg",
+      "bytes": 43163695
+    },
+    {
+      "id": "a-snow-covered-house-in-the-magic-forest",
+      "title": "A Snow Covered House In The Magic Forest",
+      "description": "A Snow Covered House In The Magic Forest — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Fantasy",
+        "Nature",
+        "Winter"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "1920x1080",
+      "codec": "H.264",
+      "duration": 10,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/a-snow-covered-house-in-the-magic-forest/a-snow-covered-house-in-the-magic-forest.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/a-snow-covered-house-in-the-magic-forest/a-snow-covered-house-in-the-magic-forest-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/a-snow-covered-house-in-the-magic-forest/a-snow-covered-house-in-the-magic-forest.jpg",
+      "bytes": 5296714
+    },
+    {
+      "id": "autumn-forest-cabin",
+      "title": "Autumn Forest Cabin",
+      "description": "Autumn Forest Cabin — a Cozy live wallpaper.",
+      "tags": [
+        "Autumn",
+        "Cozy",
+        "Nature"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "1920x1080",
+      "codec": "H.264",
+      "duration": 30,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/autumn-forest-cabin/autumn-forest-cabin.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/autumn-forest-cabin/autumn-forest-cabin-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/autumn-forest-cabin/autumn-forest-cabin.jpg",
+      "bytes": 23545000
+    },
+    {
+      "id": "autumn-reflections-the-riverside-bookstore",
+      "title": "Autumn Reflections The Riverside Bookstore",
+      "description": "Autumn Reflections The Riverside Bookstore — a Cozy live wallpaper.",
+      "tags": [
+        "Autumn",
+        "Cozy"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 5,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/autumn-reflections-the-riverside-bookstore/autumn-reflections-the-riverside-bookstore.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/autumn-reflections-the-riverside-bookstore/autumn-reflections-the-riverside-bookstore-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/autumn-reflections-the-riverside-bookstore/autumn-reflections-the-riverside-bookstore.jpg",
+      "bytes": 11275030
+    },
+    {
+      "id": "bmw-m4-f82-rainy-night-live-wallpaper",
+      "title": "Bmw M4 F82 Rainy Night",
+      "description": "Bmw M4 F82 Rainy Night — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Night",
+        "Vehicles"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "HEVC",
+      "duration": 8,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/bmw-m4-f82-rainy-night-live-wallpaper/bmw-m4-f82-rainy-night-live-wallpaper.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/bmw-m4-f82-rainy-night-live-wallpaper/bmw-m4-f82-rainy-night-live-wallpaper-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/bmw-m4-f82-rainy-night-live-wallpaper/bmw-m4-f82-rainy-night-live-wallpaper.jpg",
+      "bytes": 19165359
+    },
+    {
+      "id": "cozy-cabin-in-winter-forest",
+      "title": "Cozy Cabin In Winter Forest",
+      "description": "Cozy Cabin In Winter Forest — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Nature",
+        "Winter"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 10,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cozy-cabin-in-winter-forest/cozy-cabin-in-winter-forest.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cozy-cabin-in-winter-forest/cozy-cabin-in-winter-forest-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cozy-cabin-in-winter-forest/cozy-cabin-in-winter-forest.jpg",
+      "bytes": 10712160
+    },
+    {
+      "id": "cozy-cabin-lake",
+      "title": "Cozy Cabin Lake",
+      "description": "Cozy Cabin Lake — a Cozy live wallpaper.",
+      "tags": [
+        "4K",
+        "Cozy",
+        "Nature",
+        "Wallper"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 7,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cozy-cabin-lake/cozy-cabin-lake.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cozy-cabin-lake/cozy-cabin-lake-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cozy-cabin-lake/cozy-cabin-lake.jpg",
+      "bytes": 24984369
+    },
+    {
+      "id": "cozy-forest-campfire",
+      "title": "Cozy Forest Campfire",
+      "description": "Cozy Forest Campfire — a Cozy live wallpaper.",
+      "tags": [
+        "4K",
+        "Cozy",
+        "Nature",
+        "Wallper"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 36,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cozy-forest-campfire/cozy-forest-campfire.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cozy-forest-campfire/cozy-forest-campfire-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cozy-forest-campfire/cozy-forest-campfire.jpg",
+      "bytes": 30257229
+    },
+    {
+      "id": "cozy-winter-cabin-aurora-live-wallpaper",
+      "title": "Cozy Winter Cabin Aurora",
+      "description": "Cozy Winter Cabin Aurora — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Nature",
+        "Winter"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "1920x1080",
+      "codec": "H.264",
+      "duration": 30,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cozy-winter-cabin-aurora-live-wallpaper/cozy-winter-cabin-aurora-live-wallpaper.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cozy-winter-cabin-aurora-live-wallpaper/cozy-winter-cabin-aurora-live-wallpaper-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cozy-winter-cabin-aurora-live-wallpaper/cozy-winter-cabin-aurora-live-wallpaper.jpg",
+      "bytes": 30038920
+    },
+    {
+      "id": "cozy-winter-night-nyc-christmas",
+      "title": "Cozy Winter Night Nyc Christmas",
+      "description": "Cozy Winter Night Nyc Christmas — a Cozy live wallpaper.",
+      "tags": [
+        "City",
+        "Cozy",
+        "Night",
+        "Winter"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 58,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cozy-winter-night-nyc-christmas/cozy-winter-night-nyc-christmas.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cozy-winter-night-nyc-christmas/cozy-winter-night-nyc-christmas-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cozy-winter-night-nyc-christmas/cozy-winter-night-nyc-christmas.jpg",
+      "bytes": 74411214
+    },
+    {
+      "id": "enchanting-winter-night-snowfall-over-cozy-house",
+      "title": "Enchanting Winter Night Snowfall Over Cozy House",
+      "description": "Enchanting Winter Night Snowfall Over Cozy House — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Fantasy",
+        "Night",
+        "Winter"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "1920x1080",
+      "codec": "H.264",
+      "duration": 10,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/enchanting-winter-night-snowfall-over-cozy-house/enchanting-winter-night-snowfall-over-cozy-house.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/enchanting-winter-night-snowfall-over-cozy-house/enchanting-winter-night-snowfall-over-cozy-house-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/enchanting-winter-night-snowfall-over-cozy-house/enchanting-winter-night-snowfall-over-cozy-house.jpg",
+      "bytes": 4013501
+    },
+    {
+      "id": "first-snowfall-at-the-coffee-shop",
+      "title": "First Snowfall At The Coffee Shop",
+      "description": "First Snowfall At The Coffee Shop — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Winter"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "1920x1080",
+      "codec": "H.264",
+      "duration": 10,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/first-snowfall-at-the-coffee-shop/first-snowfall-at-the-coffee-shop.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/first-snowfall-at-the-coffee-shop/first-snowfall-at-the-coffee-shop-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/first-snowfall-at-the-coffee-shop/first-snowfall-at-the-coffee-shop.jpg",
+      "bytes": 13507940
+    },
+    {
+      "id": "hidden-cabin-emerald-forest",
+      "title": "Hidden Cabin Emerald Forest",
+      "description": "Hidden Cabin Emerald Forest — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Nature"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "1920x1080",
+      "codec": "H.264",
+      "duration": 18,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/hidden-cabin-emerald-forest/hidden-cabin-emerald-forest.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/hidden-cabin-emerald-forest/hidden-cabin-emerald-forest-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/hidden-cabin-emerald-forest/hidden-cabin-emerald-forest.jpg",
+      "bytes": 21762222
+    },
+    {
+      "id": "house-in-space",
+      "title": "House In Space",
+      "description": "House In Space — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Space"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "2560x1440",
+      "codec": "H.264",
+      "duration": 50,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/house-in-space/house-in-space.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/house-in-space/house-in-space-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/house-in-space/house-in-space.jpg",
+      "bytes": 46369627
+    },
+    {
+      "id": "jinx-neon-glow-arcane-live-wallpaper",
+      "title": "Jinx Neon Glow Arcane",
+      "description": "Jinx Neon Glow Arcane — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Neon",
+        "Pop Culture"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 13,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/jinx-neon-glow-arcane-live-wallpaper/jinx-neon-glow-arcane-live-wallpaper.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/jinx-neon-glow-arcane-live-wallpaper/jinx-neon-glow-arcane-live-wallpaper-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/jinx-neon-glow-arcane-live-wallpaper/jinx-neon-glow-arcane-live-wallpaper.jpg",
+      "bytes": 59006444
+    },
+    {
+      "id": "jungle-library-4k-animated-download",
+      "title": "Jungle Library",
+      "description": "Jungle Library — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Nature"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "1920x1080",
+      "codec": "H.264",
+      "duration": 27,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/jungle-library-4k-animated-download/jungle-library-4k-animated-download.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/jungle-library-4k-animated-download/jungle-library-4k-animated-download-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/jungle-library-4k-animated-download/jungle-library-4k-animated-download.jpg",
+      "bytes": 38878124
+    },
+    {
+      "id": "lantern-valleys-waterfall",
+      "title": "Lantern Valleys Waterfall",
+      "description": "Lantern Valleys Waterfall — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Nature"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 26,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/lantern-valleys-waterfall/lantern-valleys-waterfall.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/lantern-valleys-waterfall/lantern-valleys-waterfall-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/lantern-valleys-waterfall/lantern-valleys-waterfall.jpg",
+      "bytes": 41359655
+    },
+    {
+      "id": "misty-mountains-in-the-rain",
+      "title": "Misty Mountains In The Rain",
+      "description": "Misty Mountains In The Rain — a Cozy live wallpaper.",
+      "tags": [
+        "4K",
+        "Cozy",
+        "Nature",
+        "Spanning",
+        "Wallper"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 21,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/misty-mountains-in-the-rain/misty-mountains-in-the-rain.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/misty-mountains-in-the-rain/misty-mountains-in-the-rain-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/misty-mountains-in-the-rain/misty-mountains-in-the-rain.jpg",
+      "bytes": 103340553
+    },
+    {
+      "id": "molten-horizon-ocean-glow",
+      "title": "Molten Horizon Ocean Glow",
+      "description": "Molten Horizon Ocean Glow — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Nature",
+        "Sunset"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "1920x1080",
+      "codec": "H.264",
+      "duration": 83,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/molten-horizon-ocean-glow/molten-horizon-ocean-glow.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/molten-horizon-ocean-glow/molten-horizon-ocean-glow-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/molten-horizon-ocean-glow/molten-horizon-ocean-glow.jpg",
+      "bytes": 48388750
+    },
+    {
+      "id": "neon-snowfall-midnight-alley-glow",
+      "title": "Neon Snowfall Midnight Alley Glow",
+      "description": "Neon Snowfall Midnight Alley Glow — a Cozy live wallpaper.",
+      "tags": [
+        "City",
+        "Cozy",
+        "Neon",
+        "Night",
+        "Winter"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 17,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/neon-snowfall-midnight-alley-glow/neon-snowfall-midnight-alley-glow.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/neon-snowfall-midnight-alley-glow/neon-snowfall-midnight-alley-glow-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/neon-snowfall-midnight-alley-glow/neon-snowfall-midnight-alley-glow.jpg",
+      "bytes": 74305437
+    },
+    {
+      "id": "night-forest-camping-lake",
+      "title": "Night Forest Camping Lake",
+      "description": "Night Forest Camping Lake — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Nature",
+        "Night"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "HEVC",
+      "duration": 20,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/night-forest-camping-lake/night-forest-camping-lake.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/night-forest-camping-lake/night-forest-camping-lake-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/night-forest-camping-lake/night-forest-camping-lake.jpg",
+      "bytes": 59391316
+    },
+    {
+      "id": "old-town-rain",
+      "title": "Old Town Rain",
+      "description": "Old Town Rain — a Cozy live wallpaper.",
+      "tags": [
+        "City",
+        "Cozy"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 18,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/old-town-rain/old-town-rain.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/old-town-rain/old-town-rain-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/old-town-rain/old-town-rain.jpg",
+      "bytes": 36218676
+    },
+    {
+      "id": "quiet-campfire-night-minimal-live-wallpaper",
+      "title": "Quiet Campfire Night Minimal",
+      "description": "Quiet Campfire Night Minimal — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Minimalist",
+        "Night"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "1920x1080",
+      "codec": "H.264",
+      "duration": 10,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/quiet-campfire-night-minimal-live-wallpaper/quiet-campfire-night-minimal-live-wallpaper.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/quiet-campfire-night-minimal-live-wallpaper/quiet-campfire-night-minimal-live-wallpaper-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/quiet-campfire-night-minimal-live-wallpaper/quiet-campfire-night-minimal-live-wallpaper.jpg",
+      "bytes": 8492501
+    },
+    {
+      "id": "rain-on-glass-at-sunset-macos-windows",
+      "title": "Rain On Glass At Sunset Macos Windows",
+      "description": "Rain On Glass At Sunset Macos Windows — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Sunset"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 21,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/rain-on-glass-at-sunset-macos-windows/rain-on-glass-at-sunset-macos-windows.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/rain-on-glass-at-sunset-macos-windows/rain-on-glass-at-sunset-macos-windows-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/rain-on-glass-at-sunset-macos-windows/rain-on-glass-at-sunset-macos-windows.jpg",
+      "bytes": 23711001
+    },
+    {
+      "id": "rainlit-streets-the-last-bus-of-the-night",
+      "title": "Rainlit Streets The Last Bus Of The Night",
+      "description": "Rainlit Streets The Last Bus Of The Night — a Cozy live wallpaper.",
+      "tags": [
+        "City",
+        "Cozy",
+        "Night",
+        "Vehicles"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "2560x1440",
+      "codec": "H.264",
+      "duration": 30,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/rainlit-streets-the-last-bus-of-the-night/rainlit-streets-the-last-bus-of-the-night.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/rainlit-streets-the-last-bus-of-the-night/rainlit-streets-the-last-bus-of-the-night-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/rainlit-streets-the-last-bus-of-the-night/rainlit-streets-the-last-bus-of-the-night.jpg",
+      "bytes": 60242106
+    },
+    {
+      "id": "rainy-path-to-mont-saint-michel",
+      "title": "Rainy Path To Mont Saint Michel",
+      "description": "Rainy Path To Mont Saint Michel — a Cozy live wallpaper.",
+      "tags": [
+        "City",
+        "Cozy"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "1920x1080",
+      "codec": "HEVC",
+      "duration": 23,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/rainy-path-to-mont-saint-michel/rainy-path-to-mont-saint-michel.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/rainy-path-to-mont-saint-michel/rainy-path-to-mont-saint-michel-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/rainy-path-to-mont-saint-michel/rainy-path-to-mont-saint-michel.jpg",
+      "bytes": 39308492
+    },
+    {
+      "id": "rainy-sunset-lone-tree-serenity",
+      "title": "Rainy Sunset Lone Tree Serenity",
+      "description": "Rainy Sunset Lone Tree Serenity — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Nature",
+        "Sunset"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 12,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/rainy-sunset-lone-tree-serenity/rainy-sunset-lone-tree-serenity.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/rainy-sunset-lone-tree-serenity/rainy-sunset-lone-tree-serenity-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/rainy-sunset-lone-tree-serenity/rainy-sunset-lone-tree-serenity.jpg",
+      "bytes": 75007957
+    },
+    {
+      "id": "rainy-sunset-street-live-wallpaper-wallsflow",
+      "title": "Rainy Sunset Street Wallsflow",
+      "description": "Rainy Sunset Street Wallsflow — a Cozy live wallpaper.",
+      "tags": [
+        "City",
+        "Cozy",
+        "Sunset"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 18,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/rainy-sunset-street-live-wallpaper-wallsflow/rainy-sunset-street-live-wallpaper-wallsflow.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/rainy-sunset-street-live-wallpaper-wallsflow/rainy-sunset-street-live-wallpaper-wallsflow-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/rainy-sunset-street-live-wallpaper-wallsflow/rainy-sunset-street-live-wallpaper-wallsflow.jpg",
+      "bytes": 35832945
+    },
+    {
+      "id": "retro-porsche-911-neon-rain-live-wallpaper",
+      "title": "Retro Porsche 911 Neon Rain",
+      "description": "Retro Porsche 911 Neon Rain — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Neon",
+        "Vehicles"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 18,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/retro-porsche-911-neon-rain-live-wallpaper/retro-porsche-911-neon-rain-live-wallpaper.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/retro-porsche-911-neon-rain-live-wallpaper/retro-porsche-911-neon-rain-live-wallpaper-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/retro-porsche-911-neon-rain-live-wallpaper/retro-porsche-911-neon-rain-live-wallpaper.jpg",
+      "bytes": 87290039
+    },
+    {
+      "id": "seaside-cafe",
+      "title": "Seaside Cafe",
+      "description": "Seaside Cafe — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "2560x1440",
+      "codec": "H.264",
+      "duration": 16,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/seaside-cafe/seaside-cafe.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/seaside-cafe/seaside-cafe-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/seaside-cafe/seaside-cafe.jpg",
+      "bytes": 39684729
+    },
+    {
+      "id": "seaside-cottage-calm-breeze",
+      "title": "Seaside Cottage Calm Breeze",
+      "description": "Seaside Cottage Calm Breeze — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 30,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/seaside-cottage-calm-breeze/seaside-cottage-calm-breeze.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/seaside-cottage-calm-breeze/seaside-cottage-calm-breeze-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/seaside-cottage-calm-breeze/seaside-cottage-calm-breeze.jpg",
+      "bytes": 77158394
+    },
+    {
+      "id": "snowy-cabin-night",
+      "title": "Snowy Cabin Night",
+      "description": "Snowy Cabin Night — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Night",
+        "Winter"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 22,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/snowy-cabin-night/snowy-cabin-night.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/snowy-cabin-night/snowy-cabin-night-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/snowy-cabin-night/snowy-cabin-night.jpg",
+      "bytes": 27635233
+    },
+    {
+      "id": "starlit-garden-bookshop-live-wallpaper-download",
+      "title": "Starlit Garden Bookshop",
+      "description": "Starlit Garden Bookshop — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Nature",
+        "Night"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 30,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/starlit-garden-bookshop-live-wallpaper-download/starlit-garden-bookshop-live-wallpaper-download.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/starlit-garden-bookshop-live-wallpaper-download/starlit-garden-bookshop-live-wallpaper-download-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/starlit-garden-bookshop-live-wallpaper-download/starlit-garden-bookshop-live-wallpaper-download.jpg",
+      "bytes": 59707130
+    },
+    {
+      "id": "stray-cat-in-the-rain-animated",
+      "title": "Stray Cat In The Rain",
+      "description": "Stray Cat In The Rain — a Cozy live wallpaper.",
+      "tags": [
+        "Animals",
+        "Cozy"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 30,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/stray-cat-in-the-rain-animated/stray-cat-in-the-rain-animated.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/stray-cat-in-the-rain-animated/stray-cat-in-the-rain-animated-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/stray-cat-in-the-rain-animated/stray-cat-in-the-rain-animated.jpg",
+      "bytes": 36250473
+    },
+    {
+      "id": "sunset-street-comet-rain",
+      "title": "Sunset Street Comet Rain",
+      "description": "Sunset Street Comet Rain — a Cozy live wallpaper.",
+      "tags": [
+        "City",
+        "Cozy",
+        "Sunset"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 16,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/sunset-street-comet-rain/sunset-street-comet-rain.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/sunset-street-comet-rain/sunset-street-comet-rain-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/sunset-street-comet-rain/sunset-street-comet-rain.jpg",
+      "bytes": 88514338
+    },
+    {
+      "id": "tranquil-lake-cabin-live-wallpaper-download",
+      "title": "Tranquil Lake Cabin",
+      "description": "Tranquil Lake Cabin — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Nature"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "1920x1080",
+      "codec": "H.264",
+      "duration": 22,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/tranquil-lake-cabin-live-wallpaper-download/tranquil-lake-cabin-live-wallpaper-download.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/tranquil-lake-cabin-live-wallpaper-download/tranquil-lake-cabin-live-wallpaper-download-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/tranquil-lake-cabin-live-wallpaper-download/tranquil-lake-cabin-live-wallpaper-download.jpg",
+      "bytes": 4145862
+    },
+    {
+      "id": "tranquil-rain-pier",
+      "title": "Tranquil Rain Pier",
+      "description": "Tranquil Rain Pier — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Nature"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "1280x720",
+      "codec": "H.264",
+      "duration": 30,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/tranquil-rain-pier/tranquil-rain-pier.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/tranquil-rain-pier/tranquil-rain-pier-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/tranquil-rain-pier/tranquil-rain-pier.jpg",
+      "bytes": 10646348
+    },
+    {
+      "id": "warm-christmas-glow",
+      "title": "Warm Christmas Glow",
+      "description": "Warm Christmas Glow — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Winter"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 20,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/warm-christmas-glow/warm-christmas-glow.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/warm-christmas-glow/warm-christmas-glow-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/warm-christmas-glow/warm-christmas-glow.jpg",
+      "bytes": 30501043
+    },
+    {
+      "id": "warm-lights-mcdonalds-winter-night",
+      "title": "Warm Lights Mcdonalds Winter Night",
+      "description": "Warm Lights Mcdonalds Winter Night — a Cozy live wallpaper.",
+      "tags": [
+        "City",
+        "Cozy",
+        "Night",
+        "Winter"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 30,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/warm-lights-mcdonalds-winter-night/warm-lights-mcdonalds-winter-night.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/warm-lights-mcdonalds-winter-night/warm-lights-mcdonalds-winter-night-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/warm-lights-mcdonalds-winter-night/warm-lights-mcdonalds-winter-night.jpg",
+      "bytes": 51877344
+    },
+    {
+      "id": "winter-cabin-retreat",
+      "title": "Winter Cabin Retreat",
+      "description": "Winter Cabin Retreat — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Winter"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "1920x1080",
+      "codec": "H.264",
+      "duration": 29,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/winter-cabin-retreat/winter-cabin-retreat.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/winter-cabin-retreat/winter-cabin-retreat-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/winter-cabin-retreat/winter-cabin-retreat.jpg",
+      "bytes": 37832384
+    },
+    {
+      "id": "winter-cabin-under-the-stars",
+      "title": "Winter Cabin Under The Stars",
+      "description": "Winter Cabin Under The Stars — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Night",
+        "Winter"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 20,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/winter-cabin-under-the-stars/winter-cabin-under-the-stars.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/winter-cabin-under-the-stars/winter-cabin-under-the-stars-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/winter-cabin-under-the-stars/winter-cabin-under-the-stars.jpg",
+      "bytes": 11933854
+    },
+    {
+      "id": "winter-hearth-cabin-cozy-snowy-night",
+      "title": "Winter Hearth Cabin Cozy Snowy Night",
+      "description": "Winter Hearth Cabin Cozy Snowy Night — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Night",
+        "Winter"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "3840x2160",
+      "codec": "H.264",
+      "duration": 16,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/winter-hearth-cabin-cozy-snowy-night/winter-hearth-cabin-cozy-snowy-night.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/winter-hearth-cabin-cozy-snowy-night/winter-hearth-cabin-cozy-snowy-night-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/winter-hearth-cabin-cozy-snowy-night/winter-hearth-cabin-cozy-snowy-night.jpg",
+      "bytes": 33195645
+    },
+    {
+      "id": "woodshed-at-night",
+      "title": "Woodshed At Night",
+      "description": "Woodshed At Night — a Cozy live wallpaper.",
+      "tags": [
+        "Cozy",
+        "Night"
+      ],
+      "credit": "Source unknown",
+      "source": null,
+      "licence": {
+        "name": "Unverified",
+        "url": null
+      },
+      "unverified": true,
+      "resolution": "1920x1080",
+      "codec": "H.264",
+      "duration": 12,
+      "video": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/woodshed-at-night/woodshed-at-night.mp4",
+      "preview": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/woodshed-at-night/woodshed-at-night-preview.mp4",
+      "poster": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/woodshed-at-night/woodshed-at-night.jpg",
+      "bytes": 24574976
     }
   ]
 }
