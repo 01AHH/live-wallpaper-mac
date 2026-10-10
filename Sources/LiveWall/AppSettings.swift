@@ -50,13 +50,10 @@ final class AppSettings: ObservableObject {
     private let defaults = UserDefaults.standard
 
     init() {
-        // Sensible first-run defaults pointing at the user's wallpaper folder.
-        let media = URL(fileURLWithPath: NSHomeDirectory())
-            .appendingPathComponent("Documents/Projects/LiveWall/Media", isDirectory: true)
-
-        libraryFolder = defaults.url(forKey: Keys.libraryFolder) ?? media
+        // First run: an empty library in ~/Movies/LiveWall, filled from the
+        // online gallery. Saved choices always win.
+        libraryFolder = defaults.url(forKey: Keys.libraryFolder) ?? Self.defaultLibrary()
         currentVideo  = defaults.url(forKey: Keys.currentVideo)
-            ?? media.appendingPathComponent("golden-field.mp4")
         spanScreens   = defaults.object(forKey: Keys.spanScreens) as? Bool ?? true
         fillMode      = FillMode(rawValue: defaults.string(forKey: Keys.fillMode) ?? "") ?? .fill
         speeds        = defaults.dictionary(forKey: Keys.speeds) as? [String: Double] ?? [:]
@@ -64,8 +61,17 @@ final class AppSettings: ObservableObject {
         pauseOnBattery  = defaults.object(forKey: Keys.pauseOnBattery) as? Bool ?? false
         pauseInLowPower = defaults.object(forKey: Keys.pauseInLowPower) as? Bool ?? true
         pauseWhenHot    = defaults.object(forKey: Keys.pauseWhenHot) as? Bool ?? true
+        // Claude app chats need Accessibility permission, so new users opt in.
         islandSources = (defaults.stringArray(forKey: Keys.islandSources)?.compactMap(IslandSource.init(rawValue:)))
-            .map(Set.init) ?? Set(IslandSource.allCases)
+            .map(Set.init) ?? [.music, .claudeCode, .chatGPT]
+    }
+
+    /// `~/Movies/LiveWall`, created if it doesn't exist yet.
+    static func defaultLibrary() -> URL {
+        let folder = URL(fileURLWithPath: NSHomeDirectory())
+            .appendingPathComponent("Movies/LiveWall", isDirectory: true)
+        try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        return folder
     }
 
     func speed(for url: URL?) -> Double {

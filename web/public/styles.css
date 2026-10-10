@@ -131,8 +131,62 @@ main { max-width: 1320px; margin: 0 auto; padding: 28px; }
 .tile-title { margin: 10px 2px 0; font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .empty { color: var(--muted); text-align: center; padding: 60px 0; }
 
+/* Selection */
+.pick {
+  position: absolute; top: 10px; left: 10px; z-index: 2;
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.85); background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(6px); cursor: pointer;
+  opacity: 0; transition: opacity 0.2s, background 0.2s, transform 0.25s var(--spring);
+}
+.tile:hover .pick, .tile:focus-within .pick, .tile.selected .pick { opacity: 1; }
+.tile.selected .pick { background: var(--accent); border-color: var(--accent); }
+.tile.selected .pick::after {
+  content: ""; position: absolute; left: 8px; top: 4px; width: 6px; height: 11px;
+  border: solid var(--accent-ink); border-width: 0 2.5px 2.5px 0; transform: rotate(45deg);
+}
+.pick:active { transform: scale(0.9); }
+.tile.selected .art { outline: 3px solid var(--accent); outline-offset: 3px; }
+@media (hover: none) { .pick { opacity: 1; } }
+
+.tray {
+  position: fixed; left: 50%; bottom: 24px; z-index: 20; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 10px 10px 20px; border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter: saturate(1.6) blur(20px); -webkit-backdrop-filter: saturate(1.6) blur(20px);
+  border: 1px solid var(--line); box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  animation: rise 0.4s var(--spring);
+}
+.tray[hidden] { display: none; }
+#tray-count { font-weight: 600; white-space: nowrap; }
+
+.toast {
+  position: fixed; left: 50%; bottom: 90px; z-index: 21; transform: translateX(-50%);
+  max-width: calc(100vw - 32px); padding: 10px 16px; border-radius: 12px;
+  background: var(--text); color: var(--bg); font-size: 13px; text-align: center;
+}
+.toast[hidden] { display: none; }
+.toast a { color: var(--accent); font-weight: 600; }
+
+/* App download */
+.download {
+  margin-top: 72px; padding: 28px; border-radius: var(--radius-card);
+  display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 16%, var(--surface)), var(--surface));
+  border: 1px solid var(--line);
+}
+.download img { border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+.download-copy { flex: 1; min-width: 220px; }
+.download h2 { margin: 0 0 4px; font-size: 24px; }
+.download p { margin: 0; color: var(--muted); }
+.download .fine { margin-top: 8px; }
+.download-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn.secondary { background: var(--surface); color: var(--text); border: 1px solid var(--line); }
+.btn.secondary:hover { border-color: var(--accent); }
+
 /* How-to */
-.how { margin: 72px 0 24px; padding: 28px; border-radius: var(--radius-card); background: var(--surface); border: 1px solid var(--line); }
+.how { margin: 24px 0 24px; padding: 28px; border-radius: var(--radius-card); background: var(--surface); border: 1px solid var(--line); }
 .how h2 { margin: 0 0 12px; font-size: 20px; }
 .how ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
 .how code { font-size: 13px; padding: 1px 6px; border-radius: 6px; background: var(--line); }
@@ -206,3 +260,31 @@ dialog::backdrop { background: rgba(0,0,0,0.55); backdrop-filter: blur(6px); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Setup guide */
+.guide { max-width: 760px; }
+.guide h1 { font-size: clamp(30px, 5vw, 42px); margin: 8px 0 8px; letter-spacing: -0.02em; }
+.guide .lede { font-size: 18px; color: var(--muted); margin: 0 0 24px; }
+.guide section { margin: 40px 0; }
+.guide h2 { font-size: 24px; margin: 0 0 12px; letter-spacing: -0.01em; scroll-margin-top: 80px; }
+.guide h3 { font-size: 16px; margin: 20px 0 6px; }
+.guide p { margin: 0 0 12px; }
+.guide code { font-size: 13px; padding: 1px 6px; border-radius: 6px; background: var(--line); }
+.guide pre { margin: 12px 0; padding: 16px; border-radius: 12px; overflow-x: auto;
+  background: var(--surface); border: 1px solid var(--line); }
+.guide pre code { padding: 0; background: none; font-size: 12.5px; line-height: 1.6; }
+.toc { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.toc a { text-decoration: none; font-size: 13px; padding: 5px 12px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface); }
+.toc a:hover { border-color: var(--accent); }
+.callout { padding: 16px 18px; border-radius: 12px; margin: 0 0 8px;
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface)); border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); }
+.steps { padding-left: 22px; display: grid; gap: 10px; margin: 0 0 12px; }
+.steps li::marker { color: var(--accent); font-weight: 700; }
+.facts { padding-left: 20px; display: grid; gap: 10px; margin: 0 0 12px; }
+.note { font-size: 14px; color: var(--muted); padding-left: 12px; border-left: 3px solid var(--accent); }
+.guide details { margin: 12px 0; padding: 12px 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+.guide summary { cursor: pointer; font-weight: 600; }
+.faq dt { font-weight: 600; margin-top: 16px; }
+.faq dd { margin: 4px 0 0; color: var(--muted); }
+.guide a:not(.btn) { color: var(--accent); }

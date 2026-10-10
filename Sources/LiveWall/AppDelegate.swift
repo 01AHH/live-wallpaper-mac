@@ -12,6 +12,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var island: DynamicIslandController?
     private var subscriptions: Set<AnyCancellable> = []
     private let power = PowerMonitor()
+    private let gallery = GalleryStore()
     private var menuActions: [MenuAction] = []
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -87,9 +88,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         settings.$islandSources
             .sink { [weak self] sources in
                 self?.island?.setSources(sources)
-                // Watching the chat apps needs Accessibility permission; ask
-                // once, when a source that needs it is on.
-                if !sources.isDisjoint(with: [.chatGPT, .claudeApp]) && !ChatAppWatcher.isTrusted {
+                // Watching Claude app chats needs Accessibility permission; ask
+                // once, when that source is turned on. (ChatGPT works from its
+                // session logs, and only uses Accessibility if already allowed.)
+                if sources.contains(.claudeApp) && !ChatAppWatcher.isTrusted {
                     self?.requestAccessibilityOnce()
                 }
             }
@@ -160,6 +162,73 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         showControls(nil)
         return true
+    }
+
+    // MARK: - Adding wallpapers from the website
+
+    /// Handles `livewall://add?ids=a,b,c` links from the online gallery's
+    /// "Add to LiveWall" buttons: download each wallpaper into the library,
+    /// with its tags, and start the first one if nothing is playing.
+    func application(_ application: NSApplication, open urls: [URL]) {
+        for url in urls where url.scheme == "livewall" && url.host == "add" {
+            let ids = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+                .queryItems?.first { $0.name == "ids" || $0.name == "id" }?.value?
+                .split(separator: ",").map(String.init) ?? []
+            Task { await addFromGallery(ids) }
+        }
+    }
+
+    private func addFromGallery(_ ids: [String]) async {
+        guard !ids.isEmpty else { return }
+        let folder = settings.libraryFolder ?? AppSettings.defaultLibrary()
+        if settings.libraryFolder == nil { settings.libraryFolder = folder }
+
+        await gallery.load()
+        let wanted = ids.compactMap { id in gallery.wallpapers.first { $0.id == id } }
+        let model = island?.model
+        guard !wanted.isEmpty else {
+            model?.announce(IslandEvent(icon: "exclamationmark.triangle.fill",
+                                        title: "Couldn't find those wallpapers", subtitle: "Online Gallery"))
+            return
+        }
+
+        // Skip anything already in the library.
+        let toFetch = wanted.filter { !FileManager.default.fileExists(atPath: folder.appendingPathComponent($0.fileName).path) }
+        model?.announce(IslandEvent(icon: "arrow.down.circle.fill",
+                                    title: toFetch.isEmpty ? "Already in your library"
+                                        : toFetch.count == 1 ? "Adding \(toFetch[0].title)…" : "Adding \(toFetch.count) wallpapers…",
+                                    subtitle: "Online Gallery", duration: 4))
+
+        let categories = CategoryStore()
+        categories.load(folder: folder)
+        var added: [URL] = []
+        for wallpaper in toFetch {
+            let file: URL? = await withCheckedContinuation { continuation in
+                gallery.download(wallpaper, into: folder) { result in
+                    continuation.resume(returning: try? result.get())
+                }
+            }
+            guard let file else { continue }
+            for tag in wallpaper.tags {
+                let name = categories.addTag(tag) ?? tag
+                if !categories.has(name, file) { categories.toggle(name, for: file) }
+            }
+            added.append(file)
+            model?.announce(IslandEvent(icon: "checkmark.circle.fill", title: wallpaper.title,
+                                        subtitle: "Added to your library", duration: 2.5))
+        }
+
+        // One chosen wallpaper: play it. Several: start one only if nothing's playing.
+        let first = wanted.first.map { folder.appendingPathComponent($0.fileName) }
+        let nothingPlaying = settings.currentVideo.map { !FileManager.default.fileExists(atPath: $0.path) } ?? true
+        if let first, wanted.count == 1 || nothingPlaying, FileManager.default.fileExists(atPath: first.path) {
+            settings.currentVideo = first
+            controller.apply()
+        }
+        if added.count > 1 {
+            model?.announce(IslandEvent(icon: "checkmark.circle.fill", title: "\(added.count) wallpapers added",
+                                        subtitle: "Online Gallery", duration: 3))
+        }
     }
 
     // MARK: - Power rules
@@ -289,7 +358,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func showControls(_ sender: Any?) {
         if controlWindow == nil {
-            let root = ControlPanelView(settings: settings) { [weak self] in
+            let root = ControlPanelView(settings: settings, gallery: gallery) { [weak self] in
                 self?.controller.apply()
             }
             let hosting = NSHostingController(rootView: root)

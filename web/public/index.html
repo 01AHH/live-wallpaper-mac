@@ -29,7 +29,7 @@
       <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8.5 3a5.5 5.5 0 1 0 3.4 9.8l3.6 3.7 1.1-1.1-3.7-3.6A5.5 5.5 0 0 0 8.5 3Zm0 1.5a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"/></svg>
       <input id="search" type="search" placeholder="Search wallpapers" autocomplete="off">
     </label>
-    <a class="github" href="https://github.com/01AHH/live-wallpaper-mac">Get the app</a>
+    <a class="github" href="#download">Get the app</a>
   </header>
 
   <main>
@@ -56,14 +56,27 @@
       <p class="empty" id="empty" hidden>No wallpapers match that search.</p>
     </section>
 
+    <section class="download" id="download">
+      <img src="icon.png" alt="" width="88" height="88">
+      <div class="download-copy">
+        <h2>LiveWall for Mac</h2>
+        <p>Live video wallpapers with a Dynamic Island for music and AI activity. Free.</p>
+        <p class="fine" id="release-meta">Requires macOS 26 (Tahoe) on an Apple silicon Mac.</p>
+      </div>
+      <div class="download-actions">
+        <a class="btn primary" id="download-app" href="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/releases/LiveWall.dmg">Download for Mac</a>
+        <a class="btn secondary" href="setup.html">Setup guide</a>
+      </div>
+    </section>
+
     <section class="how">
-      <h2>Use them with LiveWall</h2>
+      <h2>Get wallpapers into LiveWall</h2>
       <ol>
-        <li><strong>Download</strong> any wallpaper as a 4K HEVC video.</li>
-        <li><strong>Drop it</strong> into your LiveWall library folder (the folder button at the top left of LiveWall shows which one).</li>
-        <li><strong>Click it</strong> in LiveWall. It appears in the library straight away.</li>
+        <li><strong>Pick</strong> wallpapers here — tick the circle on any tile, or open one.</li>
+        <li><strong>Add to LiveWall.</strong> Your browser asks to open LiveWall; allow it, and the wallpapers download straight into your library.</li>
+        <li>Or browse the same gallery inside the app: <strong>Online Gallery</strong> in the sidebar.</li>
       </ol>
-      <p class="fine">Building something else? The whole gallery is available as <a href="catalog.json">catalog.json</a>.</p>
+      <p class="fine">Prefer the file? Each wallpaper also has a plain 4K download. Building something else? The whole gallery is available as <a href="catalog.json">catalog.json</a>.</p>
     </section>
   </main>
 
@@ -85,7 +98,8 @@
         <div><dt>Length</dt><dd id="sheet-len"></dd></div>
         <div><dt>Size</dt><dd id="sheet-size"></dd></div>
       </dl>
-      <a class="btn primary wide" id="sheet-download" href="#">Download 4K</a>
+      <a class="btn primary wide" id="sheet-add" href="#">Add to LiveWall</a>
+      <a class="btn secondary wide" id="sheet-download" href="#">Download 4K file</a>
       <p class="licence">
         <span id="sheet-credit"></span><br>
         <a id="sheet-licence" href="#"></a> · <a id="sheet-source" href="#">Original source</a>
@@ -93,6 +107,17 @@
     </div>
   </dialog>
 
+  <div class="tray" id="tray" hidden>
+    <span id="tray-count"></span>
+    <button class="btn secondary" id="tray-clear" type="button">Clear</button>
+    <a class="btn primary" id="tray-add" href="#">Add to LiveWall</a>
+  </div>
+
+  <div class="toast" id="toast" hidden>
+    Opening LiveWall… Nothing happening? <a href="#download">Get the app</a> first.
+  </div>
+
+  <script src="gate.js"></script>
   <script src="app.js" type="module"></script>
 </body>
 </html>

@@ -1,0 +1,20 @@
+Installing LiveWall
+===================
+
+1. Drag LiveWall into the Applications folder (the shortcut next to it).
+
+2. Open LiveWall from Applications. macOS will say it "can't verify" the
+   app — LiveWall isn't signed with a paid Apple developer certificate.
+   Click "Done" (not "Move to Trash"), then:
+     System Settings → Privacy & Security → scroll down →
+     "LiveWall was blocked…" → Open Anyway → enter your password.
+   You only need to do this once.
+
+3. LiveWall lives in your menu bar (top right). Its window opens on first
+   launch — choose "Online Gallery" in the sidebar to get free wallpapers,
+   or use "Add to LiveWall" on the website.
+
+Requires macOS 26 (Tahoe) or later on an Apple silicon Mac.
+
+Full setup guide, optional features and troubleshooting:
+https://live-wallpaper-mac-mauve.vercel.app/setup.html

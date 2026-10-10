@@ -6,12 +6,16 @@ enum LibraryFilter: Hashable {
     case all
     case untagged
     case tag(String)
+    case gallery
 }
 
 /// The Wallpaper-Engine-style library window: a category sidebar on the left,
 /// thumbnails on the right. Click a tile to apply it, right-click to tag it.
 struct ControlPanelView: View {
     @ObservedObject var settings: AppSettings
+    /// Shared with the app delegate, which also downloads wallpapers chosen on
+    /// the website (livewall:// links).
+    @ObservedObject var gallery: GalleryStore
     /// Called whenever a change should re-render the wallpaper.
     let onApply: () -> Void
 
@@ -114,6 +118,10 @@ struct ControlPanelView: View {
                            count: videos.count, for: .all)
                 sidebarRow("Untagged", icon: "tag.slash",
                            count: categories.untagged(in: videos).count, for: .untagged)
+            }
+            Section("Discover") {
+                sidebarRow("Online Gallery", icon: "globe",
+                           count: gallery.wallpapers.count, for: .gallery)
             }
             Section("Tags") {
                 if categories.tags.isEmpty {
@@ -461,6 +469,30 @@ struct ControlPanelView: View {
         return nil
     }
 
+    /// Download a gallery wallpaper into the library, carry its tags over, and
+    /// make it the wallpaper if nothing is playing yet.
+    private func download(_ wallpaper: GalleryWallpaper) {
+        guard let folder = settings.libraryFolder else { chooseFolder(); return }
+        gallery.download(wallpaper, into: folder) { result in
+            guard case .success(let file) = result else { return }
+            for tag in wallpaper.tags {
+                let name = categories.addTag(tag) ?? tag
+                if !categories.has(name, file) { categories.toggle(name, for: file) }
+            }
+            reloadVideos()
+            if settings.currentVideo == nil || !FileManager.default.fileExists(atPath: settings.currentVideo!.path) {
+                settings.currentVideo = file
+                onApply()
+            }
+        }
+    }
+
+    private func use(_ wallpaper: GalleryWallpaper) {
+        guard let folder = settings.libraryFolder else { return }
+        settings.currentVideo = folder.appendingPathComponent(wallpaper.fileName)
+        onApply()
+    }
+
     private func shuffle() {
         let pool = filteredVideos.filter { $0 != settings.currentVideo }
         guard let next = pool.randomElement() else { return }
@@ -474,6 +506,7 @@ struct ControlPanelView: View {
         case .all:          base = videos
         case .untagged:     base = categories.untagged(in: videos)
         case .tag(let tag): base = videos.filter { categories.has(tag, $0) }
+        case .gallery:      base = []
         }
         let q = query.trimmingCharacters(in: .whitespaces)
         guard !q.isEmpty else { return base }
@@ -488,18 +521,26 @@ struct ControlPanelView: View {
         case .all:          return "All Wallpapers"
         case .untagged:     return "Untagged"
         case .tag(let tag): return tag
+        case .gallery:      return "Online Gallery"
         }
     }
 
     @ViewBuilder
     private var grid: some View {
-        if videos.isEmpty {
+        if filter == .gallery {
+            OnlineGalleryView(store: gallery,
+                              libraryFiles: Set(videos.map(\.lastPathComponent)),
+                              onDownload: download,
+                              onUse: use)
+        } else if videos.isEmpty {
             ContentUnavailableView {
-                Label("No videos here", systemImage: "film.stack")
+                Label("Your library is empty", systemImage: "film.stack")
             } description: {
-                Text("Choose a folder containing .mp4, .mov or .m4v files.")
+                Text("Get free 4K wallpapers from the online gallery, or choose a folder of .mp4, .mov or .m4v videos.")
             } actions: {
-                Button("Choose Folder…", action: chooseFolder).buttonStyle(.glassProminent)
+                Button("Browse Online Gallery") { withAnimation(Brand.spring) { filter = .gallery } }
+                    .buttonStyle(.glassProminent)
+                Button("Choose Folder…", action: chooseFolder).buttonStyle(.glass)
             }
             .padding(.top, 60)
         } else if filteredVideos.isEmpty {
@@ -547,7 +588,7 @@ struct ControlPanelView: View {
         switch filter {
         case .untagged:     return "Everything is tagged"
         case .tag(let tag): return "Nothing tagged “\(tag)”"
-        case .all:          return "No videos"
+        case .all, .gallery: return "No videos"
         }
     }
 

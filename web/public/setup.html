@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LiveWall Setup Guide</title>
+  <meta name="description" content="How to install LiveWall on your Mac, get wallpapers, and set up the Dynamic Island.">
+  <meta name="theme-color" content="#0b0b0d">
+  <link rel="icon" href="icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="gate" id="gate" hidden>
+    <form class="gate-card" id="gate-form">
+      <img src="icon.png" alt="" width="56" height="56">
+      <h1>LiveWall Gallery</h1>
+      <p>Enter the password to continue.</p>
+      <input id="gate-input" type="password" placeholder="Password" autocomplete="current-password" required>
+      <button class="btn primary wide" type="submit">Unlock</button>
+    </form>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="/">
+      <img src="icon.png" alt="" width="28" height="28">
+      <span>LiveWall <em>Setup</em></span>
+    </a>
+    <a class="github" href="/" style="margin-left:auto">Wallpaper gallery</a>
+  </header>
+
+  <main class="guide">
+    <h1>Set up LiveWall</h1>
+    <p class="lede">Live video wallpapers for your Mac, with a Dynamic Island for music and AI activity. This takes about two minutes.</p>
+
+    <nav class="toc" aria-label="On this page">
+      <a href="#install">Install</a>
+      <a href="#open-anyway">First launch</a>
+      <a href="#wallpapers">Get wallpapers</a>
+      <a href="#using">Using LiveWall</a>
+      <a href="#island">Dynamic Island</a>
+      <a href="#permissions">Permissions</a>
+      <a href="#claude-code">Claude Code</a>
+      <a href="#updating">Updating</a>
+      <a href="#uninstall">Uninstall</a>
+      <a href="#help">Troubleshooting</a>
+    </nav>
+
+    <section class="callout">
+      <strong>Before you start:</strong> LiveWall needs <strong>macOS 26 (Tahoe)</strong> or later on an
+      <strong>Apple silicon</strong> Mac (M1 or newer). Check under Apple menu → About This Mac.
+    </section>
+
+    <section id="install">
+      <h2>1. Install</h2>
+      <ol class="steps">
+        <li><a class="btn primary" id="download-app" href="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/releases/LiveWall.dmg">Download LiveWall for Mac</a></li>
+        <li>Open the downloaded <code>LiveWall-….dmg</code> from your Downloads folder.</li>
+        <li>Drag <strong>LiveWall</strong> onto the <strong>Applications</strong> folder shortcut beside it.</li>
+        <li>Eject the LiveWall disk (click ⏏ next to it in Finder's sidebar). You can delete the <code>.dmg</code>.</li>
+      </ol>
+    </section>
+
+    <section id="open-anyway">
+      <h2>2. First launch: "Open Anyway"</h2>
+      <p>LiveWall is free and isn't signed with a paid Apple developer certificate, so the first time you open it
+        macOS stops it and says Apple <em>"could not verify"</em> it. That's expected — you only do this once.</p>
+      <ol class="steps">
+        <li>Open <strong>Applications</strong> and double-click <strong>LiveWall</strong>.</li>
+        <li>When macOS says it can't verify LiveWall, click <strong>Done</strong> — <em>not</em> "Move to Trash".</li>
+        <li>Open <strong>System Settings → Privacy &amp; Security</strong> and scroll down to <strong>Security</strong>.</li>
+        <li>Next to <em>"LiveWall" was blocked to protect your Mac</em>, click <strong>Open Anyway</strong>,
+          then enter your password or use Touch ID.</li>
+        <li>Click <strong>Open Anyway</strong> once more in the dialog. LiveWall starts and its window appears.</li>
+      </ol>
+      <details>
+        <summary>Prefer the Terminal?</summary>
+        <p>This removes the "downloaded from the internet" flag, which does the same thing:</p>
+        <pre><code>xattr -dr com.apple.quarantine /Applications/LiveWall.app</code></pre>
+      </details>
+      <p class="note">LiveWall turns on <strong>Launch at Login</strong> the first time it runs, so it's there after a restart.
+        macOS shows a notification saying so. Change it any time from LiveWall's menu-bar menu.</p>
+    </section>
+
+    <section id="wallpapers">
+      <h2>3. Get wallpapers</h2>
+      <p>Your library starts empty, in <code>~/Movies/LiveWall</code>. Three ways to fill it:</p>
+      <h3>From this website</h3>
+      <ol class="steps">
+        <li>On the <a href="/">gallery</a>, tick the circle on any wallpapers you like (or open one).</li>
+        <li>Click <strong>Add to LiveWall</strong>. Your browser asks to open LiveWall — click <strong>Open LiveWall</strong>
+          (tick "Always allow" so it doesn't ask again).</li>
+        <li>The wallpapers download into your library, with progress in the Dynamic Island. If nothing was playing,
+          the first one starts.</li>
+      </ol>
+      <h3>Inside the app</h3>
+      <p>Choose <strong>Online Gallery</strong> in LiveWall's sidebar and click <strong>Get</strong> on any wallpaper.</p>
+      <h3>Your own videos</h3>
+      <p>Drop any <code>.mp4</code>, <code>.mov</code> or <code>.m4v</code> into <code>~/Movies/LiveWall</code>, or click the
+        folder button at the top left of LiveWall's window to use a different folder. New files appear straight away.</p>
+    </section>
+
+    <section id="using">
+      <h2>4. Using LiveWall</h2>
+      <ul class="facts">
+        <li><strong>The menu bar icon</strong> (top right) is LiveWall's home: pause/resume, next wallpaper, speed,
+          power saving, the Dynamic Island switch, launch at login, and <strong>Wallpaper Controls…</strong> to open the window.
+          Closing the window doesn't quit LiveWall.</li>
+        <li><strong>Click a wallpaper</strong> in the library to use it. Hover a tile for a live preview.</li>
+        <li><strong>Fill / Fit / Stretch</strong> and <strong>Span Screens</strong> are in the toolbar; the
+          <em>Your desktop</em> card shows exactly what they'll do on your monitors.</li>
+        <li><strong>Speed:</strong> the slider under the wallpaper's name slows it down or speeds it up; each wallpaper remembers its own speed.</li>
+        <li><strong>Tags:</strong> right-click a wallpaper to tag it; tags appear in the sidebar.</li>
+        <li><strong>Saving power:</strong> the wallpaper pauses by itself when it's hidden (fullscreen apps, covered screens),
+          in Low Power Mode and when your Mac runs hot. To also pause on battery: menu bar → Power Saving → Pause on Battery.</li>
+      </ul>
+    </section>
+
+    <section id="island">
+      <h2>5. The Dynamic Island</h2>
+      <p>A small black pill at the top of your main screen. On a MacBook it grows out of the notch; on an external
+        monitor it attaches to the top edge. It shows, most important first:</p>
+      <ul class="facts">
+        <li><strong>AI activity</strong> — Claude Code and ChatGPT/Codex working, needing you, or done.</li>
+        <li><strong>Music</strong> playing in Spotify or Apple Music, with artwork and controls.</li>
+        <li><strong>Your wallpaper</strong>, with pause, shuffle and speed.</li>
+      </ul>
+      <p>Hover over it to expand it. To turn it off, or choose what it shows, use the <strong>Dynamic Island</strong>
+        button in LiveWall's toolbar (or <strong>Show Dynamic Island</strong> in the menu bar menu).</p>
+    </section>
+
+    <section id="permissions">
+      <h2>6. Optional permissions</h2>
+      <p>LiveWall works without any special permissions. Two features ask for one when you first use them:</p>
+      <ul class="facts">
+        <li><strong>Music controls</strong> — the first time you press play/pause/skip in the island, macOS asks if LiveWall
+          may control Spotify or Music. Click <strong>Allow</strong>. (Showing what's playing needs no permission.)</li>
+        <li><strong>Claude app chats</strong> — off by default. To show Claude desktop-app chats in the island, turn on
+          <em>Claude app chats</em> in the Dynamic Island menu, then allow LiveWall in
+          <strong>System Settings → Privacy &amp; Security → Accessibility</strong>. LiveWall only looks for the app's
+          Stop button; it never reads your messages.</li>
+      </ul>
+      <p class="note">Because LiveWall isn't developer-signed, macOS forgets the Accessibility permission when you install
+        an update. Turn it back on in the same place afterwards.</p>
+    </section>
+
+    <section id="claude-code">
+      <h2>7. Claude Code in the island (optional)</h2>
+      <p>If you use <a href="https://claude.com/claude-code">Claude Code</a>, add these hooks to
+        <code>~/.claude/settings.json</code> (merge them into any <code>"hooks"</code> you already have). The island will
+        show when Claude is working, needs your approval, or has finished — in the terminal and in the Claude app's Code tab.</p>
+<pre><code>{
+  "hooks": {
+    "UserPromptSubmit": [{ "hooks": [{ "type": "command", "async": true,
+      "command": "/Applications/LiveWall.app/Contents/Resources/scripts/livewall-claude-hook prompt" }] }],
+    "Notification": [{ "hooks": [{ "type": "command", "async": true,
+      "command": "/Applications/LiveWall.app/Contents/Resources/scripts/livewall-claude-hook notify" }] }],
+    "PostToolUse": [{ "hooks": [{ "type": "command", "async": true,
+      "command": "/Applications/LiveWall.app/Contents/Resources/scripts/livewall-claude-hook resume" }] }],
+    "Stop": [{ "hooks": [{ "type": "command", "async": true,
+      "command": "/Applications/LiveWall.app/Contents/Resources/scripts/livewall-claude-hook stop" }] }]
+  }
+}</code></pre>
+      <p>Then type <code>/hooks</code> in Claude Code once (or restart it) so it picks them up. The hook uses
+        <code>jq</code>, which is built into macOS 15 and later.</p>
+      <p><strong>ChatGPT and Codex</strong> need no setup — LiveWall reads their session logs in <code>~/.codex</code> automatically.</p>
+      <details>
+        <summary>Show activity from your own tools</summary>
+        <p>Anything that can run a command can post to the island:</p>
+<pre><code>/Applications/LiveWall.app/Contents/Resources/scripts/livewall-activity running "Rendering video" --source "My Tool" --id render
+/Applications/LiveWall.app/Contents/Resources/scripts/livewall-activity done "Render finished" --source "My Tool" --id render</code></pre>
+        <p>States are <code>running</code>, <code>attention</code> and <code>done</code>.</p>
+      </details>
+    </section>
+
+    <section id="updating">
+      <h2>8. Updating</h2>
+      <ol class="steps">
+        <li>Download the latest version from the <a href="/#download">gallery page</a>.</li>
+        <li>Quit LiveWall: menu bar icon → <strong>Quit LiveWall</strong>.</li>
+        <li>Drag the new LiveWall into Applications and choose <strong>Replace</strong>.</li>
+        <li>Open it — you may need <a href="#open-anyway">Open Anyway</a> again, and to re-allow Accessibility if you use it.</li>
+      </ol>
+      <p>Your wallpapers, tags, speeds and settings are kept.</p>
+    </section>
+
+    <section id="uninstall">
+      <h2>9. Uninstall</h2>
+      <ol class="steps">
+        <li>Quit LiveWall from its menu bar icon.</li>
+        <li>Drag <strong>LiveWall</strong> from Applications to the Bin. Its login item is removed with it.</li>
+        <li>Optional: delete your wallpapers in <code>~/Movies/LiveWall</code>, remove LiveWall from
+          Privacy &amp; Security → Accessibility, remove the Claude Code hooks, and clear its settings with
+          <code>defaults delete com.arthurhinton.LiveWall</code>.</li>
+      </ol>
+    </section>
+
+    <section id="help">
+      <h2>10. Troubleshooting</h2>
+      <dl class="faq">
+        <dt>"LiveWall is damaged and can't be opened"</dt>
+        <dd>The download's quarantine flag is confusing macOS. Run
+          <code>xattr -dr com.apple.quarantine /Applications/LiveWall.app</code> in Terminal, then open it again.</dd>
+        <dt>There's no "Open Anyway" button</dt>
+        <dd>It only appears for about an hour after you try to open LiveWall. Double-click LiveWall again, click Done,
+          then go straight to Privacy &amp; Security.</dd>
+        <dt>"Add to LiveWall" does nothing</dt>
+        <dd>LiveWall must be installed in Applications and opened once (past the Open Anyway step) before your browser
+          knows about it. If your browser blocked the prompt, look for a notice in its address bar.</dd>
+        <dt>My desktop is black or the wallpaper isn't moving</dt>
+        <dd>Check the menu bar icon: the top line says why it's paused (fullscreen app, Low Power Mode, battery, heat,
+          or paused by you). Choose <strong>Resume Wallpaper</strong> if you paused it.</dd>
+        <dt>I can't see the Dynamic Island</dt>
+        <dd>On an external monitor it hides when nothing's happening — move your pointer to the very top-centre of the
+          screen to reveal it. Make sure <strong>Show Dynamic Island</strong> is ticked in the menu bar menu.</dd>
+        <dt>Claude app chats don't show in the island</dt>
+        <dd>Turn on <em>Claude app chats</em> in the Dynamic Island menu and allow LiveWall under
+          Privacy &amp; Security → Accessibility (re-allow it after every update).</dd>
+        <dt>Where are my files?</dt>
+        <dd>Wallpapers: <code>~/Movies/LiveWall</code> (or the folder you chose). Tags: <code>categories.json</code> in
+          that folder. Settings: <code>~/Library/Preferences/com.arthurhinton.LiveWall.plist</code>.</dd>
+      </dl>
+    </section>
+  </main>
+
+  <footer>
+    <p>LiveWall is free. Wallpapers in the gallery are public domain or openly licensed and credited to their sources.</p>
+  </footer>
+
+  <script src="gate.js"></script>
+  <script>
+    // Point the download button at the latest release when it's published.
+    fetch('https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/releases/latest.json', { cache: 'no-cache' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((release) => { if (release) document.getElementById('download-app').href = release.url; })
+      .catch(() => {});
+  </script>
+</body>
+</html>

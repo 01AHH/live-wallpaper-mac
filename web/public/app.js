@@ -5,7 +5,21 @@
 const $ = (id) => document.getElementById(id);
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const state = { all: [], tag: 'All', query: '' };
+const state = { all: [], tag: 'All', query: '', selected: new Set() };
+const RELEASES = 'https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/releases';
+
+// "Add to LiveWall" opens the app through its livewall:// link, which
+// downloads the chosen wallpapers straight into the library.
+const addURL = (ids) => `livewall://add?ids=${ids.map(encodeURIComponent).join(',')}`;
+
+function openInApp(ids) {
+  location.href = addURL(ids);
+  // Browsers say nothing if the app isn't installed, so offer a hint.
+  const toast = $('toast');
+  toast.hidden = false;
+  clearTimeout(openInApp.timer);
+  openInApp.timer = setTimeout(() => { toast.hidden = true; }, 7000);
+}
 
 const formatSize = (bytes) => `${(bytes / 1e6).toFixed(0)} MB`;
 // The 4K files are stored with Content-Disposition: attachment, so a plain
@@ -70,8 +84,26 @@ function tile(w) {
     <div class="art">
       <img loading="lazy" alt="">
       <video muted loop playsinline preload="none"></video>
+      <span class="pick" role="checkbox" tabindex="0"></span>
     </div>
     <p class="tile-title"></p>`;
+  const pick = el.querySelector('.pick');
+  const syncPick = () => {
+    const on = state.selected.has(w.id);
+    el.classList.toggle('selected', on);
+    pick.setAttribute('aria-checked', String(on));
+    pick.setAttribute('aria-label', `${on ? 'Deselect' : 'Select'} ${w.title}`);
+  };
+  const togglePick = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (state.selected.has(w.id)) state.selected.delete(w.id); else state.selected.add(w.id);
+    syncPick();
+    renderTray();
+  };
+  pick.addEventListener('click', togglePick);
+  pick.addEventListener('keydown', (e) => { if (e.key === ' ' || e.key === 'Enter') togglePick(e); });
+  syncPick();
   const img = el.querySelector('img');
   const video = el.querySelector('video');
   img.src = w.poster;
@@ -110,12 +142,40 @@ function openSheet(w) {
   $('sheet-len').textContent = `${w.duration}s loop`;
   $('sheet-size').textContent = formatSize(w.bytes);
   $('sheet-download').href = downloadURL(w.video);
+  $('sheet-add').onclick = (e) => { e.preventDefault(); openInApp([w.id]); };
   $('sheet-credit').textContent = w.credit;
   Object.assign($('sheet-licence'), { href: w.licence.url, textContent: w.licence.name });
   $('sheet-source').href = w.source;
   history.replaceState(null, '', `#${w.id}`);
   $('sheet').showModal();
 }
+
+function renderTray() {
+  const n = state.selected.size;
+  $('tray').hidden = n === 0;
+  $('tray-count').textContent = `${n} selected`;
+}
+
+$('tray-add').addEventListener('click', (e) => {
+  e.preventDefault();
+  openInApp([...state.selected]);
+});
+$('tray-clear').addEventListener('click', () => {
+  state.selected.clear();
+  renderTray();
+  renderGrid();
+});
+
+// Show the current version under the download button.
+fetch(`${RELEASES}/latest.json`, { cache: 'no-cache' })
+  .then((r) => (r.ok ? r.json() : null))
+  .then((release) => {
+    if (!release) return;
+    $('release-meta').textContent =
+      `Version ${release.version} · ${Math.max(1, Math.round(release.bytes / 1e6))} MB · Requires macOS 26 (Tahoe) on an Apple silicon Mac.`;
+    $('download-app').href = release.url;
+  })
+  .catch(() => {});
 
 function openFromHash() {
   const id = location.hash.slice(1);
@@ -131,24 +191,6 @@ $('sheet').addEventListener('close', () => {
 });
 $('search').addEventListener('input', (e) => { state.query = e.target.value; renderGrid(); });
 
-// Cosmetic lock screen: any non-empty password unlocks, remembered per browser.
-function gate() {
-  let unlocked = false;
-  try { unlocked = localStorage.getItem('livewall-unlocked') === '1'; } catch {}
-  if (unlocked) return;
-  $('gate').hidden = false;
-  $('gate-input').focus();
-  $('gate-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (!$('gate-input').value.trim()) {
-      $('gate').classList.remove('shake'); void $('gate').offsetWidth; $('gate').classList.add('shake');
-      return;
-    }
-    try { localStorage.setItem('livewall-unlocked', '1'); } catch {}
-    $('gate').hidden = true;
-  });
-}
-gate();
 
 load().catch((err) => {
   $('empty').hidden = false;

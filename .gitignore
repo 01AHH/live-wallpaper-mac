@@ -73,3 +73,6 @@ AppIcon.iconset/
 /Media/violet-sakura-reflections-tranquil-garden-evening.mp4
 /Media/where-time-stands-still.mp4
 /Media/golden-particle-drift-abstract-live-wallpaper.mp4
+
+# Release output (scripts/release.sh)
+dist/

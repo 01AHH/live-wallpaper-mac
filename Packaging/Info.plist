@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>            <string>LiveWall</string>
+    <key>CFBundleDisplayName</key>     <string>LiveWall</string>
+    <key>CFBundleExecutable</key>      <string>LiveWall</string>
+    <key>CFBundleIdentifier</key>      <string>com.arthurhinton.LiveWall</string>
+    <key>CFBundlePackageType</key>     <string>APPL</string>
+    <key>CFBundleShortVersionString</key><string>__VERSION__</string>
+    <key>CFBundleVersion</key>         <string>__BUILD__</string>
+    <key>CFBundleIconFile</key>        <string>AppIcon</string>
+    <key>LSMinimumSystemVersion</key>  <string>26.0</string>
+    <key>LSUIElement</key>             <true/>
+    <key>NSHighResolutionCapable</key> <true/>
+    <key>NSAppleEventsUsageDescription</key><string>LiveWall controls Spotify and Music playback from the Dynamic Island.</string>
+    <!-- livewall://add?ids=a,b,c — "Add to LiveWall" links from the online gallery -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>     <string>com.arthurhinton.LiveWall.gallery</string>
+            <key>CFBundleURLSchemes</key>  <array><string>livewall</string></array>
+        </dict>
+    </array>
+</dict>
+</plist>
