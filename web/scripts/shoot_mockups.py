@@ -34,7 +34,6 @@ async def main():
         browser = await p.chromium.launch(channel="chrome", headless=True)
         ctx = await browser.new_context(viewport={"width": 1440, "height": 900}, device_scale_factor=2,
                                         color_scheme="dark")
-        await ctx.add_init_script("try { localStorage.setItem('livewall-unlocked', '1') } catch {}")
         page = await ctx.new_page()
         await page.goto(f"{base}/", wait_until="networkidle")
         # Mocks render at their design size for the export.

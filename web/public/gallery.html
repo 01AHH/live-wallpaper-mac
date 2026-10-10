@@ -33,16 +33,6 @@
   <link rel="stylesheet" href="/landing.css">
 </head>
 <body class="stage">
-  <!-- A cosmetic lock screen only: any password opens the gallery. -->
-  <div class="gate" id="gate" hidden>
-    <form class="gate-card" id="gate-form">
-      <img src="/icon.png" alt="" width="56" height="56">
-      <p class="gate-title">Live Wallpaper Mac</p>
-      <p>Enter the password to continue.</p>
-      <input id="gate-input" type="password" placeholder="Password" autocomplete="current-password" required>
-      <button class="btn primary wide" type="submit">Unlock</button>
-    </form>
-  </div>
   <header class="pillnav">
     <a class="brand" href="/">
       <img src="/icon.png" alt="" width="26" height="26">
@@ -164,7 +154,6 @@
     Opening LiveWall… Nothing happening? <a href="#download">Get the app</a> first.
   </div>
 
-  <script src="/gate.js"></script>
   <script src="/app.js" type="module"></script>
 </body>
 </html>

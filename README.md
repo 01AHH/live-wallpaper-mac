@@ -375,7 +375,7 @@ Their source and licence haven't been checked; you may need a licence from the c
 
 ## The online gallery
 
-**[livewallpapermac.vercel.app](https://livewallpapermac.vercel.app)** — a static site in [`web/`](web) on Vercel: the home page with the app's features (`index.html`), the gallery at [`/gallery`](https://livewallpapermac.vercel.app/gallery), `/download` and `/setup`. Clean URLs are on in `web/vercel.json`, so old `.html` links and `/features` redirect. Videos live in the Cloudflare R2 bucket `livewall-media` and votes/downloads from a Cloudflare Worker + D1 in [`web/stats/`](web/stats). Each wallpaper has a ♥ vote and a download count, and the grid can be sorted by *Most downloaded* or *Most loved*. The site currently has a cosmetic password screen (any password unlocks it).
+**[livewallpapermac.vercel.app](https://livewallpapermac.vercel.app)** — a static site in [`web/`](web) on Vercel: the home page with the app's features (`index.html`), the gallery at [`/gallery`](https://livewallpapermac.vercel.app/gallery), `/download` and `/setup`. Clean URLs are on in `web/vercel.json`, so old `.html` links and `/features` redirect. Videos live in the Cloudflare R2 bucket `livewall-media` and votes/downloads from a Cloudflare Worker + D1 in [`web/stats/`](web/stats). Each wallpaper has a ♥ vote and a download count, and the grid can be sorted by *Most downloaded* or *Most loved*.
 
 Licensing: openly licensed entries (public domain, CC0, CC BY, own work) are credited to their source. Entries imported from a local library are published with `"unverified": true` and shown with a **Licence unverified** flag; `publish.mjs` refuses any other entry without an allowed licence, credit and source.
 
@@ -447,14 +447,12 @@ Prioritised from a review of Wallpaper Engine, Lively, Backdrop, Wallper, Wallux
 - [ ] Apple Developer ID signing and notarization (removes *Open Anyway*, keeps permissions across updates)
 - [ ] Automatic updates (Sparkle) reading `releases/latest.json`; a universal (Intel) build
 - [ ] Cut and publish the 37 vetted clips in `web/candidates.json`; decide on the 8 CC BY-SA candidates
-- [ ] Remove the cosmetic password before sharing the gallery publicly
 - [ ] Custom domain for R2 (the `r2.dev` address is rate-limited); delete the 7 old copies in Vercel Blob
 - [ ] Confirm Claude/ChatGPT app chat detection on real windows
-- [ ] Add a LICENSE file
 
 ## License
 
-No license has been chosen yet, so all rights are reserved by the author. Wallpapers in the online gallery carry their own licences, shown with each one.
+LiveWall's code is released under the [MIT License](LICENSE). Wallpapers in the online gallery are not covered by it: each carries its own licence, shown with it.
 
 ---
 
