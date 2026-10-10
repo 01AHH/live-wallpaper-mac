@@ -1,216 +1,421 @@
-# LiveWall — Live Wallpaper for Mac
+<p align="center">
+  <img src="docs/icon.png" alt="LiveWall icon" width="128" height="128">
+</p>
 
-A lightweight live/video wallpaper app for macOS, built in Swift + AppKit/SwiftUI.
-Plays looping muted videos behind your desktop icons, with a Liquid Glass control
-panel, a Dynamic Island for live activities, and a companion web gallery of openly
-licensed 4K wallpapers.
+<h1 align="center">LiveWall</h1>
 
-![LiveWall control panel](docs/screenshot.png)
+<p align="center">
+  <strong>Live video wallpapers for your Mac — with a Dynamic Island for music and AI activity.</strong><br>
+  Looping 4K wallpapers behind your desktop icons, per-display wallpapers, power-aware playback,
+  and a free online gallery you can add from in one click.
+</p>
 
-**Download:** https://live-wallpaper-mac-mauve.vercel.app/#download ·
-**Setup guide:** https://live-wallpaper-mac-mauve.vercel.app/setup.html
+<p align="center">
+  <a href="https://livewallpapermac.vercel.app/#download"><img src="https://img.shields.io/badge/download-latest-f59e38" alt="Download"></a>
+  <img src="https://img.shields.io/badge/macOS-26%2B-black" alt="macOS 26+">
+  <img src="https://img.shields.io/badge/Apple%20silicon-required-black" alt="Apple silicon">
+  <img src="https://img.shields.io/badge/Swift-6-orange" alt="Swift 6">
+  <a href="https://livewallpapermac.vercel.app"><img src="https://img.shields.io/badge/gallery-livewallpapermac.vercel.app-f59e38" alt="Gallery"></a>
+</p>
+
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshot.png" alt="The LiveWall control panel: a sidebar of tags on the left, a large Now Playing banner showing the current wallpaper with a playback-speed slider and a miniature of your monitors, and a grid of wallpaper thumbnails below." width="860">
+</p>
+
+## Contents
+
+- [Features](#features)
+- [LiveWall vs Wallpaper Engine](#livewall-vs-wallpaper-engine)
+- [Requirements](#requirements)
+- [Install](#install)
+- [Quick start](#quick-start)
+- [Using LiveWall](#using-livewall)
+- [Settings reference](#settings-reference)
+- [Supported formats](#supported-formats)
+- [Recommended clips](#recommended-clips)
+- [When LiveWall pauses](#when-livewall-pauses)
+- [How it works](#how-it-works)
+- [Privacy and permissions](#privacy-and-permissions)
+- [Where your data lives](#where-your-data-lives)
+- [Troubleshooting](#troubleshooting)
+- [FAQ](#faq)
+- [The online gallery](#the-online-gallery)
+- [Build from source](#build-from-source)
+- [Releasing](#releasing)
+- [Roadmap](#roadmap)
+- [License](#license)
 
 ## Features
 
-**Wallpaper**
-- Looping **video wallpapers** rendered at desktop level (behind icons, click-through)
-- **Multi-monitor**: span one continuous video across all screens, or give **each display
-  its own wallpaper** (click a monitor in the *Your desktop* card, then a wallpaper).
-  Each display pauses on its own when it's covered
-- **Fill / Fit / Stretch** scaling, with a live miniature of your real monitor layout
-  showing exactly what each setting does
-- **Per-video playback speed** (0.25×–1.5×), remembered for each wallpaper and applied live
-- Setting changes **morph in place** and new videos **cross-fade** — no restart or black flash
-- **Pauses automatically** when the wallpaper can't be seen: a fullscreen app's Space,
-  windows covering every screen, or displays asleep (a fullscreen app on one display
-  leaves the other playing)
-- **Power saving**: pauses in Low Power Mode and while the Mac is running hot (both on
-  by default), and optionally whenever it's on battery
-- **Menu-bar quick controls**: pause/resume (⌘P), next wallpaper (⌘N), speed, power
-  saving, the Dynamic Island switch and launch at login — no window needed
-- **Launch at login** — on by default, switchable from the menu bar
+**Wallpaper playback**
+- Looping video wallpapers rendered at desktop level — behind your icons, click-through
+- **Fill / Fit / Stretch** scaling, with a live miniature of your real monitor layout showing what each does
+- **Per-video playback speed** (0.25×–1.5×), remembered for each wallpaper
+- Changes **morph in place** and new videos **cross-fade** — no restart, no black flash
 
-**Control panel**
-- Liquid Glass design (macOS 26) with a live "Now Playing" hero, search, and a
-  calm "golden hour" brand: one amber accent for what's playing, selected or primary
-- Clean artwork tiles in the style of Apple's media apps; hover tilts a tile and
-  plays a live preview (hover effects pause while scrolling, so scrolling stays smooth)
-- **Online Gallery** in the sidebar: free, openly licensed 4K wallpapers to download
-  straight into the library, keeping their tags
-- **Add from the website**: pick wallpapers on the gallery site and click
-  **Add to LiveWall** — a `livewall://add?ids=…` link opens the app, which downloads
-  them with progress in the Dynamic Island
-- **Tags**: a sidebar filters the library by tag; right-click a video to tag it.
-  Tags live in `categories.json` beside the videos
-- Menu-bar app (no Dock icon); everything persists across launches
+**Multiple displays**
+- **Span** one continuous video across every display, or give **each display its own wallpaper**
+- Displays showing the same video share one player, so they stay in sync and decode it once
+- Per-display choices are remembered by display, and come back when you plug a monitor in again
 
-## Dynamic Island
-A live-activity pill at the top of the main display (the one with the menu bar): it
-grows out of the notch on a MacBook and attaches to the top edge like a virtual notch
-on an external monitor, following you when displays are plugged in or out. Events
-spring it open briefly; hover it to expand into stacked cards.
+**Library**
+- Any folder of `.mp4` / `.mov` / `.m4v` files; new files appear immediately
+- **Tags** with a sidebar filter, search, live hover previews
+- **Online Gallery** in the sidebar — download free 4K wallpapers straight into the library
+- **Add from the website** — pick wallpapers on the gallery site and click *Add to LiveWall*
 
-It shows, in priority order:
+**Dynamic Island**
+- A live-activity pill that grows out of the MacBook notch, or sits at the top edge of an external monitor
+- Shows **Claude Code**, **ChatGPT / Codex** and **Claude app** activity, **music** from Spotify and Apple Music (with controls), and your wallpaper
+- A public hook (`com.livewall.activity`) so any tool can post activity
+
+**Power and performance**
+- Pauses each display when it's covered, and everything in **Low Power Mode**, when the Mac is **hot**, and (optionally) **on battery**
+- Hardware-decoded playback; about 2% CPU when idle
+
+**Everything else**
+- Menu-bar app (no Dock icon) with quick controls; **launch at login**
+- Liquid Glass design (macOS 26) with a single "golden hour" amber accent
+
+## LiveWall vs Wallpaper Engine
+
+| | LiveWall | Wallpaper Engine |
+|---|---|---|
+| Platform | macOS 26+ (Apple silicon) | Windows |
+| Price | Free | Paid |
+| Video wallpapers | Yes | Yes |
+| Per-display wallpapers | Yes | Yes |
+| Pause on fullscreen / battery / heat | Yes | Yes |
+| Dynamic Island (music, AI activity) | Yes | — |
+| Add from a website in one click | Yes | Via Steam Workshop |
+| Interactive / scene wallpapers | Not yet ([#15](https://github.com/01AHH/live-wallpaper-mac/issues/15)) | Yes |
+| Playlists and rotation | Not yet ([#4](https://github.com/01AHH/live-wallpaper-mac/issues/4)) | Yes |
+
+## Requirements
+
+- **macOS 26 (Tahoe)** or later — the interface uses the Liquid Glass APIs
+- An **Apple silicon** Mac (M1 or newer)
+- To build from source: the Xcode Command Line Tools (Swift 6)
+- To package releases: `create-dmg` (`brew install create-dmg`)
+- To prepare gallery clips from WebM sources: `ffmpeg` (`brew install ffmpeg`)
+
+## Install
+
+1. Download **LiveWall.dmg** from **[livewallpapermac.vercel.app](https://livewallpapermac.vercel.app/#download)**.
+2. Open it and drag **LiveWall** onto **Applications**.
+3. Open LiveWall from Applications.
+
+> LiveWall isn't signed with an Apple Developer ID yet, so macOS blocks the first launch. That's expected — see below.
+
+### First launch and Gatekeeper
+
+1. When macOS says it can't verify LiveWall, click **Done** (not *Move to Trash*).
+2. Open **System Settings → Privacy & Security**, scroll to **Security**, and click **Open Anyway** next to *"LiveWall" was blocked*.
+3. Confirm with your password or Touch ID. You only do this once per version.
+
+Or, in Terminal: `xattr -dr com.apple.quarantine /Applications/LiveWall.app`
+
+The full illustrated guide is at **[livewallpapermac.vercel.app/setup.html](https://livewallpapermac.vercel.app/setup.html)**.
+
+### Updates
+
+Download the new `.dmg`, quit LiveWall from its menu-bar icon, and replace the app in Applications. Your library, tags, speeds and settings are kept. You may need *Open Anyway* again, and to re-allow Accessibility if you use Claude app tracking.
+
+## Quick start
+
+1. Open LiveWall — its window appears, and its icon sits in the menu bar.
+2. Choose **Online Gallery** in the sidebar and click **Get** on a wallpaper (or use *Add to LiveWall* on the website).
+3. Click any wallpaper in your library to put it on the desktop.
+4. Hover the Dynamic Island at the top of the screen to see what's playing.
+
+## Using LiveWall
+
+### The main window
+
+| Area | What it does |
+|---|---|
+| Sidebar | *All Wallpapers*, *Untagged*, **Online Gallery**, and your tags (right-click a tag to rename or delete it) |
+| Toolbar | Library folder, **Fill / Fit / Stretch**, **Span Screens**, the **Dynamic Island** menu, and search |
+| Now Playing banner | The current wallpaper playing live, its tags, the **speed** slider, Show in Finder and **Shuffle** |
+| *Your desktop* card | A miniature of your monitors showing exactly how the wallpaper will be laid out |
+| Grid | Your library — click to use, hover to preview, right-click to tag |
+
+Closing the window doesn't quit LiveWall; reopen it from the menu-bar icon (**Wallpaper Controls…**).
+
+### Getting wallpapers
+
+- **Online Gallery** (sidebar): free 4K wallpapers; *Get* downloads one into your library with its tags.
+- **Website**: tick wallpapers on [the gallery](https://livewallpapermac.vercel.app) and click **Add to LiveWall**. The browser opens LiveWall through a `livewall://add?ids=…` link and the wallpapers download with progress in the Dynamic Island.
+- **Your own videos**: drop files into the library folder (`~/Movies/LiveWall` by default) or choose another folder with the toolbar's folder button.
+
+### Multiple displays
+
+- **Span Screens on**: one video stretches across all displays as a single canvas.
+- **Span Screens off**: each display shows the full video. To give a display its own wallpaper, click that monitor in the *Your desktop* card (it gets an amber outline), then click a wallpaper. **All displays** goes back to choosing for every screen.
+
+### Playback speed
+
+The slider under the wallpaper's name runs from 0.25× to 1.5× in 0.05× steps and applies live; click the readout to reset to 1×. Each wallpaper remembers its own speed, and library previews play at it.
+
+### Menu bar
+
+The menu-bar icon shows the current wallpaper and why it's paused (if it is), plus **Pause/Resume** (P), **Next Wallpaper** (N), **Speed**, **Wallpaper Controls…** (,), **Show Dynamic Island**, **Power Saving**, **Launch at Login** and **Quit** (Q).
+
+### Dynamic Island
+
+Events (a new wallpaper, a finished AI task, a new song) spring it open for a few seconds; hover it to expand into cards with controls. Turn it off, or choose its sources, from the **Dynamic Island** button in the toolbar.
 
 | Source | How it's tracked | Needs |
 |---|---|---|
-| **Claude Code** (terminal and the Claude app's Code tab) | Claude Code hooks → `scripts/livewall-claude-hook` | hooks in `~/.claude/settings.json` |
-| **ChatGPT & Codex** | the session logs in `~/.codex/sessions` (`task_started` / `task_complete`) | nothing |
-| **Claude & ChatGPT app chats** | the apps' Stop button, via the Accessibility API | Accessibility permission |
-| **Music** — Spotify and Apple Music, with artwork and ⏮ ⏯ ⏭ | the apps' distributed notifications; controls via AppleScript | Automation permission (asked once) |
-| **The wallpaper** — now playing, pause, shuffle, speed | built in | nothing |
+| Claude Code (terminal and the Claude app's Code tab) | Claude Code hooks → `livewall-claude-hook` | Hooks in `~/.claude/settings.json` |
+| ChatGPT and Codex | Session logs in `~/.codex/sessions` | Nothing |
+| Claude app chats | The app's Stop button, via Accessibility | Accessibility permission |
+| Music (Spotify, Apple Music) | The apps' track-change notifications; controls via AppleScript | Automation permission, asked once |
+| Your wallpaper | Built in | Nothing |
 
-**Turning it on and off:** the **Dynamic Island** button in the control panel's
-toolbar has a master switch and a switch per source; **Show Dynamic Island** is also
-in the menu-bar menu. Automatic pauses (fullscreen apps, sleep) only change its icon,
-so it never pops up over a game or presentation.
+**Claude Code hooks** — add to `~/.claude/settings.json` (all `async`), using the scripts inside the app:
 
-**Reporting your own activities:** any tool can post to the island with
-[`scripts/livewall-activity`](scripts/livewall-activity) (the
-`com.livewall.activity` distributed notification):
+| Hook | Command |
+|---|---|
+| `UserPromptSubmit` | `/Applications/LiveWall.app/Contents/Resources/scripts/livewall-claude-hook prompt` |
+| `Notification` | `…/livewall-claude-hook notify` |
+| `PostToolUse` | `…/livewall-claude-hook resume` |
+| `Stop` | `…/livewall-claude-hook stop` |
+
+A copy-paste block is in the [setup guide](https://livewallpapermac.vercel.app/setup.html#claude-code).
+
+**Your own tools** can post to the island:
 ```bash
-scripts/livewall-activity running "Rendering the video" --source "My Tool" --id render
-scripts/livewall-activity done "Render complete" --source "My Tool" --id render
+/Applications/LiveWall.app/Contents/Resources/scripts/livewall-activity running "Rendering" --source "My Tool" --id render
+/Applications/LiveWall.app/Contents/Resources/scripts/livewall-activity done "Rendered" --source "My Tool" --id render
 ```
-States are `running`, `attention` and `done`; updates with the same `--id` replace
-each other, and `done` clears itself after a few seconds.
+States are `running`, `attention` and `done`; updates with the same `--id` replace each other.
 
-**Claude Code hooks** (in `~/.claude/settings.json`, all `async`). In the released app
-the scripts live at `/Applications/LiveWall.app/Contents/Resources/scripts/`; the
-[setup guide](https://live-wallpaper-mac-mauve.vercel.app/setup.html#claude-code) has a
-copy-paste block.
+## Settings reference
 
-| Hook | Command | Island shows |
+### Playback
+
+| Option | Default | What it does |
 |---|---|---|
-| `UserPromptSubmit` | `scripts/livewall-claude-hook prompt` | working, with your prompt |
-| `Notification` | `scripts/livewall-claude-hook notify` | needs you |
-| `PostToolUse` | `scripts/livewall-claude-hook resume` | back to working after you approve |
-| `Stop` | `scripts/livewall-claude-hook stop` | done |
+| Fill / Fit / Stretch | Fill | Crop to cover the screen, show the whole frame with bars, or distort to fit exactly |
+| Span Screens | On | One video across all displays, or one per display |
+| Speed | 1× (per wallpaper) | 0.25×–1.5×, applied live |
+| Per-display wallpaper | — | Set by clicking a monitor in the *Your desktop* card |
 
-## Wallpaper gallery
-Free, openly licensed 4K wallpapers to download: **https://live-wallpaper-mac-mauve.vercel.app**
+### Power saving (menu bar → Power Saving)
 
-The site lives in [`web/`](web) and is deployed on Vercel (Arthur's projects →
-`live-wallpaper-mac`, root directory `web`; pushing to `main` redeploys it). Videos
-are stored in the Cloudflare R2 bucket `livewall-media`. The site has a cosmetic
-password screen — any password unlocks it; it is not a security boundary.
+| Option | Default | What it does |
+|---|---|---|
+| Pause on Battery | Off | Pause while running on battery |
+| Pause in Low Power Mode | On | Pause while Low Power Mode is on |
+| Pause When Mac Is Hot | On | Pause at "serious" thermal pressure or above |
 
-Only public-domain, CC0, CC BY or own-work content is accepted —
-`web/scripts/publish.mjs` refuses any entry without an allowed licence, a credit and
-a source. Free stock sites (Pexels, Pixabay, Mixkit…) are excluded: their licences
-forbid redistributing clips on wallpaper sites.
+### Dynamic Island (toolbar → Dynamic Island)
+
+| Option | Default | What it does |
+|---|---|---|
+| Show Dynamic Island | On | Show or hide the island entirely |
+| Music | On | Spotify and Apple Music |
+| Claude Code | On | Activity reported by the Claude Code hooks |
+| ChatGPT & Codex | On | Turns from `~/.codex/sessions` |
+| Claude app chats | Off | Needs Accessibility permission |
+
+### General
+
+| Option | Default | What it does |
+|---|---|---|
+| Library folder | `~/Movies/LiveWall` | Where wallpapers live (toolbar folder button) |
+| Launch at Login | On (set on first run) | Start LiveWall when you log in |
+
+## Supported formats
+
+| Format | Support |
+|---|---|
+| `.mp4`, `.mov`, `.m4v` with H.264 or HEVC | Played directly, hardware-decoded |
+| Videos with audio | Played muted |
+| WebM, VP9, AV1 | Not played — convert to HEVC first (e.g. with ffmpeg) |
+| GIFs, images, web pages | Not yet ([#15](https://github.com/01AHH/live-wallpaper-mac/issues/15)) |
+
+## Recommended clips
+
+- **HEVC (H.265)** at your display's resolution — the cheapest to decode
+- **Seamless loops** — a visible jump at the loop point is distracting
+- Calm motion and no burned-in text or logos
+- **60 fps** if you'll slow it down — 30 fps at 0.5× looks steppy
+
+## When LiveWall pauses
+
+- A display's wallpaper is hidden — a fullscreen app's Space, or windows covering it (each display pauses on its own)
+- The displays are asleep
+- **Low Power Mode** is on (default)
+- The Mac is running **hot** (default)
+- On **battery** (if you turn it on)
+- You chose **Pause** in the menu bar or the Dynamic Island
+
+The menu-bar menu's first line says why it's paused. Automatic pauses never pop up the Dynamic Island.
+
+## How it works
+
+```
+┌──────────────────────────────────────────────┐
+│ Dynamic Island        NSPanel above the menu │  click-through except over the island
+├──────────────────────────────────────────────┤
+│ Your windows                                 │
+├──────────────────────────────────────────────┤
+│ Desktop icons                    (Finder)    │
+├──────────────────────────────────────────────┤
+│ LiveWall wallpaper windows   desktop level   │  one borderless window per display,
+│   AVPlayerLayer ← channel (one player/video) │  each showing an AVPlayerLayer
+└──────────────────────────────────────────────┘
+```
+
+- `WallpaperController` — the desktop windows, one *channel* (`AVQueuePlayer` + `AVPlayerLooper`) per distinct video, cross-fades, per-display pause from window occlusion
+- `PowerMonitor` — AC vs battery (IOKit), Low Power Mode, thermal state
+- `ControlPanel`, `LibraryTile`, `OnlineGallery` — the SwiftUI window, library grid and gallery
+- `DynamicIsland`, `Activities`, `AIWatchers` — the island, music and activity sources
+- `AppSettings`, `CategoryStore` — persisted settings and `categories.json` tags
+
+## Privacy and permissions
+
+- LiveWall plays files from your disk; nothing about your library leaves your Mac.
+- The online gallery and stats are contacted only when you open the Online Gallery or download from it.
+- Gallery votes and download counts are keyed by a **salted hash of your IP address** — the address itself is never stored.
+
+| Permission | Why | When it's asked |
+|---|---|---|
+| Accessibility | Spot the Stop button in the Claude/ChatGPT apps (never reads messages) | Only if you turn on *Claude app chats* |
+| Automation (Spotify, Music) | Play/pause and skip from the island | The first time you press a music control |
+| Login item | Launch at login | Added on first run; macOS shows a notification |
+
+## Where your data lives
+
+```
+~/Movies/LiveWall/                         your wallpapers (or the folder you chose)
+└── categories.json                        tags
+~/Library/Preferences/com.arthurhinton.LiveWall.plist   settings, speeds, per-display choices
+/Applications/LiveWall.app/Contents/Resources/scripts/   livewall-activity, livewall-claude-hook
+```
+
+To reset LiveWall's settings: quit it, then run `defaults delete com.arthurhinton.LiveWall`.
+
+## Troubleshooting
+
+**"LiveWall is damaged and can't be opened."**
+Run `xattr -dr com.apple.quarantine /Applications/LiveWall.app` and open it again.
+
+**There's no "Open Anyway" button.**
+It only appears for about an hour after a blocked launch. Open LiveWall again, click Done, then go straight to Privacy & Security.
+
+**"Add to LiveWall" on the website does nothing.**
+LiveWall must be in Applications and opened once before the browser knows about it.
+
+**The desktop is black or not moving.**
+Check the first line of the menu-bar menu — it says why playback is paused.
+
+**I can't see the Dynamic Island.**
+On an external monitor it hides when nothing's happening; move the pointer to the top-centre edge. Check *Show Dynamic Island* is ticked.
+
+**Claude app chats don't show.**
+Turn on *Claude app chats* and allow LiveWall in Privacy & Security → Accessibility (again after each update).
+
+## FAQ
+
+**Does LiveWall use much battery?**
+Video is hardware-decoded and LiveWall idles at around 2% CPU; it pauses in Low Power Mode, when hot, when covered, and optionally on battery.
+
+**Can I use my own videos?**
+Yes — any `.mp4`, `.mov` or `.m4v` in the library folder.
+
+**Does it work on Intel Macs or older macOS?**
+Not currently: it needs macOS 26 and Apple silicon.
+
+**Can it show a live wallpaper on the lock screen?**
+Not yet — there's no public API for it. It's on the roadmap ([#7](https://github.com/01AHH/live-wallpaper-mac/issues/7)).
+
+**Why do some gallery wallpapers say "Licence unverified"?**
+Their source and licence haven't been checked; you may need a licence from the creator to use or share them.
+
+## The online gallery
+
+**[livewallpapermac.vercel.app](https://livewallpapermac.vercel.app)** — a static site in [`web/`](web) on Vercel, with videos in the Cloudflare R2 bucket `livewall-media` and votes/downloads from a Cloudflare Worker + D1 in [`web/stats/`](web/stats). Each wallpaper has a ♥ vote and a download count, and the grid can be sorted by *Most downloaded* or *Most loved*. The site currently has a cosmetic password screen (any password unlocks it).
+
+Licensing: openly licensed entries (public domain, CC0, CC BY, own work) are credited to their source. Entries imported from a local library are published with `"unverified": true` and shown with a **Licence unverified** flag; `publish.mjs` refuses any other entry without an allowed licence, credit and source.
 
 To add wallpapers:
-1. Cut a clip into `web/content/` with `web/scripts/clip.swift` (MP4/MOV sources) or
-   ffmpeg (WebM sources) — a 4K HEVC download, a short 640px preview and a poster.
-2. Add the entry to `web/catalog.source.json`.
-3. Run `npm run publish-catalog` in `web/` (uploads to R2 via `wrangler`, skipping
-   files already there) and commit `web/public/catalog.json`.
+1. **From longer footage** — `swift web/scripts/clip.swift <url> <start> <seconds> web/content <id>` cuts a 4K HEVC clip, a preview and a poster. Vetted candidates are in [`web/candidates.json`](web/candidates.json).
+2. **From a LiveWall library** — `python3 web/scripts/import_local.py --library Media --tag Japan` (or `--name 'lo-?fi' --label Lofi`).
+3. Run `npm run publish-catalog` in `web/` (uploads to R2, skipping files already there), then commit `web/public/catalog.json`.
 
-The full list is published as [`catalog.json`](https://live-wallpaper-mac-mauve.vercel.app/catalog.json).
+Stats Worker: `npx wrangler deploy` in `web/stats/`; schema in `schema.sql`.
 
-## Install
-**For everyone:** download the `.dmg` from the
-[website](https://live-wallpaper-mac-mauve.vercel.app/#download) and follow the
-[setup guide](https://live-wallpaper-mac-mauve.vercel.app/setup.html). The app isn't
-signed with an Apple Developer ID, so the first launch needs **System Settings →
-Privacy & Security → Open Anyway** (or `xattr -dr com.apple.quarantine /Applications/LiveWall.app`).
+## Build from source
 
-**Requirements:** macOS 26 (Tahoe) or later on Apple silicon — the UI uses the Liquid Glass APIs.
+1. Install the Xcode Command Line Tools: `xcode-select --install`
+2. Clone and build:
+   ```bash
+   git clone https://github.com/01AHH/live-wallpaper-mac.git
+   cd live-wallpaper-mac
+   swift build -c release
+   ./.build/release/LiveWall          # runs without launch at login or livewall:// links
+   scripts/release.sh 2.8 --install   # builds the full app bundle into /Applications
+   ```
 
-**From source / releasing:** [`scripts/release.sh`](scripts/release.sh) builds the app
-from scratch (binary + `AppIcon.icns` + [`Packaging/Info.plist`](Packaging/Info.plist),
-with the helper scripts in `Contents/Resources/scripts/`), ad-hoc signs it and
-packages `dist/LiveWall-<version>.dmg` as a styled installer window (drawn by
-[`Packaging/make_dmg_background.swift`](Packaging/make_dmg_background.swift): the app,
-an arrow to Applications, and the install steps). Needs `brew install create-dmg`.
-```bash
-scripts/release.sh 2.8             # build dist/LiveWall-2.8.dmg
-scripts/release.sh 2.8 --install   # …and install it into /Applications
-scripts/release.sh 2.8 --publish   # …and upload it to R2 as the website's download
+### Project layout
+
 ```
-`--publish` uploads `releases/LiveWall-<version>.dmg`, `releases/LiveWall.dmg` and
-`releases/latest.json` (which the website reads for the version and link). For
-development, `swift build -c release && ./.build/release/LiveWall` runs the app
-directly (without launch at login or `livewall://` links).
-
-**Permissions** macOS may ask for:
-- **Accessibility** — only for tracking Claude app chats (off by default). The app is
-  ad-hoc signed, so macOS forgets this after each update; re-enable it in
-  System Settings → Privacy & Security → Accessibility.
-- **Automation** (Spotify / Music) — the first time you use the island's music controls.
-
-## Wallpaper library
-The library starts empty in `~/Movies/LiveWall`; choose another folder with the folder
-button in the control panel. Drop `.mp4`, `.mov` or `.m4v` files in and they
-appear immediately.
-
-Tags are stored in `<library>/categories.json`:
-```json
-{ "version": 1,
-  "tags": ["Cozy", "Nature"],
-  "videos": { "autumn-forest-cabin.mp4": ["Cozy", "Nature"] } }
+Sources/LiveWall/        the app (Swift, AppKit + SwiftUI)
+Packaging/               Info.plist template, DMG background generator
+scripts/                 release.sh, livewall-activity, livewall-claude-hook
+web/public/              the gallery website
+web/scripts/             clip.swift, import_local.py, publish.mjs
+web/stats/               votes/downloads Worker (Cloudflare D1)
+Media/                   the author's local wallpaper library
+docs/                    icon and screenshots
 ```
-Edit it by hand or regenerate it — the app picks up external changes live.
 
-## To do
-Where things stand (October 2026). Roadmap features are tracked as issues below.
+## Releasing
 
-**Gallery**
-- [ ] Install ffmpeg (`brew install ffmpeg`) — the next clips are WebM, which
-      `clip.swift` (AVFoundation) can't read
-- [ ] Cut and publish the 37 vetted clips in [`web/candidates.json`](web/candidates.json)
-      (Wikimedia Commons + Blender open films; licences and clean segments already
-      checked). 2.35:1 film shots and a few others need cropping — see each `note`
-- [ ] Decide on the 8 CC BY-SA candidates (share-alike) — not yet on the allow-list
-- [ ] Delete the 7 old copies in Vercel Blob now the gallery reads from R2
-- [ ] Give R2 a custom domain — the `r2.dev` address is rate-limited and meant for development
+1. `scripts/release.sh <version> --publish`
+   - builds the app, bundles the helper scripts and ad-hoc signs it;
+   - makes a styled `.dmg` (app, arrow to Applications, install steps) with `create-dmg`;
+   - uploads `releases/LiveWall-<version>.dmg`, `releases/LiveWall.dmg` and `releases/latest.json` to R2.
+2. The website reads `latest.json` for the version and download link — no redeploy needed.
 
-**Dynamic Island**
-- [ ] Confirm chat tracking in the Claude and ChatGPT desktop apps — the Stop-button
-      labels it looks for are unverified
-- [ ] Sign the app with a Developer ID, so macOS keeps the Accessibility permission
-      across updates
-- [ ] Pick up music that's already playing when LiveWall launches
-
-**App distribution**
-- [ ] Apple Developer ID signing + notarization (removes the "Open Anyway" step and
-      keeps permissions across updates) — `release.sh` is ready to gain a signing step
-- [ ] Automatic updates (Sparkle), reading `releases/latest.json`
-- [ ] Universal (Intel) build — currently Apple silicon only
-
-**Library**
-- [ ] Decide whether to commit the ~72 new videos in `Media/` (and `categories.json`)
-      or keep them local; anything over 50 MB must stay in `.gitignore`
+Uploading needs `npx wrangler login` once (Cloudflare account with R2).
 
 ## Roadmap
-Prioritised from a review of Wallpaper Engine, Lively, Backdrop, Wallper,
-Wallux/Wallspace, Phosphene, Aerial and Plash. Each item is tracked as a
-[GitHub issue](https://github.com/01AHH/live-wallpaper-mac/issues).
 
-**Done**
-- [x] Pause playback when the wallpaper is hidden (fullscreen apps, covered screens, displays asleep)
-- [x] Per-video playback speed
-- [x] Dynamic Island with music, AI activities and wallpaper controls
-- [x] Launch at login ([#14](https://github.com/01AHH/live-wallpaper-mac/issues/14))
-- [x] Pause on battery / Low Power Mode ([#1](https://github.com/01AHH/live-wallpaper-mac/issues/1)) — "reduce quality" instead of pausing comes with #9
-- [x] Thermal-state awareness ([#2](https://github.com/01AHH/live-wallpaper-mac/issues/2))
-- [x] Menu-bar quick controls ([#5](https://github.com/01AHH/live-wallpaper-mac/issues/5))
-- [x] Per-screen wallpapers and per-screen pause ([#3](https://github.com/01AHH/live-wallpaper-mac/issues/3))
+Prioritised from a review of Wallpaper Engine, Lively, Backdrop, Wallper, Wallux/Wallspace, Phosphene, Aerial and Plash; each item is a [GitHub issue](https://github.com/01AHH/live-wallpaper-mac/issues).
 
-**Must have** — table stakes every serious competitor has
+**Done** — pause when hidden (per display); per-video speed; Dynamic Island; launch at login (#14); battery / Low Power Mode (#1); thermal awareness (#2); menu-bar controls (#5); per-display wallpapers (#3); downloadable app and online gallery with votes.
+
+**Next**
 - [ ] Playlists and rotation ([#4](https://github.com/01AHH/live-wallpaper-mac/issues/4))
 - [ ] Sync a still frame to the system wallpaper ([#6](https://github.com/01AHH/live-wallpaper-mac/issues/6))
-
-**Should have** — differentiators
-- [ ] Live video on the lock and login screens (experimental) ([#7](https://github.com/01AHH/live-wallpaper-mac/issues/7))
-- [ ] Per-app rules (including camera in use) ([#8](https://github.com/01AHH/live-wallpaper-mac/issues/8))
+- [ ] Live video on the lock and login screens, experimental ([#7](https://github.com/01AHH/live-wallpaper-mac/issues/7))
+- [ ] Per-app rules, including camera in use ([#8](https://github.com/01AHH/live-wallpaper-mac/issues/8))
 - [ ] Lower-resolution variants on battery ([#9](https://github.com/01AHH/live-wallpaper-mac/issues/9))
 - [ ] Shortcuts actions and global hotkeys ([#10](https://github.com/01AHH/live-wallpaper-mac/issues/10))
-- [ ] Schedules: time of day, sunrise/sunset, light/dark mode ([#11](https://github.com/01AHH/live-wallpaper-mac/issues/11))
+- [ ] Schedules: time of day, sunrise/sunset, light/dark ([#11](https://github.com/01AHH/live-wallpaper-mac/issues/11))
 - [ ] Import tool: convert to HEVC, trim, smooth the loop seam ([#12](https://github.com/01AHH/live-wallpaper-mac/issues/12))
 - [ ] Smooth motion for slowed-down videos ([#13](https://github.com/01AHH/live-wallpaper-mac/issues/13))
+- [ ] Interactive web/HTML scenes ([#15](https://github.com/01AHH/live-wallpaper-mac/issues/15)) and other nice-to-haves ([#16](https://github.com/01AHH/live-wallpaper-mac/issues/16))
 
-**Could have**
-- [ ] Interactive web/HTML scenes ([#15](https://github.com/01AHH/live-wallpaper-mac/issues/15))
-- [ ] Nice-to-haves from competitor research ([#16](https://github.com/01AHH/live-wallpaper-mac/issues/16))
+**Housekeeping**
+- [ ] Apple Developer ID signing and notarization (removes *Open Anyway*, keeps permissions across updates)
+- [ ] Automatic updates (Sparkle) reading `releases/latest.json`; a universal (Intel) build
+- [ ] Cut and publish the 37 vetted clips in `web/candidates.json`; decide on the 8 CC BY-SA candidates
+- [ ] Remove the cosmetic password before sharing the gallery publicly
+- [ ] Custom domain for R2 (the `r2.dev` address is rate-limited); delete the 7 old copies in Vercel Blob
+- [ ] Confirm Claude/ChatGPT app chat detection on real windows
+- [ ] Add a LICENSE file
+
+## License
+
+No license has been chosen yet, so all rights are reserved by the author. Wallpapers in the online gallery carry their own licences, shown with each one.
+
+---
+
+© 2026 Arthur Hinton
