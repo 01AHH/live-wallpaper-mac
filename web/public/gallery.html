@@ -1,16 +1,16 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Live Wallpaper Mac — Free 4K Live Wallpapers for macOS | LiveWall</title>
+  <title>Live Wallpaper Mac: Free 4K Live Wallpapers for macOS | LiveWall</title>
   <meta name="description" content="Live Wallpaper Mac: free 4K animated video wallpapers for macOS and the free LiveWall app. Browse, vote and add live wallpapers to your Mac desktop in one click.">
-  <link rel="canonical" href="https://livewallpapermac.vercel.app/">
+  <link rel="canonical" href="https://livewallpapermac.vercel.app/gallery">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Live Wallpaper Mac">
-  <meta property="og:title" content="Live Wallpaper Mac — Free 4K Live Wallpapers for macOS">
+  <meta property="og:title" content="Live Wallpaper Mac: Free 4K Live Wallpapers for macOS">
   <meta property="og:description" content="Free 4K animated wallpapers for your Mac desktop, and the free LiveWall app to play them.">
-  <meta property="og:url" content="https://livewallpapermac.vercel.app/">
+  <meta property="og:url" content="https://livewallpapermac.vercel.app/gallery">
   <meta property="og:image" content="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/blue-horizon/blue-horizon.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <script type="application/ld+json">
@@ -27,37 +27,43 @@
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
   }
   </script>
-  <meta name="theme-color" content="#0b0b0d">
-  <link rel="icon" href="icon.png">
-  <link rel="stylesheet" href="styles.css">
+  <meta name="theme-color" content="#07070a">
+  <link rel="icon" href="/icon.png">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/landing.css">
 </head>
-<body>
+<body class="stage">
   <!-- A cosmetic lock screen only: any password opens the gallery. -->
   <div class="gate" id="gate" hidden>
     <form class="gate-card" id="gate-form">
-      <img src="icon.png" alt="" width="56" height="56">
+      <img src="/icon.png" alt="" width="56" height="56">
       <p class="gate-title">Live Wallpaper Mac</p>
       <p>Enter the password to continue.</p>
       <input id="gate-input" type="password" placeholder="Password" autocomplete="current-password" required>
       <button class="btn primary wide" type="submit">Unlock</button>
     </form>
   </div>
-  <header class="topbar">
+  <header class="pillnav">
     <a class="brand" href="/">
-      <img src="icon.png" alt="" width="28" height="28">
-      <span>Live Wallpaper <em>Mac</em></span>
+      <img src="/icon.png" alt="" width="26" height="26">
+      <span>LiveWall</span>
     </a>
     <label class="search">
       <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8.5 3a5.5 5.5 0 1 0 3.4 9.8l3.6 3.7 1.1-1.1-3.7-3.6A5.5 5.5 0 0 0 8.5 3Zm0 1.5a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"/></svg>
       <input id="search" type="search" placeholder="Search wallpapers" autocomplete="off">
     </label>
-    <a class="github" href="download.html">Get the app</a>
+    <nav>
+      <a href="/">Features</a>
+      <a href="/gallery" aria-current="page">Gallery</a>
+      <a href="/setup">Setup guide</a>
+    </nav>
+    <a class="btn-white" href="/download">Download</a>
   </header>
 
   <main>
     <section class="intro">
       <h1>Live wallpapers for Mac</h1>
-      <p>Free 4K animated wallpapers for your macOS desktop — pick the ones you love, vote for your favourites,
+      <p>Free 4K animated wallpapers for your macOS desktop. Pick the ones you love, vote for your favourites,
         and add them to the free <a href="#download">LiveWall app</a> in one click.</p>
     </section>
 
@@ -90,26 +96,26 @@
     </section>
 
     <section class="download" id="download">
-      <img src="icon.png" alt="" width="88" height="88">
+      <img src="/icon.png" alt="" width="88" height="88">
       <div class="download-copy">
         <h2>LiveWall for Mac</h2>
         <p>Live video wallpapers with a Dynamic Island for music and AI activity. Free.</p>
         <p class="fine" id="release-meta">Requires macOS 26 (Tahoe) on an Apple silicon Mac.</p>
       </div>
       <div class="download-actions">
-        <a class="btn primary" id="download-app" href="download.html">Download for Mac</a>
-        <a class="btn secondary" href="setup.html">Setup guide</a>
+        <a class="btn primary" id="download-app" href="/download">Download for Mac</a>
+        <a class="btn secondary" href="/setup">Setup guide</a>
       </div>
     </section>
 
     <section class="how">
       <h2>Get wallpapers into LiveWall</h2>
       <ol>
-        <li><strong>Pick</strong> wallpapers here — tick the circle on any tile, or open one.</li>
+        <li><strong>Pick</strong> wallpapers here: tick the circle on any tile, or open one.</li>
         <li><strong>Add to LiveWall.</strong> Your browser asks to open LiveWall; allow it, and the wallpapers download straight into your library.</li>
         <li>Or browse the same gallery inside the app: <strong>Online Gallery</strong> in the sidebar.</li>
       </ol>
-      <p class="fine">Prefer the file? Each wallpaper also has a plain 4K download. Building something else? The whole gallery is available as <a href="catalog.json">catalog.json</a>.</p>
+      <p class="fine">Prefer the file? Each wallpaper also has a plain 4K download. Building something else? The whole gallery is available as <a href="/catalog.json">catalog.json</a>.</p>
     </section>
   </main>
 
@@ -158,7 +164,7 @@
     Opening LiveWall… Nothing happening? <a href="#download">Get the app</a> first.
   </div>
 
-  <script src="gate.js"></script>
-  <script src="app.js" type="module"></script>
+  <script src="/gate.js"></script>
+  <script src="/app.js" type="module"></script>
 </body>
 </html>

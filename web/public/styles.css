@@ -290,7 +290,7 @@ dialog::backdrop { background: rgba(0,0,0,0.55); backdrop-filter: blur(6px); }
   .brand em, .github { display: none; }
   main { padding: 16px; }
   .hero-copy { padding: 20px; }
-  .grid { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: minmax(0, 1fr); }
   dialog[open] { grid-template-columns: 1fr; }
   .sheet-media { aspect-ratio: 16 / 9; min-height: 0; }
 }
@@ -408,3 +408,7 @@ dialog::backdrop { background: rgba(0,0,0,0.55); backdrop-filter: blur(6px); }
 .dl-next .dl-actions { margin: 0; }
 
 @media (max-width: 860px) { .dl-steps { grid-template-columns: 1fr; } }
+/* Long commands and paths wrap instead of widening the page on phones. */
+.guide code, .how code { overflow-wrap: anywhere; }
+.guide pre { max-width: 100%; }
+.guide pre code { overflow-wrap: normal; }

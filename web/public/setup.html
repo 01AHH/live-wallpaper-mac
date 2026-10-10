@@ -1,16 +1,17 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>How to Install Live Wallpapers on Mac — LiveWall Setup Guide</title>
+  <title>How to Install Live Wallpapers on Mac | LiveWall Setup Guide</title>
   <meta name="description" content="How to install LiveWall and set live video wallpapers on your Mac: download, Open Anyway, adding 4K live wallpapers, the Dynamic Island and troubleshooting.">
-  <link rel="canonical" href="https://livewallpapermac.vercel.app/setup.html">
-  <meta name="theme-color" content="#0b0b0d">
+  <link rel="canonical" href="https://livewallpapermac.vercel.app/setup">
+  <meta name="theme-color" content="#07070a">
   <link rel="icon" href="icon.png">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/landing.css">
 </head>
-<body>
+<body class="stage">
   <div class="gate" id="gate" hidden>
     <form class="gate-card" id="gate-form">
       <img src="icon.png" alt="" width="56" height="56">
@@ -21,12 +22,17 @@
     </form>
   </div>
 
-  <header class="topbar">
+  <header class="pillnav">
     <a class="brand" href="/">
-      <img src="icon.png" alt="" width="28" height="28">
-      <span>Live Wallpaper <em>Mac</em></span>
+      <img src="/icon.png" alt="" width="26" height="26">
+      <span>LiveWall</span>
     </a>
-    <a class="github" href="/" style="margin-left:auto">Wallpaper gallery</a>
+    <nav>
+      <a href="/">Features</a>
+      <a href="/gallery">Gallery</a>
+      <a href="/setup" aria-current="page">Setup guide</a>
+    </nav>
+    <a class="btn-white" href="/download">Download</a>
   </header>
 
   <main class="guide">
@@ -54,7 +60,7 @@
     <section id="install">
       <h2>1. Install</h2>
       <ol class="steps">
-        <li><a class="btn primary" href="download.html">Download LiveWall for Mac</a></li>
+        <li><a class="btn primary" href="/download">Download LiveWall for Mac</a></li>
         <li>Open the downloaded <code>LiveWall-….dmg</code> from your Downloads folder.</li>
         <li>Drag <strong>LiveWall</strong> onto the <strong>Applications</strong> folder shortcut beside it.</li>
         <li>Eject the LiveWall disk (click ⏏ next to it in Finder's sidebar). You can delete the <code>.dmg</code>.</li>
@@ -64,10 +70,10 @@
     <section id="open-anyway">
       <h2>2. First launch: "Open Anyway"</h2>
       <p>LiveWall is free and isn't signed with a paid Apple developer certificate, so the first time you open it
-        macOS stops it and says Apple <em>"could not verify"</em> it. That's expected — you only do this once.</p>
+        macOS stops it and says Apple <em>"could not verify"</em> it. That's expected, and you only do this once.</p>
       <ol class="steps">
         <li>Open <strong>Applications</strong> and double-click <strong>LiveWall</strong>.</li>
-        <li>When macOS says it can't verify LiveWall, click <strong>Done</strong> — <em>not</em> "Move to Trash".</li>
+        <li>When macOS says it can't verify LiveWall, click <strong>Done</strong>, <em>not</em> "Move to Trash".</li>
         <li>Open <strong>System Settings → Privacy &amp; Security</strong> and scroll down to <strong>Security</strong>.</li>
         <li>Next to <em>"LiveWall" was blocked to protect your Mac</em>, click <strong>Open Anyway</strong>,
           then enter your password or use Touch ID.</li>
@@ -87,8 +93,8 @@
       <p>Your library starts empty, in <code>~/Movies/LiveWall</code>. Three ways to fill it:</p>
       <h3>From this website</h3>
       <ol class="steps">
-        <li>On the <a href="/">gallery</a>, tick the circle on any wallpapers you like (or open one).</li>
-        <li>Click <strong>Add to LiveWall</strong>. Your browser asks to open LiveWall — click <strong>Open LiveWall</strong>
+        <li>On the <a href="/gallery">gallery</a>, tick the circle on any wallpapers you like (or open one).</li>
+        <li>Click <strong>Add to LiveWall</strong>. Your browser asks to open LiveWall; click <strong>Open LiveWall</strong>
           (tick "Always allow" so it doesn't ask again).</li>
         <li>The wallpapers download into your library, with progress in the Dynamic Island. If nothing was playing,
           the first one starts.</li>
@@ -103,6 +109,8 @@
     <section id="using">
       <h2>4. Using LiveWall</h2>
       <ul class="facts">
+        <li><strong>The first time</strong> you open LiveWall, a full-screen welcome helps you pick a wallpaper and set things up.
+          Skip it any time with <strong>Esc</strong>, and replay it from the menu bar (<strong>Show Welcome…</strong>).</li>
         <li><strong>The menu bar icon</strong> (top right) is LiveWall's home: pause/resume, next wallpaper, speed,
           power saving, the Dynamic Island switch, launch at login, and <strong>Wallpaper Controls…</strong> to open the window.
           Closing the window doesn't quit LiveWall.</li>
@@ -121,7 +129,7 @@
       <p>A small black pill at the top of your main screen. On a MacBook it grows out of the notch; on an external
         monitor it attaches to the top edge. It shows, most important first:</p>
       <ul class="facts">
-        <li><strong>AI activity</strong> — Claude Code and ChatGPT/Codex working, needing you, or done.</li>
+        <li><strong>AI activity:</strong> Claude Code and ChatGPT/Codex working, needing you, or done.</li>
         <li><strong>Music</strong> playing in Spotify or Apple Music, with artwork and controls.</li>
         <li><strong>Your wallpaper</strong>, with pause, shuffle and speed.</li>
       </ul>
@@ -133,9 +141,9 @@
       <h2>6. Optional permissions</h2>
       <p>LiveWall works without any special permissions. Two features ask for one when you first use them:</p>
       <ul class="facts">
-        <li><strong>Music controls</strong> — the first time you press play/pause/skip in the island, macOS asks if LiveWall
+        <li><strong>Music controls:</strong> the first time you press play/pause/skip in the island, macOS asks if LiveWall
           may control Spotify or Music. Click <strong>Allow</strong>. (Showing what's playing needs no permission.)</li>
-        <li><strong>Claude app chats</strong> — off by default. To show Claude desktop-app chats in the island, turn on
+        <li><strong>Claude app chats:</strong> off by default. To show Claude desktop-app chats in the island, turn on
           <em>Claude app chats</em> in the Dynamic Island menu, then allow LiveWall in
           <strong>System Settings → Privacy &amp; Security → Accessibility</strong>. LiveWall only looks for the app's
           Stop button; it never reads your messages.</li>
@@ -148,7 +156,7 @@
       <h2>7. Claude Code in the island (optional)</h2>
       <p>If you use <a href="https://claude.com/claude-code">Claude Code</a>, add these hooks to
         <code>~/.claude/settings.json</code> (merge them into any <code>"hooks"</code> you already have). The island will
-        show when Claude is working, needs your approval, or has finished — in the terminal and in the Claude app's Code tab.</p>
+        show when Claude is working, needs your approval, or has finished, in the terminal and in the Claude app's Code tab.</p>
 <pre><code>{
   "hooks": {
     "UserPromptSubmit": [{ "hooks": [{ "type": "command", "async": true,
@@ -163,7 +171,7 @@
 }</code></pre>
       <p>Then type <code>/hooks</code> in Claude Code once (or restart it) so it picks them up. The hook uses
         <code>jq</code>, which is built into macOS 15 and later.</p>
-      <p><strong>ChatGPT and Codex</strong> need no setup — LiveWall reads their session logs in <code>~/.codex</code> automatically.</p>
+      <p><strong>ChatGPT and Codex</strong> need no setup. LiveWall reads their session logs in <code>~/.codex</code> automatically.</p>
       <details>
         <summary>Show activity from your own tools</summary>
         <p>Anything that can run a command can post to the island:</p>
@@ -179,7 +187,7 @@
         <li>Download the latest version from the <a href="/#download">gallery page</a>.</li>
         <li>Quit LiveWall: menu bar icon → <strong>Quit LiveWall</strong>.</li>
         <li>Drag the new LiveWall into Applications and choose <strong>Replace</strong>.</li>
-        <li>Open it — you may need <a href="#open-anyway">Open Anyway</a> again, and to re-allow Accessibility if you use it.</li>
+        <li>Open it. You may need <a href="#open-anyway">Open Anyway</a> again, and to re-allow Accessibility if you use it.</li>
       </ol>
       <p>Your wallpapers, tags, speeds and settings are kept.</p>
     </section>
@@ -207,11 +215,14 @@
         <dt>"Add to LiveWall" does nothing</dt>
         <dd>LiveWall must be installed in Applications and opened once (past the Open Anyway step) before your browser
           knows about it. If your browser blocked the prompt, look for a notice in its address bar.</dd>
+        <dt>I can't see LiveWall in the menu bar</dt>
+        <dd>When the menu bar is full, macOS hides icons behind the notch. Hold ⌘ and drag other icons out to make room,
+          and check LiveWall is allowed in System Settings → Menu Bar. Opening LiveWall from Applications always shows its window.</dd>
         <dt>My desktop is black or the wallpaper isn't moving</dt>
         <dd>Check the menu bar icon: the top line says why it's paused (fullscreen app, Low Power Mode, battery, heat,
           or paused by you). Choose <strong>Resume Wallpaper</strong> if you paused it.</dd>
         <dt>I can't see the Dynamic Island</dt>
-        <dd>On an external monitor it hides when nothing's happening — move your pointer to the very top-centre of the
+        <dd>On an external monitor it hides when nothing's happening, so move your pointer to the very top-centre of the
           screen to reveal it. Make sure <strong>Show Dynamic Island</strong> is ticked in the menu bar menu.</dd>
         <dt>Claude app chats don't show in the island</dt>
         <dd>Turn on <em>Claude app chats</em> in the Dynamic Island menu and allow LiveWall under

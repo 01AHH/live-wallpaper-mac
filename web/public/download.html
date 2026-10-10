@@ -1,16 +1,17 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Download LiveWall — Live Wallpaper App for Mac</title>
+  <title>Download LiveWall: Live Wallpaper App for Mac</title>
   <meta name="description" content="Download LiveWall, the free live wallpaper app for Mac. Install it in three steps and add 4K live wallpapers to your macOS desktop.">
-  <link rel="canonical" href="https://livewallpapermac.vercel.app/download.html">
-  <meta name="theme-color" content="#0b0b0d">
+  <link rel="canonical" href="https://livewallpapermac.vercel.app/download">
+  <meta name="theme-color" content="#07070a">
   <link rel="icon" href="icon.png">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="landing.css">
 </head>
-<body class="download-page">
+<body class="download-page stage">
   <div class="gate" id="gate" hidden>
     <form class="gate-card" id="gate-form">
       <img src="icon.png" alt="" width="56" height="56">
@@ -21,35 +22,41 @@
     </form>
   </div>
 
-  <header class="topbar">
+  <header class="pillnav">
     <a class="brand" href="/">
-      <img src="icon.png" alt="" width="28" height="28">
-      <span>Live Wallpaper <em>Mac</em></span>
+      <img src="icon.png" alt="" width="26" height="26">
+      <span>LiveWall</span>
     </a>
-    <a class="github" href="/" style="margin-left:auto">Wallpaper gallery</a>
+    <nav>
+      <a href="/">Features</a>
+      <a href="/gallery">Gallery</a>
+      <a href="/setup">Setup guide</a>
+    </nav>
   </header>
 
   <main class="dl">
     <!-- Shown on a Mac: the download starts and the steps follow. -->
     <section class="dl-hero" id="dl-mac">
-      <img class="dl-icon" src="icon.png" alt="" width="96" height="96">
+      <div class="glow-bands" aria-hidden="true"></div>
+      <img class="dl-icon" src="icon.png" alt="" width="112" height="112">
       <h1>Thanks for downloading LiveWall</h1>
       <p class="dl-status" id="dl-status">
         <span class="dl-spinner" aria-hidden="true"></span>
         Your download is starting…
       </p>
-      <p class="dl-meta" id="dl-meta">Free · Requires macOS 26 on an Apple silicon Mac</p>
+      <p class="dl-meta" id="dl-meta">macOS Tahoe and Apple silicon required</p>
       <p class="dl-retry">Didn't start? <a id="dl-again" href="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/releases/LiveWall.dmg">Download again</a></p>
     </section>
 
     <!-- Shown on anything that can't run LiveWall. -->
     <section class="dl-hero" id="dl-other" hidden>
-      <img class="dl-icon" src="icon.png" alt="" width="96" height="96">
+      <div class="glow-bands" aria-hidden="true"></div>
+      <img class="dl-icon" src="icon.png" alt="" width="112" height="112">
       <h1>LiveWall is for Mac</h1>
       <p class="dl-sub" id="dl-other-reason">It needs macOS 26 (Tahoe) on an Apple silicon Mac (M1 or newer).</p>
       <div class="dl-actions">
-        <button class="btn primary" id="dl-copy" type="button">Copy link for your Mac</button>
-        <a class="btn secondary" id="dl-anyway" href="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/releases/LiveWall.dmg">Download anyway</a>
+        <button class="btn-white" id="dl-copy" type="button">Copy link for your Mac</button>
+        <a class="btn-ghost" id="dl-anyway" href="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/releases/LiveWall.dmg">Download anyway</a>
       </div>
     </section>
 
@@ -90,7 +97,7 @@
           </div>
         </div>
         <span class="dl-num">3</span>
-        <h2>Open Anyway — once</h2>
+        <h2>Open Anyway, just once</h2>
         <p>macOS can't verify free apps without a paid Apple certificate. Click <strong>Done</strong>, open
           <strong>System Settings → Privacy &amp; Security</strong>, and click <strong>Open Anyway</strong>.</p>
         <button class="dl-terminal" id="dl-terminal" type="button" title="Copy the Terminal command">
@@ -103,17 +110,17 @@
     <section class="dl-next">
       <div>
         <h2>You're all set</h2>
-        <p>LiveWall lives in your menu bar. Fill your library from the gallery — tick wallpapers and click <strong>Add to LiveWall</strong>.</p>
+        <p>A short welcome helps you pick your first wallpaper. After that, LiveWall lives in your menu bar.</p>
       </div>
       <div class="dl-actions">
-        <a class="btn primary" href="/">Browse wallpapers</a>
-        <a class="btn secondary" href="setup.html">Full setup guide</a>
+        <a class="btn-white" href="/gallery">Browse wallpapers</a>
+        <a class="btn-ghost" href="/">See what it does</a>
       </div>
     </section>
   </main>
 
   <footer>
-    <p>LiveWall is free. Questions? See <a href="setup.html#help">troubleshooting</a>.</p>
+    <p>LiveWall is free. Questions? See <a href="/setup#help">troubleshooting</a>.</p>
   </footer>
 
   <script src="gate.js"></script>

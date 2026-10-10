@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LiveWall: Live Wallpapers for Mac</title>
+  <meta name="description" content="LiveWall puts looping 4K video wallpapers behind your Mac's desktop icons, adds a Dynamic Island for music and AI activity, and comes with a free wallpaper gallery.">
+  <link rel="canonical" href="https://livewallpapermac.vercel.app/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="LiveWall">
+  <meta property="og:title" content="LiveWall: Live Wallpapers for Mac">
+  <meta property="og:description" content="Looping 4K wallpapers behind your icons, a Dynamic Island for music and AI, and a free gallery. Free for macOS.">
+  <meta property="og:url" content="https://livewallpapermac.vercel.app/">
+  <meta property="og:image" content="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/blue-horizon/blue-horizon.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#07070a">
+  <link rel="icon" href="icon.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="landing.css">
+</head>
+<body class="stage">
+  <div class="gate" id="gate" hidden>
+    <form class="gate-card" id="gate-form">
+      <img src="icon.png" alt="" width="56" height="56">
+      <p class="gate-title">Live Wallpaper Mac</p>
+      <p>Enter the password to continue.</p>
+      <input id="gate-input" type="password" placeholder="Password" autocomplete="current-password" required>
+      <button class="btn primary wide" type="submit">Unlock</button>
+    </form>
+  </div>
+
+  <header class="pillnav">
+    <a class="brand" href="/">
+      <img src="icon.png" alt="" width="26" height="26">
+      <span>LiveWall</span>
+    </a>
+    <nav>
+      <a href="/" aria-current="page">Features</a>
+      <a href="/gallery">Gallery</a>
+      <a href="/setup">Setup guide</a>
+    </nav>
+    <a class="btn-white" href="/download">Download</a>
+  </header>
+
+  <section class="stage-hero">
+    <div class="glow-bands" aria-hidden="true"></div>
+    <h1>Your desktop,<br>alive.</h1>
+    <p class="lede">Looping 4K wallpapers behind your icons, a Dynamic Island for music and AI, and a free gallery to fill it. One quiet menu-bar app.</p>
+    <div class="cta">
+      <a class="btn-white" href="/download">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8m0 0 3.2-3.2M8 10 4.8 6.8M2.5 13.5h11"/></svg>
+        Download for Mac
+      </a>
+      <span class="mono">macOS Tahoe and Apple silicon required</span>
+      <span class="mono"><a href="/gallery">Browse wallpapers</a> &nbsp;|&nbsp; <a href="/setup">Setup guide</a></span>
+    </div>
+  </section>
+
+  <!-- 1. The app itself, floating over a live wallpaper -->
+  <div class="wrap">
+    <div class="panel">
+      <div class="fit">
+        <div class="screen" data-w="1180" data-shot="control-panel" style="width:1180px;height:760px">
+          <video class="wall" autoplay muted loop playsinline poster="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cloud-swirl/cloud-swirl.jpg"
+                 src="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cloud-swirl/cloud-swirl-preview.mp4"></video>
+          <div class="win" style="position:absolute;inset:34px 40px 34px">
+            <div class="cp">
+              <aside class="cp-side">
+                <div class="lights"><i></i><i></i><i></i></div>
+                <h6>Library</h6>
+                <div class="cp-row on"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>All Wallpapers<b>24</b></div>
+                <div class="cp-row"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 8.5V3h5.5L14 9.5 9.5 14z"/></svg>Untagged<b>2</b></div>
+                <div class="cp-row"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2c2 2 2 10 0 12M8 2c-2 2-2 10 0 12"/></svg>Online Gallery</div>
+                <h6>Tags</h6>
+                <div class="cp-row"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 8.5V3h5.5L14 9.5 9.5 14z"/></svg>Space<b>7</b></div>
+                <div class="cp-row"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 8.5V3h5.5L14 9.5 9.5 14z"/></svg>Earth<b>5</b></div>
+                <div class="cp-row"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 8.5V3h5.5L14 9.5 9.5 14z"/></svg>Calm<b>9</b></div>
+                <div class="cp-row"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 8.5V3h5.5L14 9.5 9.5 14z"/></svg>Winter<b>4</b></div>
+                <div class="cp-row"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 8.5V3h5.5L14 9.5 9.5 14z"/></svg>Ocean<b>6</b></div>
+                <div class="cp-row"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 8.5V3h5.5L14 9.5 9.5 14z"/></svg>Storm<b>2</b></div>
+                <div class="cp-row"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 8.5V3h5.5L14 9.5 9.5 14z"/></svg>Spanning<b>3</b></div>
+              </aside>
+              <div class="cp-main">
+                <div class="cp-bar">
+                  <div class="title"><b>LiveWall</b><span>All Wallpapers · 24 wallpapers</span></div>
+                  <div class="seg glass"><span class="on">Fill</span><span>Fit</span><span>Stretch</span></div>
+                  <span class="pill glass"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.5" y="3.5" width="13" height="9" rx="1.5"/><path d="M6 3.5v9M10 3.5v9"/></svg>Span Screens</span>
+                  <span class="pill glass"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="6" width="10" height="4" rx="2"/></svg></span>
+                  <span class="pill glass" style="width:170px"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M8.5 3a5.5 5.5 0 1 0 3.4 9.8l3.6 3.7 1.1-1.1-3.7-3.6A5.5 5.5 0 0 0 8.5 3Zm0 1.5a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"/></svg>Search wallpapers</span>
+                </div>
+                <div class="np">
+                  <video autoplay muted loop playsinline poster="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/blue-horizon/blue-horizon.jpg"
+                         src="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/blue-horizon/blue-horizon-preview.mp4"></video>
+                  <div class="desk">
+                    <div class="desk-head">Your desktop <span>Fill</span></div>
+                    <div class="desk-mons">
+                      <div class="mon sel" style="background-image:url(https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/blue-horizon/blue-horizon.jpg)"></div>
+                      <div class="mon" style="background-image:url(https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/blue-horizon/blue-horizon.jpg)"></div>
+                    </div>
+                    <p>One video spans both displays as a single canvas.</p>
+                  </div>
+                  <div class="np-copy">
+                    <div class="np-eyebrow"><i><b></b><b></b><b></b></i>NOW PLAYING</div>
+                    <h3>Blue Horizon</h3>
+                    <p>Earth · Space · Calm · 4K HEVC</p>
+                    <div class="np-controls">
+                      <div class="speed glass"><span>🐢</span><div class="track" style="--v:40%"></div><span>🐇</span><b>0.8×</b></div>
+                      <span class="spacer"></span>
+                      <span class="pill glass">Show in Finder</span>
+                      <span class="pill glass">⤨ Shuffle</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="cp-grid-head">All Wallpapers <span>24</span></div>
+                <div class="cp-grid">
+                  <div class="cp-tile"><div class="art playing"><img src="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/blue-horizon/blue-horizon.jpg" alt=""></div><p>Blue Horizon</p></div>
+                  <div class="cp-tile"><div class="art"><img src="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/snowy-ridge/snowy-ridge.jpg" alt=""></div><p>Snowy Ridge</p></div>
+                  <div class="cp-tile"><div class="art"><img src="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/station-over-storm/station-over-storm.jpg" alt=""></div><p>Station Over Storm</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="caption"><strong>Your library, front and centre.</strong> Every wallpaper plays as you hover it. Click one and it fades onto your desktop, no restart, no black flash.</p>
+  </div>
+
+  <!-- 2. Dynamic Island -->
+  <section class="section">
+    <div class="wrap split">
+      <div>
+        <p class="say">A Dynamic Island for your Mac. <span>Music, Claude Code and ChatGPT, right at the notch.</span></p>
+        <p class="body">It grows out of the MacBook notch, or sits at the top of an external display. When a song changes or an AI task finishes, it springs open for a moment. Hover it for controls.</p>
+        <ul class="ticks">
+          <li>Spotify and Apple Music, with play, pause and skip</li>
+          <li>Claude Code, Codex and ChatGPT activity as it happens</li>
+          <li>A public hook so your own tools can post to it</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <div class="fit">
+          <div class="screen island-stage" data-w="760" data-shot="dynamic-island" style="width:760px">
+            <img class="wall" src="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/desert-plateau/desert-plateau.jpg" alt="">
+            <div class="menubar"><span></span><b>Finder</b><span>File</span><span>Edit</span><span>View</span>
+              <div class="r"><span>⌁</span><span>Sat 10 Oct 9:41</span></div></div>
+            <div class="island">
+              <div class="isl-card">
+                <div class="ic" style="background:#d97757;color:#fff">✳</div>
+                <div class="t"><b>Claude Code</b><span>Running the test suite · live-wallpaper-mac</span></div>
+                <div class="spin"></div>
+              </div>
+              <div class="isl-card">
+                <div class="ic" style="background:linear-gradient(135deg,#f59e38,#b8452a)">♪</div>
+                <div class="t"><b>Golden Hour Drive</b><span>Lumen Fields · Spotify</span><div class="prog"><i></i></div></div>
+                <div class="ctl"><span>⏮</span><span>⏸</span><span>⏭</span></div>
+              </div>
+              <div class="isl-card">
+                <div class="ic" style="background:#10a37f;color:#fff">◎</div>
+                <div class="t"><b>Codex</b><span>Refactor finished · 3 files changed</span></div>
+                <span class="st" style="color:#5fd38d">Done</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Multiple displays -->
+  <section class="section">
+    <div class="wrap">
+      <p class="say center">One canvas across every screen. <span>Or a different wallpaper on each.</span></p>
+      <div class="fit" style="margin-top:36px">
+        <div data-w="1100" data-shot="multiple-displays" id="displays" style="width:1100px">
+          <div class="displays">
+            <div class="display left"><div class="bezel"><div class="glass-s">
+              <video autoplay muted loop playsinline poster="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/winter-limb/winter-limb.jpg"
+                     src="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/winter-limb/winter-limb-preview.mp4"></video>
+            </div></div><div class="stand"></div><div class="foot"></div></div>
+            <div class="display right"><div class="bezel"><div class="glass-s">
+              <video autoplay muted loop playsinline poster="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/winter-limb/winter-limb.jpg"
+                     src="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/winter-limb/winter-limb-preview.mp4"></video>
+            </div></div><div class="stand"></div><div class="foot"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <button class="switch" id="span-toggle" type="button" role="switch" aria-checked="true"><i></i> Span Screens</button>
+      </div>
+      <p class="caption">Displays showing the same video share one player, so they stay in sync and decode it once. Plug a monitor back in and its wallpaper comes back too.</p>
+    </div>
+  </section>
+
+  <!-- 4. Bento -->
+  <section class="section">
+    <div class="wrap">
+      <p class="say">Thoughtful in every detail. <span>And light on your battery.</span></p>
+      <div class="bento">
+        <div class="cell wide" data-shot="power-saving">
+          <div class="art-area">
+            <ul class="pauses">
+              <li>🪟 Covered by a full-screen app <span class="on">paused</span></li>
+              <li>🔋 Low Power Mode <span class="on">paused</span></li>
+              <li>🌡️ Mac running hot <span class="on">paused</span></li>
+              <li>🔌 On battery <span>optional</span></li>
+            </ul>
+          </div>
+          <h4>Pauses when you can't see it</h4>
+          <p>Each display pauses on its own when it's covered, and everything pauses in Low Power Mode or when your Mac gets hot. Hardware decoding keeps it around 2% CPU.</p>
+        </div>
+        <div class="cell" data-shot="playback-speed">
+          <div class="art-area">
+            <div class="speed-big">
+              <div class="speed glass"><span>🐢</span><div class="track" style="--v:30%"></div><span>🐇</span><b>0.6×</b></div>
+              <div class="ticks"><span>0.25×</span><span>1×</span><span>1.5×</span></div>
+            </div>
+          </div>
+          <h4>Speed per wallpaper</h4>
+          <p>Slow a wave to a drift. Each wallpaper remembers its own speed.</p>
+        </div>
+        <div class="cell" data-shot="fill-fit-stretch">
+          <div class="art-area">
+            <div class="fitmodes">
+              <figure class="on"><div class="f"><img src="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/solar-wing/solar-wing.jpg" alt=""></div>Fill</figure>
+              <figure><div class="f fit"><img src="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/solar-wing/solar-wing.jpg" alt=""></div>Fit</figure>
+              <figure><div class="f stretch"><img src="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/solar-wing/solar-wing.jpg" alt=""></div>Stretch</figure>
+            </div>
+          </div>
+          <h4>Fill, Fit or Stretch</h4>
+          <p>A miniature of your real monitors shows exactly what each one does.</p>
+        </div>
+        <div class="cell" data-shot="online-gallery">
+          <div class="art-area">
+            <div class="mini-gallery">
+              <div class="g picked"><img src="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/blue-horizon/blue-horizon.jpg" alt=""></div>
+              <div class="g"><img src="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/snowy-ridge/snowy-ridge.jpg" alt=""></div>
+              <div class="g picked"><img src="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/cloud-swirl/cloud-swirl.jpg" alt=""></div>
+              <div class="g"><img src="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/winter-limb/winter-limb.jpg" alt=""></div>
+              <div class="g picked"><img src="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/station-over-storm/station-over-storm.jpg" alt=""></div>
+              <div class="g"><img src="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/desert-plateau/desert-plateau.jpg" alt=""></div>
+              <span class="add">Add 3 to LiveWall</span>
+            </div>
+          </div>
+          <h4>A free 4K gallery</h4>
+          <p>Tick wallpapers on the website and they download straight into the app.</p>
+        </div>
+        <div class="cell" data-shot="menu-bar">
+          <div class="art-area" style="position:relative;width:100%">
+            <div class="menu" style="position:static;width:100%;max-width:290px">
+              <div class="dim">Blue Horizon</div>
+              <div>Pause Wallpaper <kbd>⌘P</kbd></div>
+              <div class="hi">Next Wallpaper <kbd>⌘N</kbd></div>
+              <div class="chev">Speed</div>
+              <hr>
+              <div>Wallpaper Controls… <kbd>⌘,</kbd></div>
+              <div>✓ Show Dynamic Island</div>
+              <div class="chev">Power Saving</div>
+            </div>
+          </div>
+          <h4>Lives in your menu bar</h4>
+          <p>No Dock icon. Pause, skip and change speed from the menu bar.</p>
+        </div>
+        <div class="cell wide">
+          <div class="art-area">
+            <div class="private">
+              <b>~/Movies/LiveWall/</b><br>
+              ├─ your-own-clip.mov<br>
+              ├─ blue-horizon.mp4<br>
+              └─ categories.json<br>
+              <span style="color:var(--accent)">✓ nothing leaves your Mac</span>
+            </div>
+          </div>
+          <h4>Your files, your Mac</h4>
+          <p>Any .mp4, .mov or .m4v in a folder. Your library never leaves your Mac.</p>
+        </div>
+        <div class="cell">
+          <div class="art-area">
+            <div class="private code"><span class="k">$</span> livewall-activity running "Rendering" --source "My Tool"<br><span class="k">$</span> livewall-activity done "Rendered"</div>
+          </div>
+          <h4>Hook in your own tools</h4>
+          <p>Anything that can run a command can post to the Dynamic Island.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Welcome -->
+  <section class="section">
+    <div class="wrap split flip">
+      <div>
+        <p class="say">Set up in a minute. <span>A welcome that feels like a new Mac.</span></p>
+        <p class="body">The first time you open LiveWall, a full-screen welcome picks your first wallpaper with you. It starts playing behind the welcome as soon as you choose. Then it sets up the Dynamic Island, launch at login and power saving.</p>
+      </div>
+      <div class="panel">
+        <div class="fit">
+          <div class="screen welcome" data-w="760" data-shot="welcome" style="width:760px">
+            <video class="wall" autoplay muted loop playsinline poster="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/snowy-ridge/snowy-ridge.jpg"
+                   src="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/snowy-ridge/snowy-ridge-preview.mp4"></video>
+            <div class="top"><span></span><div class="dots"><i class="on"></i><i></i><i></i><i></i><i></i></div><span>Skip</span></div>
+            <div>
+              <h3>Welcome to your new Mac.</h3>
+              <p>Welcome to a more personalised experience.</p>
+              <span class="go">Let's begin</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="closer">
+    <div class="glow-bands" aria-hidden="true"></div>
+    <img class="icon" src="icon.png" alt="" width="112" height="112">
+    <p class="say center">Free. <span>Bring your desktop to life.</span></p>
+    <div class="cta">
+      <a class="btn-white" href="/download">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8m0 0 3.2-3.2M8 10 4.8 6.8M2.5 13.5h11"/></svg>
+        Download for Mac
+      </a>
+      <span class="mono">macOS Tahoe and Apple silicon required</span>
+    </div>
+  </section>
+
+  <footer>
+    <p>Wallpapers shown are public-domain footage from NASA's 4K Earth Views. <a href="/setup#help">Help</a> · <a href="/gallery">Gallery</a></p>
+  </footer>
+
+  <script src="gate.js"></script>
+  <script src="landing.js"></script>
+</body>
+</html>

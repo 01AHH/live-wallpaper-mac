@@ -11,18 +11,42 @@
 </p>
 
 <p align="center">
-  <a href="https://livewallpapermac.vercel.app/download.html"><img src="https://img.shields.io/badge/download-latest-f59e38" alt="Download"></a>
+  <a href="https://livewallpapermac.vercel.app/download"><img src="https://img.shields.io/badge/download-latest-f59e38" alt="Download"></a>
   <img src="https://img.shields.io/badge/macOS-26%2B-black" alt="macOS 26+">
   <img src="https://img.shields.io/badge/Apple%20silicon-required-black" alt="Apple silicon">
   <img src="https://img.shields.io/badge/Swift-6-orange" alt="Swift 6">
-  <a href="https://livewallpapermac.vercel.app"><img src="https://img.shields.io/badge/gallery-livewallpapermac.vercel.app-f59e38" alt="Gallery"></a>
+  <a href="https://livewallpapermac.vercel.app/gallery"><img src="https://img.shields.io/badge/gallery-livewallpapermac.vercel.app%2Fgallery-f59e38" alt="Gallery"></a>
+</p>
+
+<p align="center">
+  <a href="https://livewallpapermac.vercel.app"><strong>See what it does →</strong></a>
 </p>
 
 ## Screenshots
 
 <p align="center">
-  <img src="docs/screenshot.png" alt="The LiveWall control panel: a sidebar of tags on the left, a large Now Playing banner showing the current wallpaper with a playback-speed slider and a miniature of your monitors, and a grid of wallpaper thumbnails below." width="860">
+  <img src="docs/screenshots/control-panel.png" alt="The LiveWall window floating over a live wallpaper: a sidebar of tags, a Now Playing banner for Blue Horizon with a speed slider and a miniature of two monitors, and a grid of wallpapers." width="860">
 </p>
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/dynamic-island.png" alt="The Dynamic Island open under the notch, showing a Claude Code task running, a song playing with controls, and a finished Codex task."></td>
+    <td width="50%"><img src="docs/screenshots/welcome.png" alt="The full-screen first-launch welcome: “Welcome to your new Mac.” over a live wallpaper, with a Let's begin button."></td>
+  </tr>
+  <tr>
+    <td colspan="2"><img src="docs/screenshots/multiple-displays.png" alt="Two monitors showing one wallpaper spanned across both as a single canvas."></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/power-saving.png" alt="The reasons LiveWall pauses: covered by a full-screen app, Low Power Mode, Mac running hot, and optionally on battery."></td>
+    <td><img src="docs/screenshots/menu-bar.png" alt="The menu-bar menu: the current wallpaper, Pause, Next Wallpaper, Speed, Wallpaper Controls, Show Dynamic Island and Power Saving."></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/online-gallery.png" alt="Gallery wallpapers ticked on the website with an Add 3 to LiveWall button."></td>
+    <td><img src="docs/screenshots/fill-fit-stretch.png" alt="The same wallpaper shown with Fill, Fit and Stretch scaling."></td>
+  </tr>
+</table>
+
+These are mockups of the real interface, drawn in HTML on the [home page](https://livewallpapermac.vercel.app) and exported with `python3 web/scripts/shoot_mockups.py`. The wallpapers are public-domain NASA footage.
 
 ## Contents
 
@@ -104,7 +128,7 @@
 
 ## Install
 
-1. Download LiveWall from **[livewallpapermac.vercel.app/download.html](https://livewallpapermac.vercel.app/download.html)** — the download starts automatically and the page walks you through the next steps.
+1. Download LiveWall from **[livewallpapermac.vercel.app/download](https://livewallpapermac.vercel.app/download)** — the download starts automatically and the page walks you through the next steps.
 2. Open it and drag **LiveWall** onto **Applications**.
 3. Open LiveWall from Applications.
 
@@ -112,7 +136,7 @@
 
 ### First launch
 
-Opened straight from the `.dmg` or Downloads, LiveWall offers to **Move to Applications**, copies itself there, relaunches and ejects the installer. The first time it runs, a full-screen welcome — *"Welcome to your new Mac."* — walks you through choosing your first wallpaper (it plays behind the welcome as soon as you pick it), the Dynamic Island, and launch-at-login and power saving. Replay it any time from the menu bar (**Show Welcome…**).
+Opened straight from the `.dmg` or Downloads, LiveWall offers to **Move to Applications**, copies itself there, relaunches and ejects the installer. The first time it runs, a full-screen welcome — *"Welcome to your new Mac."* — walks you through choosing your first wallpaper (it plays behind the welcome as soon as you pick it), the Dynamic Island, and launch-at-login and power saving. Step through it with the **← →** arrow keys if you like. **Skip**, **Esc**, **⌘W** or **⌘Q** close it at any step, and if you switch to another app it steps back so it never covers your screen. Replay it any time from the menu bar (**Show Welcome…**).
 
 ### Gatekeeper
 
@@ -122,7 +146,7 @@ Opened straight from the `.dmg` or Downloads, LiveWall offers to **Move to Appli
 
 Or, in Terminal: `xattr -dr com.apple.quarantine /Applications/LiveWall.app`
 
-The full illustrated guide is at **[livewallpapermac.vercel.app/setup.html](https://livewallpapermac.vercel.app/setup.html)**.
+The full illustrated guide is at **[livewallpapermac.vercel.app/setup](https://livewallpapermac.vercel.app/setup)**.
 
 ### Updates
 
@@ -152,7 +176,7 @@ Closing the window doesn't quit LiveWall; reopen it from the menu-bar icon (**Wa
 ### Getting wallpapers
 
 - **Online Gallery** (sidebar): free 4K wallpapers; *Get* downloads one into your library with its tags.
-- **Website**: tick wallpapers on [the gallery](https://livewallpapermac.vercel.app) and click **Add to LiveWall**. The browser opens LiveWall through a `livewall://add?ids=…` link and the wallpapers download with progress in the Dynamic Island.
+- **Website**: tick wallpapers on [the gallery](https://livewallpapermac.vercel.app/gallery) and click **Add to LiveWall**. The browser opens LiveWall through a `livewall://add?ids=…` link and the wallpapers download with progress in the Dynamic Island.
 - **Your own videos**: drop files into the library folder (`~/Movies/LiveWall` by default) or choose another folder with the toolbar's folder button.
 
 ### Removing wallpapers
@@ -170,7 +194,7 @@ The slider under the wallpaper's name runs from 0.25× to 1.5× in 0.05× steps 
 
 ### Menu bar
 
-The menu-bar icon shows the current wallpaper and why it's paused (if it is), plus **Pause/Resume** (P), **Next Wallpaper** (N), **Speed**, **Wallpaper Controls…** (,), **Show Dynamic Island**, **Power Saving**, **Launch at Login** and **Quit** (Q).
+The menu-bar icon shows the current wallpaper and why it's paused (if it is), plus **Pause/Resume** (P), **Next Wallpaper** (N), **Speed**, **Wallpaper Controls…** (,), **Show Welcome…**, **Show Dynamic Island**, **Power Saving**, **Launch at Login** and **Quit** (Q).
 
 ### Dynamic Island
 
@@ -193,7 +217,7 @@ Events (a new wallpaper, a finished AI task, a new song) spring it open for a fe
 | `PostToolUse` | `…/livewall-claude-hook resume` |
 | `Stop` | `…/livewall-claude-hook stop` |
 
-A copy-paste block is in the [setup guide](https://livewallpapermac.vercel.app/setup.html#claude-code).
+A copy-paste block is in the [setup guide](https://livewallpapermac.vercel.app/setup#claude-code).
 
 **Your own tools** can post to the island:
 ```bash
@@ -320,6 +344,9 @@ It only appears for about an hour after a blocked launch. Open LiveWall again, c
 **"Add to LiveWall" on the website does nothing.**
 LiveWall must be in Applications and opened once before the browser knows about it.
 
+**I can't see LiveWall in the menu bar.**
+If your menu bar is full, macOS hides icons behind the notch. Hold ⌘ and drag other icons out to make room, and check LiveWall is allowed in System Settings → Menu Bar. Opening LiveWall again from Applications always brings up its window.
+
 **The desktop is black or not moving.**
 Check the first line of the menu-bar menu — it says why playback is paused.
 
@@ -348,9 +375,11 @@ Their source and licence haven't been checked; you may need a licence from the c
 
 ## The online gallery
 
-**[livewallpapermac.vercel.app](https://livewallpapermac.vercel.app)** — a static site in [`web/`](web) on Vercel, with videos in the Cloudflare R2 bucket `livewall-media` and votes/downloads from a Cloudflare Worker + D1 in [`web/stats/`](web/stats). Each wallpaper has a ♥ vote and a download count, and the grid can be sorted by *Most downloaded* or *Most loved*. The site currently has a cosmetic password screen (any password unlocks it).
+**[livewallpapermac.vercel.app](https://livewallpapermac.vercel.app)** — a static site in [`web/`](web) on Vercel: the home page with the app's features (`index.html`), the gallery at [`/gallery`](https://livewallpapermac.vercel.app/gallery), `/download` and `/setup`. Clean URLs are on in `web/vercel.json`, so old `.html` links and `/features` redirect. Videos live in the Cloudflare R2 bucket `livewall-media` and votes/downloads from a Cloudflare Worker + D1 in [`web/stats/`](web/stats). Each wallpaper has a ♥ vote and a download count, and the grid can be sorted by *Most downloaded* or *Most loved*. The site currently has a cosmetic password screen (any password unlocks it).
 
 Licensing: openly licensed entries (public domain, CC0, CC BY, own work) are credited to their source. Entries imported from a local library are published with `"unverified": true` and shown with a **Licence unverified** flag; `publish.mjs` refuses any other entry without an allowed licence, credit and source.
+
+To refresh the README screenshots after changing the home page's mockups: `python3 web/scripts/shoot_mockups.py` (needs Python Playwright and Chrome).
 
 To add wallpapers:
 1. **From longer footage** — `swift web/scripts/clip.swift <url> <start> <seconds> web/content <id>` cuts a 4K HEVC clip, a preview and a poster. Vetted candidates are in [`web/candidates.json`](web/candidates.json).
@@ -368,7 +397,7 @@ Stats Worker: `npx wrangler deploy` in `web/stats/`; schema in `schema.sql`.
    cd live-wallpaper-mac
    swift build -c release
    ./.build/release/LiveWall          # runs without launch at login or livewall:// links
-   scripts/release.sh 2.8 --install   # builds the full app bundle into /Applications
+   scripts/release.sh 3.0 --install   # builds the full app bundle into /Applications
    ```
 
 ### Project layout
@@ -377,20 +406,20 @@ Stats Worker: `npx wrangler deploy` in `web/stats/`; schema in `schema.sql`.
 Sources/LiveWall/        the app (Swift, AppKit + SwiftUI)
 Packaging/               Info.plist template, DMG background generator
 scripts/                 release.sh, livewall-activity, livewall-claude-hook
-web/public/              the gallery website
-web/scripts/             clip.swift, import_local.py, publish.mjs
+web/public/              the website: home (features), gallery, download and setup pages
+web/scripts/             clip.swift, import_local.py, publish.mjs, shoot_mockups.py
 web/stats/               votes/downloads Worker (Cloudflare D1)
 Media/                   the author's local wallpaper library
-docs/                    icon and screenshots
+docs/                    icon, screenshots (docs/screenshots/ is generated) and BRAND.md, the look everything follows
 ```
 
 ## Releasing
 
 1. `scripts/release.sh <version> --publish`
    - builds the app, bundles the helper scripts and ad-hoc signs it;
-   - makes a styled `.dmg` (app, arrow to Applications, install steps) with `create-dmg`;
+   - makes a styled `.dmg` with `create-dmg`: the app and Applications on a black stage with the amber glow, and the install steps (`Packaging/make_dmg_background.swift`);
    - uploads `releases/LiveWall-<version>.dmg`, `releases/LiveWall.dmg` and `releases/latest.json` to R2.
-2. The website's download page (`web/public/download.html`) reads `latest.json` for the version, size and link — no redeploy needed. It starts the download on Apple silicon Macs and explains the requirements to everyone else; add `?preview` to view it without downloading.
+2. The website's download page (`web/public/download.html`, served at `/download`) reads `latest.json` for the version, size and link — no redeploy needed. It starts the download on Apple silicon Macs and explains the requirements to everyone else; add `?preview` to view it without downloading.
 
 Uploading needs `npx wrangler login` once (Cloudflare account with R2).
 

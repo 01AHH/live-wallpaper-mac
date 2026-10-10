@@ -86,7 +86,7 @@ def main():
             catalog["wallpapers"].append({
                 "id": wid,
                 "title": title_for(Path(name).stem),
-                "description": f"{title_for(Path(name).stem)} — a {label} live wallpaper.",
+                "description": f"{title_for(Path(name).stem)}, a {label} live wallpaper.",
                 "tags": sorted(set(tags.get(name, [])) | ({label} if label else set())),
                 "credit": "Source unknown",
                 "source": None,

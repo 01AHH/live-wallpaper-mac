@@ -212,7 +212,7 @@ function tile(w) {
     const flag = document.createElement('span');
     flag.className = 'flag';
     flag.textContent = 'Licence unverified';
-    flag.title = 'Source and licence not checked — you may need a licence to use this wallpaper.';
+    flag.title = 'Source and licence not checked. You may need a licence to use this wallpaper.';
     el.querySelector('.art').append(flag);
   }
   el.setAttribute('aria-label', `${w.title}, view details`);

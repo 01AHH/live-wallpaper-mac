@@ -15,7 +15,7 @@ async function detect() {
   try {
     const hints = await navigator.userAgentData?.getHighEntropyValues?.(['architecture']);
     if (hints?.architecture === 'x86') {
-      return { ok: false, intel: true, reason: 'This looks like an Intel Mac — LiveWall currently needs Apple silicon (M1 or newer).' };
+      return { ok: false, intel: true, reason: 'This looks like an Intel Mac. LiveWall currently needs Apple silicon (M1 or newer).' };
     }
     if (hints?.architecture === 'arm') return { ok: true };
   } catch { /* fall through */ }
@@ -26,7 +26,7 @@ async function detect() {
     const info = gl?.getExtension('WEBGL_debug_renderer_info');
     const renderer = info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : '';
     if (/Intel|AMD|Radeon/i.test(renderer) && !/Apple/i.test(renderer)) {
-      return { ok: false, intel: true, reason: 'This looks like an Intel Mac — LiveWall currently needs Apple silicon (M1 or newer).' };
+      return { ok: false, intel: true, reason: 'This looks like an Intel Mac. LiveWall currently needs Apple silicon (M1 or newer).' };
     }
   } catch { /* unknown — assume it's fine */ }
   return { ok: true };
@@ -43,7 +43,7 @@ async function main() {
     const release = await res.json();
     url = release.url;
     const mb = Math.max(1, Math.round(release.bytes / 1e6));
-    $('dl-meta').textContent = `Version ${release.version} · ${mb} MB · Free · Requires macOS 26 on an Apple silicon Mac`;
+    $('dl-meta').textContent = `Version ${release.version} · ${mb} MB · macOS Tahoe and Apple silicon required`;
     $('mock-size').textContent = `${mb} MB · Downloads`;
   } catch { /* the default link still works */ }
   $('dl-again').href = url;
@@ -60,13 +60,13 @@ async function main() {
   // Start the download (the file is served as an attachment, so the page
   // stays). ?preview shows the page without downloading.
   if (new URLSearchParams(location.search).has('preview')) {
-    $('dl-status').innerHTML = '<span class="dl-check" aria-hidden="true">✓</span> Preview — the download would start now.';
+    $('dl-status').innerHTML = '<span class="dl-check" aria-hidden="true">✓</span> Preview: the download would start now.';
     return;
   }
   setTimeout(() => {
     location.href = url;
     setTimeout(() => {
-      $('dl-status').innerHTML = '<span class="dl-check" aria-hidden="true">✓</span> Downloading — follow the steps below.';
+      $('dl-status').innerHTML = '<span class="dl-check" aria-hidden="true">✓</span> Downloading. Follow the steps below.';
     }, 1200);
   }, 700);
 }
