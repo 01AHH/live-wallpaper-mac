@@ -269,6 +269,18 @@ struct ControlPanelView: View {
             .help(settings.spanScreens ? "One video spans every display" : "Each display plays the full video")
         }
         ToolbarItem(placement: .primaryAction) { islandMenu }
+        // Developer-only: shown on Macs where it's switched on with
+        // `defaults write com.arthurhinton.LiveWall devTools -bool true`.
+        if UserDefaults.standard.bool(forKey: "devTools") {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    (NSApp.delegate as? AppDelegate)?.showWelcome()
+                } label: {
+                    Label("Replay Welcome", systemImage: "sparkles")
+                }
+                .help("Developer: replay the first-launch welcome")
+            }
+        }
     }
 
     // MARK: - Detail

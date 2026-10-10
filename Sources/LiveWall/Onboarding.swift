@@ -3,9 +3,10 @@ import AppKit
 import ServiceManagement
 
 /// The first-run experience: a full-screen welcome in the spirit of Arc and
-/// Raycast. Big, quiet type on black, then a few steps that make the Mac
-/// yours — the first wallpaper plays full-screen behind the welcome the
-/// moment it's chosen.
+/// Raycast. Big, quiet type on black, then a live wallpaper dawns behind it
+/// and the steps play over it — swapping to the user's own pick the moment
+/// it's chosen. At the end the type dissolves, leaving just the wallpaper,
+/// and the welcome fades into the real desktop.
 struct OnboardingView: View {
     @ObservedObject var settings: AppSettings
     @ObservedObject var gallery: GalleryStore
@@ -24,14 +25,21 @@ struct OnboardingView: View {
     @State private var chosenFile: URL?
     @State private var downloading: String?
     @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
+    /// Set once the opening is over: the wallpaper rises out of the black.
+    @State private var dawned = false
+    /// Set while finishing: everything but the wallpaper fades away.
+    @State private var leaving = false
 
     var body: some View {
         ZStack {
             background
             VStack(spacing: 0) {
                 topBar
+                    .opacity(leaving ? 0 : 1)
                 Spacer(minLength: 0)
                 content
+                    .opacity(leaving ? 0 : 1)
+                    .blur(radius: leaving ? 12 : 0)
                     .frame(maxWidth: 980)
                     .padding(.horizontal, 48)
                     .id(step)
@@ -40,34 +48,47 @@ struct OnboardingView: View {
                         removal: .opacity.combined(with: .offset(y: -16))))
                 Spacer(minLength: 0)
                 progressDots.padding(.bottom, 40)
+                    .opacity(leaving ? 0 : 1)
             }
         }
         .ignoresSafeArea()
         .environment(\.colorScheme, .dark)
-        .onExitCommand { finish() }
         .task { await runWelcome() }
+        .task { await gallery.load() }   // early, so the wallpaper is ready to dawn
     }
 
     // MARK: Background
 
-    /// Black at first; once a wallpaper is chosen it plays full-screen
-    /// behind everything, softened so the type stays readable.
+    /// Black with nothing but type for the opening. Then a live wallpaper
+    /// rises out of the dark — the user's own once chosen, until then the
+    /// one already on their desktop or a gallery favourite, streamed — under
+    /// a scrim that keeps the type readable. The scrim lifts on the last
+    /// step, and goes entirely as the welcome leaves.
     private var background: some View {
         ZStack {
             Color.black
-            if let chosenFile {
-                LoopingVideoView(url: chosenFile)
-                    .transition(.opacity.animation(.easeInOut(duration: 1.6)))
-                LinearGradient(colors: [.black.opacity(0.55), .black.opacity(0.25), .black.opacity(0.7)],
-                               startPoint: .top, endPoint: .bottom)
-            } else if step != .welcome {
-                RadialGradient(colors: [Brand.accent.opacity(0.18), .clear],
-                               center: .top, startRadius: 0, endRadius: 900)
+            if let ambientVideo {
+                LoopingVideoView(url: ambientVideo)
+                    .id(ambientVideo)   // a fresh player per wallpaper, so they cross-fade
                     .transition(.opacity)
+                    .scaleEffect(dawned ? 1 : 1.08)
+                    .opacity(dawned ? 1 : 0)
             }
+            LinearGradient(colors: [.black.opacity(0.6), .black.opacity(0.3), .black.opacity(0.75)],
+                           startPoint: .top, endPoint: .bottom)
+                .opacity(leaving ? 0 : step == .done ? 0.55 : 1)
         }
-        .animation(.easeInOut(duration: 1.2), value: chosenFile)
+        .animation(.easeInOut(duration: 1.6), value: ambientVideo)
         .animation(.easeInOut(duration: 1.2), value: step)
+    }
+
+    /// What plays behind the welcome.
+    private var ambientVideo: URL? {
+        if let chosenFile { return chosenFile }
+        if let current = settings.currentVideo, FileManager.default.fileExists(atPath: current.path) {
+            return current
+        }
+        return gallery.wallpapers.first { !$0.isUnverified }?.video
     }
 
     private var topBar: some View {
@@ -80,12 +101,11 @@ struct OnboardingView: View {
                 .foregroundStyle(.white.opacity(0.6))
             }
             Spacer()
-            if step != .done {
-                Button("Skip") { finish() }
-                    .buttonStyle(.plain)
-                    .foregroundStyle(.white.opacity(0.6))
-                    .help("Skip the welcome (Esc)")
-            }
+            // Always there, on every step: the way out.
+            Button(step == .done ? "Close" : "Skip") { finish() }
+                .buttonStyle(.plain)
+                .foregroundStyle(.white.opacity(0.6))
+                .help("Close the welcome (Esc)")
         }
         .font(.system(size: 14, weight: .medium))
         .padding(.horizontal, 40)
@@ -131,7 +151,7 @@ struct OnboardingView: View {
                 .opacity(showSecondLine ? 1 : 0)
                 .offset(y: showSecondLine ? 0 : 14)
                 .blur(radius: showSecondLine ? 0 : 6)
-            primaryButton("Let's begin") { go(.wallpaper) }
+            primaryButton("Let's begin") { begin() }
                 .padding(.top, 34)
                 .opacity(showBegin ? 1 : 0)
                 .scaleEffect(showBegin ? 1 : 0.94)
@@ -321,11 +341,14 @@ struct OnboardingView: View {
                 .frame(maxWidth: 620)
             HStack(spacing: 14) {
                 secondaryButton("Browse the gallery") {
-                    NSWorkspace.shared.open(URL(string: "https://livewallpapermac.vercel.app")!)
+                    // Close first — the browser would otherwise open behind
+                    // the full-screen welcome.
+                    finish {
+                        NSWorkspace.shared.open(URL(string: "https://livewallpapermac.vercel.app")!)
+                    }
                 }
                 primaryButton("Open LiveWall") {
-                    finish()
-                    onOpenControls()
+                    finish(then: onOpenControls)
                 }
             }
             .padding(.top, 18)
@@ -386,13 +409,28 @@ struct OnboardingView: View {
         withAnimation(Brand.spring) { showBegin = true }
     }
 
+    /// Out of the black: the wallpaper slowly rises and settles as the
+    /// first step comes in.
+    private func begin() {
+        withAnimation(.easeOut(duration: 3.2)) { dawned = true }
+        go(.wallpaper)
+    }
+
     private func go(_ next: Step) {
         withAnimation(.spring(response: 0.6, dampingFraction: 0.86)) { step = next }
     }
 
-    private func finish() {
+    /// The type and scrim dissolve, leaving the wallpaper on its own for a
+    /// beat, then the welcome fades into the desktop playing the same one.
+    private func finish(then after: (() -> Void)? = nil) {
+        guard !leaving else { return }
         settings.hasOnboarded = true
-        onFinish()
+        let linger = ambientVideo != nil && dawned
+        withAnimation(.easeInOut(duration: 0.9)) { leaving = true }
+        DispatchQueue.main.asyncAfter(deadline: .now() + (linger ? 1.6 : 0.3)) {
+            onFinish()
+            after?()
+        }
     }
 }
 
@@ -400,6 +438,13 @@ struct OnboardingView: View {
 final class OnboardingWindow: NSWindow {
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { true }
+}
+
+/// Buttons answer the first click even when LiveWall isn't the active app
+/// (say, after a link opened the browser) instead of the click only
+/// activating the app and looking like it did nothing.
+final class FirstMouseHostingView<Content: View>: NSHostingView<Content> {
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
 }
 
 // MARK: - Move to Applications

@@ -16,6 +16,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var menuActions: [MenuAction] = []
 
     private var onboardingWindow: NSWindow?
+    /// Escape hatches for the welcome: a key monitor and app-activation
+    /// observers, removed when it closes.
+    private var onboardingKeyMonitor: Any?
+    private var onboardingObservers: [NSObjectProtocol] = []
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Opened from the .dmg or Downloads: offer to move into Applications
@@ -56,25 +60,66 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         window.collectionBehavior = [.fullScreenAuxiliary, .canJoinAllSpaces]
         window.backgroundColor = .black
         window.isReleasedWhenClosed = false
-        window.contentView = NSHostingView(rootView: view)
+        window.contentView = FirstMouseHostingView(rootView: view)
         window.setFrame(screen.frame, display: true)
         window.alphaValue = 0
         onboardingWindow = window
         NSApp.activate()
         window.makeKeyAndOrderFront(nil)
         NSAnimationContext.runAnimationGroup { $0.duration = 0.6; window.animator().alphaValue = 1 }
+        installWelcomeEscapeHatches(window)
+    }
+
+    /// However the welcome gets stuck, there's always a way out. LiveWall has
+    /// no app menu, so ⌘Q does nothing on its own — catch Esc, ⌘Q, ⌘W and
+    /// ⌘. here, before SwiftUI's focus gets a say. And when another app comes
+    /// forward (a link opened in the browser, ⌘-Tab), drop the welcome to an
+    /// ordinary window so it can't trap the screen.
+    private func installWelcomeEscapeHatches(_ window: NSWindow) {
+        onboardingKeyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
+            let command = event.modifierFlags.contains(.command)
+            let key = event.charactersIgnoringModifiers?.lowercased()
+            let escape = event.keyCode == 53
+            guard escape || (command && ["q", "w", "."].contains(key)) else { return event }
+            self?.settings.hasOnboarded = true
+            self?.closeWelcome()
+            return nil
+        }
+        let center = NotificationCenter.default
+        onboardingObservers = [
+            center.addObserver(forName: NSApplication.didResignActiveNotification, object: nil, queue: .main) { _ in
+                MainActor.assumeIsolated { window.level = .normal }
+            },
+            center.addObserver(forName: NSApplication.didBecomeActiveNotification, object: nil, queue: .main) { _ in
+                MainActor.assumeIsolated {
+                    window.level = .statusBar
+                    window.makeKeyAndOrderFront(nil)
+                }
+            },
+        ]
     }
 
     private func closeWelcome() {
         guard let window = onboardingWindow else { return }
         onboardingWindow = nil
+        if let onboardingKeyMonitor { NSEvent.removeMonitor(onboardingKeyMonitor) }
+        onboardingKeyMonitor = nil
+        onboardingObservers.forEach(NotificationCenter.default.removeObserver)
+        onboardingObservers = []
+        // Stop taking clicks straight away, so even a fade that never
+        // completes can't leave an invisible wall over the screen.
+        window.ignoresMouseEvents = true
+        var closed = false
+        let tearDown = { [weak self] in
+            guard !closed else { return }
+            closed = true
+            window.orderOut(nil)
+            window.contentView = nil   // stops the background video
+            self?.island?.isShown = self?.settings.showIsland ?? true
+        }
         NSAnimationContext.runAnimationGroup({ $0.duration = 0.5; window.animator().alphaValue = 0 },
-                                             completionHandler: { [weak self] in
-            MainActor.assumeIsolated {
-                window.orderOut(nil)
-                self?.island?.isShown = self?.settings.showIsland ?? true
-            }
-        })
+                                             completionHandler: { MainActor.assumeIsolated { tearDown() } })
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { MainActor.assumeIsolated { tearDown() } }
     }
 
     /// Download a gallery wallpaper into the library and put it on every
