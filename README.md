@@ -379,6 +379,8 @@ Their source and licence haven't been checked; you may need a licence from the c
 
 Licensing: openly licensed entries (public domain, CC0, CC BY, own work) are credited to their source. Entries imported from a local library are published with `"unverified": true` and shown with a **Licence unverified** flag; `publish.mjs` refuses any other entry without an allowed licence, credit and source.
 
+To deploy the website: `scripts/deploy-web.sh` (needs `npx vercel login` once). Pushing to GitHub doesn't deploy it.
+
 To refresh the README screenshots after changing the home page's mockups: `python3 web/scripts/shoot_mockups.py` (needs Python Playwright and Chrome).
 
 To add wallpapers:
@@ -405,7 +407,7 @@ Stats Worker: `npx wrangler deploy` in `web/stats/`; schema in `schema.sql`.
 ```
 Sources/LiveWall/        the app (Swift, AppKit + SwiftUI)
 Packaging/               Info.plist template, DMG background generator
-scripts/                 release.sh, livewall-activity, livewall-claude-hook
+scripts/                 release.sh, deploy-web.sh, livewall-activity, livewall-claude-hook
 web/public/              the website: home (features), gallery, download and setup pages
 web/scripts/             clip.swift, import_local.py, publish.mjs, shoot_mockups.py
 web/stats/               votes/downloads Worker (Cloudflare D1)
