@@ -1505,6 +1505,25 @@
       "resolution": "1920x1080",
       "codec": "H.264",
       "duration": 12
+    },
+    {
+      "id": "pacific-sunset",
+      "title": "Pacific Sundown",
+      "description": "Sun setting into the Pacific behind gently washing surf and rocks.",
+      "tags": [
+        "Ocean",
+        "Sky"
+      ],
+      "credit": "Steven Pavlov (YouTube \"senapa\")",
+      "source": "https://commons.wikimedia.org/wiki/File:2022-08-06,_Pacific_Ocean_sunset_(Ocean_Shores,_Washington),_01.webm",
+      "sourceStart": 0,
+      "licence": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/"
+      },
+      "resolution": "3840x2160",
+      "codec": "HEVC",
+      "duration": 16
     }
   ]
 }
