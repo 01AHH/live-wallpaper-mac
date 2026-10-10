@@ -3,3 +3,5 @@ public/content
 node_modules
 scripts
 .env*
+stats
+candidates.json

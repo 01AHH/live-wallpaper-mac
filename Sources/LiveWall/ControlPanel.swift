@@ -510,6 +510,7 @@ struct ControlPanelView: View {
         guard let folder = settings.libraryFolder else { chooseFolder(); return }
         gallery.download(wallpaper, into: folder) { result in
             guard case .success(let file) = result else { return }
+            gallery.recordDownload(wallpaper)
             for tag in wallpaper.tags {
                 let name = categories.addTag(tag) ?? tag
                 if !categories.has(name, file) { categories.toggle(name, for: file) }

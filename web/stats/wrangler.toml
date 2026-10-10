@@ -1,0 +1,10 @@
+# Votes and download counts for the LiveWall gallery.
+# Deploy: npx wrangler deploy   ·   Schema: npx wrangler d1 execute livewall-stats --remote --file schema.sql
+name = "livewall-stats"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "livewall-stats"
+database_id = "f74692ee-11d8-480a-93df-46d9dbdf7162"

@@ -78,7 +78,16 @@ for (const w of source.wallpapers) {
                     '--file', f.path, '--content-type', f.type, '--remote'];
       // The 4K file is for saving, so browsers download it instead of playing it.
       if (f.download) args.push('--content-disposition', `attachment; filename="${name}"`);
-      execFileSync('npx', args, { stdio: ['ignore', 'ignore', 'inherit'] });
+      // Large batches hit the odd dropped connection; retry before giving up.
+      for (let attempt = 1; ; attempt++) {
+        try {
+          execFileSync('npx', args, { stdio: ['ignore', 'ignore', 'pipe'] });
+          break;
+        } catch (err) {
+          if (attempt === 3) throw err;
+          console.warn(`  ${w.id} ${kind} — upload failed, retrying (${attempt}/3)`);
+        }
+      }
       console.log(`  ${w.id} ${kind} → ${url}`);
     }
     urls[kind] = url;

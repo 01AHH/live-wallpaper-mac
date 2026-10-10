@@ -1,11 +1,77 @@
-// LiveWall Gallery: reads catalog.json and renders the featured hero, a
-// searchable, tag-filtered grid with hover previews, and a detail sheet with
-// the download, licence and credit.
+// Live Wallpaper Mac gallery: reads catalog.json and renders the featured
+// hero, a searchable, tag-filtered, sortable grid with hover previews, votes
+// and download counts, and a detail sheet with the download and credit.
 
 const $ = (id) => document.getElementById(id);
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const state = { all: [], tag: 'All', query: '', selected: new Set() };
+const state = {
+  all: [], tag: 'All', query: '', selected: new Set(),
+  sort: 'featured', stats: {}, mine: new Set(),
+};
+// Votes and download counts (web/stats — a Cloudflare Worker with D1).
+const STATS = 'https://livewall-stats.livewall-gallery.workers.dev';
+
+const countsFor = (id) => state.stats[id] || { downloads: 0, votes: 0 };
+const compact = (n) => new Intl.NumberFormat('en', { notation: 'compact' }).format(n);
+
+async function loadStats() {
+  try {
+    const res = await fetch(`${STATS}/stats`, { signal: AbortSignal.timeout(4000) });
+    const { wallpapers, mine } = await res.json();
+    state.stats = wallpapers;
+    state.mine = new Set(mine);
+  } catch { /* counts are a nice-to-have; the gallery works without them */ }
+}
+
+/** Count a download (4K file or "Add to LiveWall"). Fire-and-forget. */
+function recordDownloads(ids) {
+  for (const id of ids) {
+    const c = countsFor(id);
+    state.stats[id] = { ...c, downloads: c.downloads + 1 };
+  }
+  fetch(`${STATS}/download`, {
+    method: 'POST', keepalive: true,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ids }),
+  }).catch(() => {});
+  document.querySelectorAll('[data-downloads]').forEach(updateStatEl);
+}
+
+/** Vote or un-vote; optimistic, then reconciled with the server's count. */
+async function toggleVote(id) {
+  const voted = state.mine.has(id);
+  const c = countsFor(id);
+  if (voted) state.mine.delete(id); else state.mine.add(id);
+  state.stats[id] = { ...c, votes: Math.max(0, c.votes + (voted ? -1 : 1)) };
+  document.querySelectorAll(`[data-vote="${id}"], [data-downloads="${id}"]`).forEach(updateStatEl);
+  try {
+    const res = await fetch(`${STATS}/vote`, {
+      method: voted ? 'DELETE' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    });
+    const body = await res.json();
+    state.stats[id] = { ...countsFor(id), votes: body.votes };
+  } catch { /* keep the optimistic count */ }
+  document.querySelectorAll(`[data-vote="${id}"]`).forEach(updateStatEl);
+}
+
+/** Refresh a vote button or download label from state. */
+function updateStatEl(el) {
+  if (el.dataset.vote) {
+    const id = el.dataset.vote;
+    const on = state.mine.has(id);
+    el.classList.toggle('voted', on);
+    el.setAttribute('aria-pressed', String(on));
+    el.querySelector('.n').textContent = compact(countsFor(id).votes);
+    el.title = on ? 'Remove your vote' : 'Vote for this wallpaper';
+  } else if (el.dataset.downloads) {
+    const n = countsFor(el.dataset.downloads).downloads;
+    el.textContent = `↓ ${compact(n)}`;
+    el.title = `${n} download${n === 1 ? '' : 's'}`;
+  }
+}
 const RELEASES = 'https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/releases';
 
 // "Add to LiveWall" opens the app through its livewall:// link, which
@@ -13,6 +79,7 @@ const RELEASES = 'https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/releases';
 const addURL = (ids) => `livewall://add?ids=${ids.map(encodeURIComponent).join(',')}`;
 
 function openInApp(ids) {
+  recordDownloads(ids);
   location.href = addURL(ids);
   // Browsers say nothing if the app isn't installed, so offer a hint.
   const toast = $('toast');
@@ -27,9 +94,15 @@ const formatSize = (bytes) => `${(bytes / 1e6).toFixed(0)} MB`;
 const downloadURL = (url) => url;
 
 async function load() {
+  // Draw the gallery straight away; counts fill in when they arrive.
+  const stats = loadStats();
   const res = await fetch('catalog.json', { cache: 'no-cache' });
   const { wallpapers } = await res.json();
   state.all = wallpapers;
+  stats.then(() => {
+    if (state.sort !== 'featured') renderGrid();
+    document.querySelectorAll('[data-vote], [data-downloads]').forEach(updateStatEl);
+  });
   renderHero(wallpapers[0]);
   renderTags();
   renderGrid();
@@ -69,8 +142,22 @@ function filtered() {
     (!q || w.title.toLowerCase().includes(q) || w.tags.some((t) => t.toLowerCase().includes(q))));
 }
 
+function sorted(list) {
+  if (state.sort === 'featured') return list;
+  const key = state.sort;   // 'downloads' or 'votes'
+  return [...list].sort((a, b) => countsFor(b.id)[key] - countsFor(a.id)[key]);
+}
+
+document.querySelectorAll('.sort').forEach((button) => {
+  button.addEventListener('click', () => {
+    state.sort = button.dataset.sort;
+    document.querySelectorAll('.sort').forEach((b) => b.setAttribute('aria-checked', String(b === button)));
+    renderGrid();
+  });
+});
+
 function renderGrid() {
-  const list = filtered();
+  const list = sorted(filtered());
   $('count').textContent = list.length;
   $('library-title').firstChild.textContent = (state.tag === 'All' ? 'All Wallpapers' : state.tag) + ' ';
   $('empty').hidden = list.length > 0;
@@ -86,7 +173,20 @@ function tile(w) {
       <video muted loop playsinline preload="none"></video>
       <span class="pick" role="checkbox" tabindex="0"></span>
     </div>
-    <p class="tile-title"></p>`;
+    <div class="tile-foot">
+      <p class="tile-title"></p>
+      <span class="downloads"></span>
+      <span class="vote" role="button" tabindex="0"><span class="heart">♥</span> <span class="n"></span></span>
+    </div>`;
+  const vote = el.querySelector('.vote');
+  vote.dataset.vote = w.id;
+  const downloads = el.querySelector('.downloads');
+  downloads.dataset.downloads = w.id;
+  updateStatEl(vote);
+  updateStatEl(downloads);
+  const onVote = (e) => { e.stopPropagation(); e.preventDefault(); toggleVote(w.id); };
+  vote.addEventListener('click', onVote);
+  vote.addEventListener('keydown', (e) => { if (e.key === ' ' || e.key === 'Enter') onVote(e); });
   const pick = el.querySelector('.pick');
   const syncPick = () => {
     const on = state.selected.has(w.id);
@@ -150,6 +250,14 @@ function openSheet(w) {
   $('sheet-size').textContent = formatSize(w.bytes);
   $('sheet-download').href = downloadURL(w.video);
   $('sheet-add').onclick = (e) => { e.preventDefault(); openInApp([w.id]); };
+  $('sheet-download').onclick = () => recordDownloads([w.id]);
+  const sheetVote = $('sheet-vote');
+  sheetVote.dataset.vote = w.id;
+  sheetVote.querySelector('#sheet-votes').classList.add('n');
+  sheetVote.onclick = () => toggleVote(w.id);
+  updateStatEl(sheetVote);
+  $('sheet-downloads').dataset.downloads = w.id;
+  updateStatEl($('sheet-downloads'));
   $('sheet-unverified').hidden = !w.unverified;
   $('sheet-licence-line').hidden = !!w.unverified;
   if (!w.unverified) {

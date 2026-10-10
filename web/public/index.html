@@ -3,8 +3,30 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LiveWall Gallery</title>
-  <meta name="description" content="Free, openly licensed live wallpapers for LiveWall on Mac.">
+  <title>Live Wallpaper Mac — Free 4K Live Wallpapers for macOS | LiveWall</title>
+  <meta name="description" content="Live Wallpaper Mac: free 4K animated video wallpapers for macOS and the free LiveWall app. Browse, vote and add live wallpapers to your Mac desktop in one click.">
+  <link rel="canonical" href="https://livewallpapermac.vercel.app/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Live Wallpaper Mac">
+  <meta property="og:title" content="Live Wallpaper Mac — Free 4K Live Wallpapers for macOS">
+  <meta property="og:description" content="Free 4K animated wallpapers for your Mac desktop, and the free LiveWall app to play them.">
+  <meta property="og:url" content="https://livewallpapermac.vercel.app/">
+  <meta property="og:image" content="https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/wallpapers/blue-horizon/blue-horizon.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "LiveWall",
+    "alternateName": "Live Wallpaper Mac",
+    "applicationCategory": "DesktopEnhancementApplication",
+    "operatingSystem": "macOS 26 or later",
+    "description": "Live video wallpapers for Mac, with a Dynamic Island for music and AI activity.",
+    "url": "https://livewallpapermac.vercel.app/",
+    "downloadUrl": "https://pub-a3e561f362c147a7845a8f32d2f71a91.r2.dev/releases/LiveWall.dmg",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
   <meta name="theme-color" content="#0b0b0d">
   <link rel="icon" href="icon.png">
   <link rel="stylesheet" href="styles.css">
@@ -14,7 +36,7 @@
   <div class="gate" id="gate" hidden>
     <form class="gate-card" id="gate-form">
       <img src="icon.png" alt="" width="56" height="56">
-      <h1>LiveWall Gallery</h1>
+      <p class="gate-title">Live Wallpaper Mac</p>
       <p>Enter the password to continue.</p>
       <input id="gate-input" type="password" placeholder="Password" autocomplete="current-password" required>
       <button class="btn primary wide" type="submit">Unlock</button>
@@ -23,7 +45,7 @@
   <header class="topbar">
     <a class="brand" href="/">
       <img src="icon.png" alt="" width="28" height="28">
-      <span>LiveWall <em>Gallery</em></span>
+      <span>Live Wallpaper <em>Mac</em></span>
     </a>
     <label class="search">
       <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8.5 3a5.5 5.5 0 1 0 3.4 9.8l3.6 3.7 1.1-1.1-3.7-3.6A5.5 5.5 0 0 0 8.5 3Zm0 1.5a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"/></svg>
@@ -33,12 +55,18 @@
   </header>
 
   <main>
+    <section class="intro">
+      <h1>Live wallpapers for Mac</h1>
+      <p>Free 4K animated wallpapers for your macOS desktop — pick the ones you love, vote for your favourites,
+        and add them to the free <a href="#download">LiveWall app</a> in one click.</p>
+    </section>
+
     <section class="hero" id="hero" hidden>
       <video id="hero-video" muted loop playsinline autoplay></video>
       <div class="hero-scrim"></div>
       <div class="hero-copy">
         <p class="eyebrow">Featured</p>
-        <h1 id="hero-title"></h1>
+        <h2 id="hero-title"></h2>
         <p id="hero-desc" class="hero-desc"></p>
         <div class="hero-actions">
           <button class="btn primary" id="hero-open">View wallpaper</button>
@@ -50,8 +78,13 @@
     <section class="library">
       <div class="library-head">
         <h2 id="library-title">All Wallpapers <span id="count"></span></h2>
-        <div class="tags" id="tags" role="tablist" aria-label="Filter by tag"></div>
+        <div class="sorts" role="radiogroup" aria-label="Sort wallpapers">
+          <button class="sort" data-sort="featured" aria-checked="true" role="radio">Featured</button>
+          <button class="sort" data-sort="downloads" aria-checked="false" role="radio">Most downloaded</button>
+          <button class="sort" data-sort="votes" aria-checked="false" role="radio">Most loved</button>
+        </div>
       </div>
+      <div class="tags" id="tags" role="tablist" aria-label="Filter by tag"></div>
       <div class="grid" id="grid" aria-live="polite"></div>
       <p class="empty" id="empty" hidden>No wallpapers match that search.</p>
     </section>
@@ -92,6 +125,10 @@
       <h3 id="sheet-title"></h3>
       <p id="sheet-desc"></p>
       <ul class="chips" id="sheet-tags"></ul>
+      <div class="sheet-stats">
+        <button class="vote" id="sheet-vote" type="button" aria-pressed="false"><span class="heart">♥</span> <span id="sheet-votes">0</span></button>
+        <span class="downloads" id="sheet-downloads"></span>
+      </div>
       <dl class="meta">
         <div><dt>Resolution</dt><dd id="sheet-res"></dd></div>
         <div><dt>Format</dt><dd id="sheet-codec"></dd></div>

@@ -25,7 +25,20 @@ struct GalleryWallpaper: Decodable, Identifiable, Hashable {
 /// Loads the online catalog and downloads wallpapers into the library.
 @MainActor
 final class GalleryStore: NSObject, ObservableObject {
-    static let catalogURL = URL(string: "https://live-wallpaper-mac-mauve.vercel.app/catalog.json")!
+    static let catalogURL = URL(string: "https://livewallpapermac.vercel.app/catalog.json")!
+    /// Download counts and votes shown on the website (web/stats).
+    static let statsURL = URL(string: "https://livewall-stats.livewall-gallery.workers.dev")!
+
+    /// Count a download made from inside the app, so the website's "Most
+    /// downloaded" reflects it. (Downloads started from the website are
+    /// already counted there.)
+    func recordDownload(_ wallpaper: GalleryWallpaper) {
+        var request = URLRequest(url: Self.statsURL.appendingPathComponent("download"))
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try? JSONSerialization.data(withJSONObject: ["ids": [wallpaper.id]])
+        URLSession.shared.dataTask(with: request).resume()
+    }
 
     @Published private(set) var wallpapers: [GalleryWallpaper] = []
     @Published private(set) var isLoading = false
