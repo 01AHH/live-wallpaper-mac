@@ -328,7 +328,6 @@ struct ControlPanelView: View {
             HStack(alignment: .bottom, spacing: 16) {
                 VStack(alignment: .leading, spacing: 8) {
                     Label("Now Playing", systemImage: "waveform")
-                        .symbolEffect(.variableColor.iterative, options: .repeating)
                         .font(Brand.Font.eyebrow)
                         .textCase(.uppercase)
                         .tracking(1.4)

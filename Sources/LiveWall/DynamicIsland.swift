@@ -240,7 +240,6 @@ struct DynamicIslandView: View {
             Image(systemName: a.state == .attention ? "exclamationmark.bubble.fill" : "sparkles")
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(Brand.accent)
-                .symbolEffect(.pulse, options: .repeating, isActive: a.state == .running)
         case .music:
             artwork(activities.artwork, size: CGSize(width: 18, height: 18), radius: 4, fallback: "music.note")
         case .wallpaper:
@@ -255,12 +254,15 @@ struct DynamicIslandView: View {
             if a.state == .attention {
                 Circle().fill(Brand.accent).frame(width: 7, height: 7)
             } else {
-                ProgressView().controlSize(.mini).tint(Brand.accent)
+                // Static on purpose: a resting island that animates forever
+                // redraws its whole window every frame and makes the app stutter.
+                Image(systemName: "ellipsis")
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundStyle(Brand.accent)
             }
         case .music:
             Image(systemName: "waveform")
                 .font(.system(size: 12, weight: .semibold))
-                .symbolEffect(.variableColor.iterative, options: .repeating)
                 .foregroundStyle(Brand.accent)
         case .wallpaper:
             wallpaperGlyph.font(.system(size: 12, weight: .semibold))
@@ -444,7 +446,6 @@ struct DynamicIslandView: View {
     private var wallpaperGlyph: some View {
         if model.isPlaying {
             Image(systemName: "waveform")
-                .symbolEffect(.variableColor.iterative, options: .repeating)
                 .foregroundStyle(Brand.accent)
         } else {
             Image(systemName: "pause.fill").foregroundStyle(.white.opacity(0.6))

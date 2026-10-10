@@ -160,7 +160,6 @@ struct VideoTile: View {
 
     private var playingBadge: some View {
         Label("Playing", systemImage: "waveform")
-            .symbolEffect(.variableColor.iterative, options: .repeating, isActive: !isHovering)
             .font(.caption.weight(.semibold))
             .foregroundStyle(.white)
             .padding(.horizontal, 9)

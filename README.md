@@ -119,8 +119,9 @@ Privacy & Security → Open Anyway** (or `xattr -dr com.apple.quarantine /Applic
 **From source / releasing:** [`scripts/release.sh`](scripts/release.sh) builds the app
 from scratch (binary + `AppIcon.icns` + [`Packaging/Info.plist`](Packaging/Info.plist),
 with the helper scripts in `Contents/Resources/scripts/`), ad-hoc signs it and
-packages `dist/LiveWall-<version>.dmg` with an Applications shortcut and
-[`Packaging/Install.txt`](Packaging/Install.txt).
+packages `dist/LiveWall-<version>.dmg` as a styled installer window (drawn by
+[`Packaging/make_dmg_background.swift`](Packaging/make_dmg_background.swift): the app,
+an arrow to Applications, and the install steps). Needs `brew install create-dmg`.
 ```bash
 scripts/release.sh 2.8             # build dist/LiveWall-2.8.dmg
 scripts/release.sh 2.8 --install   # …and install it into /Applications

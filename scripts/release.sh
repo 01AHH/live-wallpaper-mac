@@ -37,12 +37,25 @@ codesign --force --deep --sign - "$APP"
 codesign --verify "$APP"
 
 echo "▸ Packaging $DMG"
-STAGE="$(mktemp -d)"
-cp -R "$APP" "$STAGE/"
-ln -s /Applications "$STAGE/Applications"
-cp Packaging/Install.txt "$STAGE/How to install.txt"
-hdiutil create -volname "LiveWall $VERSION" -srcfolder "$STAGE" -ov -format UDZO "$DMG" >/dev/null
-rm -rf "$STAGE"
+# A styled installer window like other Mac apps': app icon, arrow, Applications
+# folder, and the install steps drawn into the background (including the
+# one-time "Open Anyway"). Icon positions match Packaging/make_dmg_background.swift.
+WORK="$(mktemp -d)"
+mkdir "$WORK/source"
+cp -R "$APP" "$WORK/source/"
+swift Packaging/make_dmg_background.swift "$WORK/bg.png" "$WORK/bg@2x.png"
+tiffutil -cathidpicheck "$WORK/bg.png" "$WORK/bg@2x.png" -out "$WORK/background.tiff" 2>/dev/null
+# The window height includes Finder's title bar, so add it to the 440pt artwork.
+create-dmg \
+  --volname "LiveWall $VERSION" \
+  --background "$WORK/background.tiff" \
+  --window-pos 240 160 --window-size 660 468 \
+  --icon-size 112 --text-size 13 \
+  --icon "LiveWall.app" 170 175 --hide-extension "LiveWall.app" \
+  --app-drop-link 490 175 \
+  --no-internet-enable \
+  "$DMG" "$WORK/source" >/dev/null
+rm -rf "$WORK"
 SIZE=$(stat -f%z "$DMG")
 echo "  $(( SIZE / 1000000 )) MB"
 
