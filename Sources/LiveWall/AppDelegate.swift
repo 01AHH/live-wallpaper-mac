@@ -2,6 +2,7 @@ import Cocoa
 import SwiftUI
 import Combine
 import ServiceManagement
+import Sparkle
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
@@ -14,6 +15,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let power = PowerMonitor()
     private let gallery = GalleryStore()
     private var menuActions: [MenuAction] = []
+    /// Sparkle: checks releases/appcast.xml daily and installs updates.
+    /// Only in the packaged app; a bare `swift run` has no feed to read.
+    private let updates = UpdateController()
 
     private var onboardingWindow: NSWindow?
     /// Escape hatches for the welcome: a key monitor and app-activation
@@ -449,6 +453,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(item("Launch at Login", checked: SMAppService.mainApp.status == .enabled) { [weak self] in
             self?.toggleLaunchAtLogin(nil)
         })
+
+        menu.addItem(item("Check for Updates…") { [weak self] in self?.updates.checkForUpdates() })
 
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "Quit LiveWall",

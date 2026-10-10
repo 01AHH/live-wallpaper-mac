@@ -14,6 +14,10 @@
     <key>LSUIElement</key>             <true/>
     <key>NSHighResolutionCapable</key> <true/>
     <key>NSAppleEventsUsageDescription</key><string>LiveWall controls Spotify and Music playback from the Dynamic Island.</string>
+    <!-- Sparkle automatic updates: Sources/LiveWall/Updates.swift; release.sh writes the appcast. -->
+    <key>SUFeedURL</key>               <string>__MEDIA__/releases/appcast.xml</string>
+    <key>SUPublicEDKey</key>           <string>rWsxjppXtN2gY7614pWg4ggxeZekW9dVj8Jny5HXysk=</string>
+    <key>SUEnableAutomaticChecks</key> <true/>
     <!-- livewall://add?ids=a,b,c — "Add to LiveWall" links from the online gallery -->
     <key>CFBundleURLTypes</key>
     <array>

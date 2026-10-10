@@ -12,4 +12,4 @@ mkdir "$STAGE/web"
 cp -R web/.vercel "$STAGE/.vercel"
 cp -R web/public web/vercel.json web/.vercelignore "$STAGE/web/"
 cd "$STAGE"
-npx --yes vercel --prod --yes | grep -E "Aliased|Production|Error" || true
+npx --yes vercel --prod --yes 2>&1 | grep -E "Aliased|Production|Error" || true
