@@ -30,6 +30,9 @@ final class AppSettings: ObservableObject {
     @Published var libraryFolder: URL? { didSet { persist() } }
     @Published var currentVideo: URL?  { didSet { persist() } }
     @Published var spanScreens: Bool   { didSet { persist() } }
+    /// Wallpapers chosen for individual displays (keyed by `NSScreen.stableID`).
+    /// Screens without one show `currentVideo`. Ignored while spanning.
+    @Published private(set) var screenVideos: [String: URL] { didSet { persist() } }
     @Published var fillMode: FillMode  { didSet { persist() } }
     /// Playback speed per video, keyed by filename (like categories.json),
     /// so each wallpaper remembers its own pace. Missing means 1×.
@@ -55,6 +58,8 @@ final class AppSettings: ObservableObject {
         libraryFolder = defaults.url(forKey: Keys.libraryFolder) ?? Self.defaultLibrary()
         currentVideo  = defaults.url(forKey: Keys.currentVideo)
         spanScreens   = defaults.object(forKey: Keys.spanScreens) as? Bool ?? true
+        screenVideos  = (defaults.dictionary(forKey: Keys.screenVideos) as? [String: String] ?? [:])
+            .mapValues { URL(fileURLWithPath: $0) }
         fillMode      = FillMode(rawValue: defaults.string(forKey: Keys.fillMode) ?? "") ?? .fill
         speeds        = defaults.dictionary(forKey: Keys.speeds) as? [String: Double] ?? [:]
         showIsland    = defaults.object(forKey: Keys.showIsland) as? Bool ?? true
@@ -74,6 +79,22 @@ final class AppSettings: ObservableObject {
         return folder
     }
 
+    /// The wallpaper a display shows when not spanning.
+    func video(forScreen id: String) -> URL? {
+        screenVideos[id] ?? currentVideo
+    }
+
+    /// Give one display its own wallpaper, or (with `screen` nil) set the
+    /// wallpaper for every display, clearing the per-display choices.
+    func setVideo(_ url: URL, forScreen screen: String?) {
+        if let screen {
+            screenVideos[screen] = url == currentVideo ? nil : url
+        } else {
+            screenVideos = [:]
+            currentVideo = url
+        }
+    }
+
     func speed(for url: URL?) -> Double {
         guard let url else { return 1 }
         return speeds[url.lastPathComponent] ?? 1
@@ -89,6 +110,7 @@ final class AppSettings: ObservableObject {
         defaults.set(libraryFolder, forKey: Keys.libraryFolder)
         defaults.set(currentVideo, forKey: Keys.currentVideo)
         defaults.set(spanScreens, forKey: Keys.spanScreens)
+        defaults.set(screenVideos.mapValues(\.path), forKey: Keys.screenVideos)
         defaults.set(fillMode.rawValue, forKey: Keys.fillMode)
         defaults.set(speeds, forKey: Keys.speeds)
         defaults.set(showIsland, forKey: Keys.showIsland)
@@ -102,6 +124,7 @@ final class AppSettings: ObservableObject {
         static let libraryFolder = "libraryFolder"
         static let currentVideo  = "currentVideo"
         static let spanScreens   = "spanScreens"
+        static let screenVideos  = "screenVideos"
         static let fillMode      = "fillMode"
         static let speeds        = "videoSpeeds"
         static let showIsland    = "showDynamicIsland"

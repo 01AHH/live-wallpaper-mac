@@ -155,9 +155,15 @@ struct SpecularHighlight: View {
 /// A miniature of the real monitor arrangement showing exactly how the
 /// current fill mode and span setting will lay the wallpaper out.
 struct DisplayPreview: View {
-    let poster: NSImage?
+    /// One poster per screen, in `NSScreen.screens` order. When spanning, the
+    /// first is stretched across them all.
+    let posters: [NSImage?]
     let mode: FillMode
     let span: Bool
+    /// The screen being edited (index into `NSScreen.screens`), if any.
+    var selected: Int? = nil
+    /// Set to make monitors clickable.
+    var onSelect: ((Int) -> Void)? = nil
 
     var body: some View {
         let screens = NSScreen.screens.map(\.frame)
@@ -180,7 +186,10 @@ struct DisplayPreview: View {
 
             ZStack(alignment: .topLeading) {
                 ForEach(rects.indices, id: \.self) { i in
-                    monitor(rect: rects[i], canvas: span ? canvas : rects[i])
+                    monitor(rect: rects[i], canvas: span ? canvas : rects[i],
+                            poster: span ? posters.first ?? nil : (i < posters.count ? posters[i] : nil),
+                            isSelected: selected == i)
+                        .onTapGesture { onSelect?(i) }
                 }
             }
         }
@@ -188,7 +197,7 @@ struct DisplayPreview: View {
         .animation(.spring(response: 0.55, dampingFraction: 0.78), value: span)
     }
 
-    private func monitor(rect: CGRect, canvas: CGRect) -> some View {
+    private func monitor(rect: CGRect, canvas: CGRect, poster: NSImage?, isSelected: Bool) -> some View {
         let screen = rect.insetBy(dx: 3, dy: 0)
         let content = poster?.size ?? CGSize(width: 16, height: 9)
         let video = videoRect(content: content, in: canvas, mode: mode)
@@ -206,7 +215,12 @@ struct DisplayPreview: View {
             }
             .frame(width: screen.width, height: screen.height, alignment: .topLeading)
             .clipShape(shape)
-            .overlay { shape.strokeBorder(.white.opacity(0.35), lineWidth: 1.5) }
+            .overlay {
+                shape.strokeBorder(isSelected ? Brand.accent : .white.opacity(0.35),
+                                   lineWidth: isSelected ? 2.5 : 1.5)
+            }
+            .contentShape(shape)
+            .help(onSelect == nil ? "" : "Choose this display's wallpaper")
 
             // A little monitor stand.
             Rectangle()

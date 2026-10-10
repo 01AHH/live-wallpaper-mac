@@ -37,6 +37,10 @@ struct ControlPanelView: View {
     @State private var ambient: [Color] = AmbientPalette.fallback
     @State private var titleProgress: Double = 1
     @State private var heroHover: UnitPoint?
+    /// The display whose wallpaper is being chosen (`NSScreen.stableID`), or
+    /// nil for all displays. Only used with several screens and no spanning.
+    @State private var targetScreen: String?
+    @State private var screenPosters: [NSImage?] = []
     @State private var isScrolling = false
 
     private let columns = [GridItem(.adaptive(minimum: 240), spacing: Brand.Spacing.gridColumn)]
@@ -258,7 +262,7 @@ struct ControlPanelView: View {
     private var detail: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Brand.Spacing.section) {
-                if let current = settings.currentVideo, query.isEmpty {
+                if let current = displayedVideo, query.isEmpty {
                     hero(for: current)
                         .transition(.asymmetric(
                             insertion: .opacity.combined(with: .scale(scale: 0.96)),
@@ -279,8 +283,16 @@ struct ControlPanelView: View {
         }
         // Everything that follows the current wallpaper — the aurora colours,
         // the poster frame, the title reveal — updates together.
-        .task(id: settings.currentVideo) {
-            guard let url = settings.currentVideo else { return }
+        .task(id: screenVideoKey) {
+            // A poster per screen for the "Your desktop" miniature.
+            var posters: [NSImage?] = []
+            for url in NSScreen.screens.map({ settings.spanScreens ? settings.currentVideo : settings.video(forScreen: $0.stableID) }) {
+                posters.append(url == nil ? nil : await ThumbnailCache.image(for: url!))
+            }
+            screenPosters = posters
+        }
+        .task(id: displayedVideo) {
+            guard let url = displayedVideo else { return }
             titleProgress = 0
             let poster = await ThumbnailCache.image(for: url)
             heroPoster = poster
@@ -364,7 +376,7 @@ struct ControlPanelView: View {
 
                         Button(action: shuffle) {
                             Label("Shuffle", systemImage: "shuffle")
-                                .symbolEffect(.bounce, value: settings.currentVideo)
+                                .symbolEffect(.bounce, value: displayedVideo)
                                 .fixedSize()
                         }
                         .buttonStyle(.glassProminent)
@@ -428,15 +440,39 @@ struct ControlPanelView: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 6) {
                 Image(systemName: NSScreen.screens.count > 1 ? "display.2" : "display")
-                Text("Your desktop")
+                Text(targetName ?? "Your desktop")
+                    .lineLimit(1)
                 Spacer()
                 Text("\(settings.fillMode.title)\(settings.spanScreens && NSScreen.screens.count > 1 ? " · Spanned" : "")")
                     .foregroundStyle(.secondary)
                     .contentTransition(.numericText())
             }
             .font(.caption.weight(.semibold))
-            DisplayPreview(poster: heroPoster, mode: settings.fillMode, span: settings.spanScreens)
+            DisplayPreview(posters: screenPosters, mode: settings.fillMode, span: settings.spanScreens,
+                           selected: canChooseScreens ? targetIndex : nil,
+                           onSelect: canChooseScreens ? { index in
+                               withAnimation(Brand.spring) { targetScreen = NSScreen.screens[index].stableID }
+                           } : nil)
                 .frame(height: 76)
+            if canChooseScreens {
+                HStack(spacing: 6) {
+                    Button {
+                        withAnimation(Brand.spring) { targetScreen = nil }
+                    } label: {
+                        Text("All displays")
+                            .font(.caption2.weight(.semibold))
+                            .padding(.horizontal, 8).padding(.vertical, 3)
+                            .background(targetScreen == nil ? Brand.accent.opacity(0.85) : .white.opacity(0.12), in: .capsule)
+                            .foregroundStyle(targetScreen == nil ? Color.black : .white)
+                    }
+                    .buttonStyle(.plain)
+                    Text(targetScreen == nil ? "Click a display to give it its own wallpaper."
+                                             : "Wallpapers you pick now go on this display.")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                }
+            }
             if let hint = scalingHint {
                 Text(hint)
                     .font(.caption2)
@@ -488,15 +524,45 @@ struct ControlPanelView: View {
 
     private func use(_ wallpaper: GalleryWallpaper) {
         guard let folder = settings.libraryFolder else { return }
-        settings.currentVideo = folder.appendingPathComponent(wallpaper.fileName)
+        select(folder.appendingPathComponent(wallpaper.fileName))
+    }
+
+    // MARK: - Per-display wallpapers
+
+    /// Several screens, not spanning: each display can have its own wallpaper.
+    private var canChooseScreens: Bool { NSScreen.screens.count > 1 && !settings.spanScreens }
+
+    private var targetIndex: Int? {
+        targetScreen.flatMap { id in NSScreen.screens.firstIndex { $0.stableID == id } }
+    }
+
+    private var targetName: String? {
+        guard canChooseScreens, let index = targetIndex else { return nil }
+        return NSScreen.screens[index].localizedName
+    }
+
+    /// The wallpaper on the display being edited (or on every display).
+    private var displayedVideo: URL? {
+        guard canChooseScreens, let targetScreen, targetIndex != nil else { return settings.currentVideo }
+        return settings.video(forScreen: targetScreen)
+    }
+
+    /// Changes whenever any screen's wallpaper does, to refresh the miniature.
+    private var screenVideoKey: String {
+        NSScreen.screens.map { (settings.spanScreens ? settings.currentVideo : settings.video(forScreen: $0.stableID))?.path ?? "-" }
+            .joined(separator: "|")
+    }
+
+    /// Put a wallpaper on the display being edited, or on every display.
+    private func select(_ url: URL) {
+        settings.setVideo(url, forScreen: canChooseScreens && targetIndex != nil ? targetScreen : nil)
         onApply()
     }
 
     private func shuffle() {
-        let pool = filteredVideos.filter { $0 != settings.currentVideo }
+        let pool = filteredVideos.filter { $0 != displayedVideo }
         guard let next = pool.randomElement() else { return }
-        settings.currentVideo = next
-        onApply()
+        select(next)
     }
 
     private var filteredVideos: [URL] {
@@ -568,11 +634,10 @@ struct ControlPanelView: View {
                 LazyVGrid(columns: columns, spacing: Brand.Spacing.gridRow) {
                     ForEach(Array(filteredVideos.enumerated()), id: \.element) { index, url in
                         VideoTile(url: url,
-                                  isSelected: url == settings.currentVideo,
+                                  isSelected: url == displayedVideo,
                                   speed: settings.speed(for: url),
                                   index: index) {
-                            settings.currentVideo = url
-                            onApply()
+                            select(url)
                         }
                         .contextMenu { tagMenu(for: url) }
                     }

@@ -14,7 +14,9 @@ licensed 4K wallpapers.
 
 **Wallpaper**
 - Looping **video wallpapers** rendered at desktop level (behind icons, click-through)
-- **Multi-monitor**: span one continuous video across all screens, or play per screen
+- **Multi-monitor**: span one continuous video across all screens, or give **each display
+  its own wallpaper** (click a monitor in the *Your desktop* card, then a wallpaper).
+  Each display pauses on its own when it's covered
 - **Fill / Fit / Stretch** scaling, with a live miniature of your real monitor layout
   showing exactly what each setting does
 - **Per-video playback speed** (0.25×–1.5×), remembered for each wallpaper and applied live
@@ -194,9 +196,9 @@ Wallux/Wallspace, Phosphene, Aerial and Plash. Each item is tracked as a
 - [x] Pause on battery / Low Power Mode ([#1](https://github.com/01AHH/live-wallpaper-mac/issues/1)) — "reduce quality" instead of pausing comes with #9
 - [x] Thermal-state awareness ([#2](https://github.com/01AHH/live-wallpaper-mac/issues/2))
 - [x] Menu-bar quick controls ([#5](https://github.com/01AHH/live-wallpaper-mac/issues/5))
+- [x] Per-screen wallpapers and per-screen pause ([#3](https://github.com/01AHH/live-wallpaper-mac/issues/3))
 
 **Must have** — table stakes every serious competitor has
-- [ ] Per-screen players and per-screen pause ([#3](https://github.com/01AHH/live-wallpaper-mac/issues/3))
 - [ ] Playlists and rotation ([#4](https://github.com/01AHH/live-wallpaper-mac/issues/4))
 - [ ] Sync a still frame to the system wallpaper ([#6](https://github.com/01AHH/live-wallpaper-mac/issues/6))
 

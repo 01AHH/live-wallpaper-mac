@@ -25,34 +25,69 @@ func videoRect(content: CGSize, in container: CGRect, mode: FillMode) -> CGRect 
                   width: size.width, height: size.height)
 }
 
-/// Owns the desktop-level windows and the shared video player. Reads everything
-/// it needs from `AppSettings`. Call `apply()` when settings change — layout
+extension NSScreen {
+    /// A stable identifier for the physical display (survives reboots and
+    /// re-plugging), used to remember which wallpaper each screen shows.
+    var stableID: String {
+        let key = NSDeviceDescriptionKey("NSScreenNumber")
+        let number = deviceDescription[key] as? CGDirectDisplayID ?? 0
+        if let uuid = CGDisplayCreateUUIDFromDisplayID(number)?.takeRetainedValue(),
+           let string = CFUUIDCreateString(nil, uuid) {
+            return string as String
+        }
+        return String(number)
+    }
+}
+
+/// Owns the desktop-level windows and the video players. Reads everything it
+/// needs from `AppSettings`. Call `apply()` when settings change — layout
 /// changes morph in place and new videos cross-fade, with no teardown — and
 /// `rebuild()` only when the screens themselves change.
+///
+/// Each distinct video plays in one *channel* (one player) that feeds every
+/// screen showing it: spanning puts all screens on one channel, and screens
+/// with their own wallpapers get their own. A channel pauses only when every
+/// screen it feeds is hidden, so a fullscreen app on one display pauses just
+/// that display's wallpaper.
 final class WallpaperController {
+    private final class Channel {
+        let url: URL?
+        let player: AVQueuePlayer?
+        let looper: AVPlayerLooper?
+
+        init(url: URL?) {
+            self.url = url
+            guard let url, FileManager.default.fileExists(atPath: url.path) else {
+                player = nil
+                looper = nil
+                return
+            }
+            let player = AVQueuePlayer()
+            player.isMuted = true
+            looper = AVPlayerLooper(player: player, templateItem: AVPlayerItem(url: url))
+            self.player = player
+        }
+    }
+
     private struct Surface {
         let window: WallpaperWindow
         let screen: NSScreen
+        let id: String
         var layer: CALayer?
+        var channelURL: URL??          // nil = nothing shown yet
+        var isVisible = true
     }
 
     private var surfaces: [Surface] = []
-    private var player: AVQueuePlayer?
-    private var looper: AVPlayerLooper?
-    private var loadedURL: URL?
-    private var hasLoaded = false
-    private var readyObservers: [NSKeyValueObservation] = []
-    /// False while every wallpaper is hidden (fullscreen apps, windows
-    /// covering the screens, displays asleep) — playback pauses until it's
-    /// back in view.
-    private var isVisible = true
+    private var channels: [URL?: Channel] = [:]
+    private var readyObservers: [ObjectIdentifier: NSKeyValueObservation] = [:]
     private var displaysAsleep = false
     private var pendingVisibilityCheck: DispatchWorkItem?
 
     /// Paused by the person (from the Dynamic Island or menu), independent of
     /// the automatic visibility pausing.
     var userPaused = false {
-        didSet { if userPaused != oldValue { updateRate(); reportPlayback() } }
+        didSet { if userPaused != oldValue { updateRates(); reportPlayback() } }
     }
 
     /// Why playback is currently stopped, or nil while it's playing.
@@ -60,19 +95,33 @@ final class WallpaperController {
 
     /// Set from the power rules (battery, Low Power Mode, heat), or nil.
     var powerPause: PauseReason? {
-        didSet { if powerPause != oldValue { updateRate(); reportPlayback() } }
+        didSet { if powerPause != oldValue { updateRates(); reportPlayback() } }
     }
 
-    var pauseReason: PauseReason? {
+    /// Reasons that stop every screen at once.
+    private var globalPause: PauseReason? {
         if userPaused { return .user }
         if displaysAsleep { return .displaysAsleep }
-        if let powerPause { return powerPause }
-        if !isVisible { return .hidden }
+        return powerPause
+    }
+
+    /// Why nothing is playing, or nil while at least one screen plays.
+    var pauseReason: PauseReason? {
+        if let globalPause { return globalPause }
+        if !surfaces.isEmpty && !surfaces.contains(where: \.isVisible) { return .hidden }
         return nil
     }
+
     /// Called whenever playback starts or stops, with the reason it stopped.
     var onPlaybackChange: ((PauseReason?) -> Void)?
-    private func reportPlayback() { onPlaybackChange?(pauseReason) }
+    private var lastReported: PauseReason??
+    private func reportPlayback() {
+        let reason = pauseReason
+        guard lastReported == nil || lastReported! != reason else { return }
+        lastReported = reason
+        onPlaybackChange?(reason)
+    }
+
     private let settings: AppSettings
 
     init(settings: AppSettings) {
@@ -113,15 +162,18 @@ final class WallpaperController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: check)
     }
 
-    /// One player feeds every screen, so it only pauses when *all* wallpapers
-    /// are hidden — a fullscreen app on one display leaves the other playing.
     private func applyVisibility() {
-        let anyVisible = surfaces.contains { $0.window.occlusionState.contains(.visible) }
-        let visible = anyVisible && !displaysAsleep
-        guard visible != isVisible else { return }
-        isVisible = visible
-        NSLog("LiveWall: wallpaper \(visible ? "visible — resuming" : "hidden — pausing")")
-        updateRate()
+        var changed = false
+        for i in surfaces.indices {
+            let visible = surfaces[i].window.occlusionState.contains(.visible)
+            if visible != surfaces[i].isVisible {
+                surfaces[i].isVisible = visible
+                changed = true
+                NSLog("LiveWall: \(surfaces[i].screen.localizedName) \(visible ? "visible — resuming" : "hidden — pausing")")
+            }
+        }
+        guard changed else { return }
+        updateRates()
         reportPlayback()
     }
 
@@ -131,21 +183,46 @@ final class WallpaperController {
         surfaces = NSScreen.screens.map { screen in
             let win = makeWindow(for: screen, level: desktopLevel)
             win.orderFront(nil)
-            return Surface(window: win, screen: screen)
+            return Surface(window: win, screen: screen, id: screen.stableID)
         }
         apply(animated: false)
         refreshVisibility()
     }
 
+    // MARK: - Applying settings
+
+    /// The video a screen should show right now.
+    private func desiredVideo(for surface: Surface) -> URL? {
+        settings.spanScreens ? settings.currentVideo : settings.video(forScreen: surface.id)
+    }
+
     /// Bring the desktop in line with the current settings.
     func apply(animated: Bool = true) {
-        if !hasLoaded || settings.currentVideo != loadedURL {
-            swapVideo(animated: animated && hasLoaded)
-        } else {
-            layout(animated: animated)
+        // Channels for every video that should be on screen; reuse the ones
+        // already playing so unchanged screens don't restart.
+        let wanted = Set(surfaces.map { desiredVideo(for: $0) })
+        for url in wanted where channels[url] == nil {
+            channels[url] = Channel(url: url)
         }
-        updateRate()
-        NSLog("LiveWall: \(surfaces.count) screen(s), span=\(settings.spanScreens), mode=\(settings.fillMode.rawValue), source=\(settings.currentVideo?.lastPathComponent ?? "gradient")")
+
+        for i in surfaces.indices {
+            let url = desiredVideo(for: surfaces[i])
+            if surfaces[i].channelURL != .some(url) {
+                attach(channels[url]!, to: i, animated: animated && surfaces[i].layer != nil)
+            }
+        }
+        layout(animated: animated)
+
+        // Drop channels no screen uses any more (their layers fade out first).
+        for url in channels.keys where !wanted.contains(url) {
+            let channel = channels.removeValue(forKey: url)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { channel?.player?.pause() }
+        }
+        updateRates()
+        reportPlayback()
+
+        let summary = surfaces.map { "\($0.screen.localizedName)=\(desiredVideo(for: $0)?.lastPathComponent ?? "gradient")" }
+        NSLog("LiveWall: span=\(settings.spanScreens), mode=\(settings.fillMode.rawValue), \(summary.joined(separator: ", "))")
     }
 
     // MARK: - Layout
@@ -181,92 +258,72 @@ final class WallpaperController {
         CATransaction.commit()
     }
 
-    // MARK: - Video swapping
+    // MARK: - Switching a screen's video
 
-    /// Replace the playing video. With `animated`, the new video fades in over
-    /// the old one once its first frame is ready, so there's never a black flash.
-    private func swapVideo(animated: Bool) {
-        let url = settings.currentVideo
-        loadedURL = url
-        hasLoaded = true
-        readyObservers.removeAll()
+    /// Point one screen at a channel. With `animated`, the new video fades in
+    /// over the old one once its first frame is ready — never a black flash.
+    private func attach(_ channel: Channel, to index: Int, animated: Bool) {
+        let content = surfaces[index].window.contentView!
+        let oldLayer = surfaces[index].layer
 
-        let oldPlayer = player
-        let oldLayers = surfaces.map(\.layer)
-        let newPlayer = makePlayer(for: url)
-        player = newPlayer
-
-        for i in surfaces.indices {
-            let content = surfaces[i].window.contentView!
-            let layer: CALayer
-            if let newPlayer {
-                let playerLayer = AVPlayerLayer(player: newPlayer)
-                playerLayer.videoGravity = gravity
-                playerLayer.frame = frame(for: surfaces[i].screen)
-                layer = playerLayer
-            } else {
-                layer = makeGradient(bounds: content.bounds)   // no video selected → visible fallback
-            }
-            layer.opacity = animated ? 0 : 1
-            content.layer?.addSublayer(layer)
-            surfaces[i].layer = layer
+        let layer: CALayer
+        if let player = channel.player {
+            let playerLayer = AVPlayerLayer(player: player)
+            playerLayer.videoGravity = gravity
+            playerLayer.frame = frame(for: surfaces[index].screen)
+            layer = playerLayer
+        } else {
+            layer = makeGradient(bounds: content.bounds)   // no video selected → visible fallback
         }
-        updateRate()
+        layer.opacity = animated ? 0 : 1
+        content.layer?.addSublayer(layer)
+        surfaces[index].layer = layer
+        surfaces[index].channelURL = .some(channel.url)
 
-        let retire = {
-            oldLayers.forEach { $0?.removeFromSuperlayer() }
-            oldPlayer?.pause()
-        }
-        guard animated else { retire(); return }
+        guard animated else { oldLayer?.removeFromSuperlayer(); return }
 
-        let newLayers = surfaces.compactMap(\.layer)
         let fadeIn = {
             CATransaction.begin()
-            CATransaction.setCompletionBlock(retire)
-            for layer in newLayers {
-                let fade = CABasicAnimation(keyPath: "opacity")
-                fade.fromValue = 0
-                fade.toValue = 1
-                fade.duration = 0.9
-                fade.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-                layer.opacity = 1
-                layer.add(fade, forKey: "crossfade")
-            }
+            CATransaction.setCompletionBlock { oldLayer?.removeFromSuperlayer() }
+            let fade = CABasicAnimation(keyPath: "opacity")
+            fade.fromValue = 0
+            fade.toValue = 1
+            fade.duration = 0.9
+            fade.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            layer.opacity = 1
+            layer.add(fade, forKey: "crossfade")
             CATransaction.commit()
         }
-
         // Wait for a real frame before fading, so we never fade in black.
-        if let first = newLayers.first as? AVPlayerLayer, !first.isReadyForDisplay {
-            readyObservers.append(first.observe(\.isReadyForDisplay) { [weak self] layer, _ in
-                guard layer.isReadyForDisplay else { return }
+        if let playerLayer = layer as? AVPlayerLayer, !playerLayer.isReadyForDisplay {
+            let key = ObjectIdentifier(playerLayer)
+            readyObservers[key] = playerLayer.observe(\.isReadyForDisplay) { [weak self] observed, _ in
+                guard observed.isReadyForDisplay else { return }
                 DispatchQueue.main.async {
-                    self?.readyObservers.removeAll()
+                    self?.readyObservers[key] = nil
                     fadeIn()
                 }
-            })
+            }
         } else {
             fadeIn()
         }
     }
 
-    /// Apply the current video's speed. `defaultRate` makes the player
-    /// resume at this speed after loops and stalls, not snap back to 1×.
-    private func updateRate() {
-        guard let player else { return }
-        let rate = Float(settings.speed(for: settings.currentVideo))
-        player.defaultRate = rate
-        player.rate = pauseReason == nil ? rate : 0
+    /// Play each channel at its video's speed while any screen it feeds is
+    /// visible. `defaultRate` makes a player resume at that speed after
+    /// loops and stalls, not snap back to 1×.
+    private func updateRates() {
+        let global = globalPause
+        for channel in channels.values {
+            guard let player = channel.player else { continue }
+            let rate = Float(settings.speed(for: channel.url))
+            let seen = surfaces.contains { $0.channelURL == .some(channel.url) && $0.isVisible }
+            player.defaultRate = rate
+            player.rate = (global == nil && seen) ? rate : 0
+        }
     }
 
     // MARK: - Building blocks
-
-    private func makePlayer(for url: URL?) -> AVQueuePlayer? {
-        guard let url, FileManager.default.fileExists(atPath: url.path) else { return nil }
-        let player = AVQueuePlayer()
-        player.isMuted = true
-        looper = AVPlayerLooper(player: player, templateItem: AVPlayerItem(url: url))
-        return player
-    }
 
     private func makeWindow(for screen: NSScreen, level: NSWindow.Level) -> WallpaperWindow {
         let win = WallpaperWindow(contentRect: screen.frame, styleMask: .borderless,
@@ -304,10 +361,8 @@ final class WallpaperController {
         readyObservers.removeAll()
         surfaces.forEach { $0.window.orderOut(nil) }
         surfaces.removeAll()
-        player?.pause()
-        player = nil
-        looper = nil
-        loadedURL = nil
-        hasLoaded = false
+        channels.values.forEach { $0.player?.pause() }
+        channels.removeAll()
+        lastReported = nil
     }
 }
