@@ -110,7 +110,11 @@
 
 > LiveWall isn't signed with an Apple Developer ID yet, so macOS blocks the first launch. That's expected — see below.
 
-### First launch and Gatekeeper
+### First launch
+
+Opened straight from the `.dmg` or Downloads, LiveWall offers to **Move to Applications**, copies itself there, relaunches and ejects the installer. The first time it runs, a full-screen welcome — *"Welcome to your new Mac."* — walks you through choosing your first wallpaper (it plays behind the welcome as soon as you pick it), the Dynamic Island, and launch-at-login and power saving. Replay it any time from the menu bar (**Show Welcome…**).
+
+### Gatekeeper
 
 1. When macOS says it can't verify LiveWall, click **Done** (not *Move to Trash*).
 2. Open **System Settings → Privacy & Security**, scroll to **Security**, and click **Open Anyway** next to *"LiveWall" was blocked*.

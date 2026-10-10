@@ -15,7 +15,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let gallery = GalleryStore()
     private var menuActions: [MenuAction] = []
 
+    private var onboardingWindow: NSWindow?
+
     func applicationDidFinishLaunching(_ notification: Notification) {
+        // Opened from the .dmg or Downloads: offer to move into Applications
+        // and relaunch from there.
+        if ApplicationsMover.moveIfNeeded() { return }
+
         controller.rebuild()
 
         NotificationCenter.default.addObserver(
@@ -26,7 +32,75 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         setupIsland()
         setupPowerRules()
         enableLaunchAtLoginOnFirstRun()
-        showControls(nil)   // open the panel on launch
+        if settings.hasOnboarded {
+            showControls(nil)   // open the panel on launch
+        } else {
+            showWelcome()
+        }
+    }
+
+    // MARK: - Welcome
+
+    /// The full-screen first-run welcome (also replayable from the menu bar).
+    func showWelcome() {
+        guard onboardingWindow == nil, let screen = NSScreen.main ?? NSScreen.screens.first else { return }
+        island?.isShown = false   // the welcome covers the whole screen
+        let view = OnboardingView(
+            settings: settings, gallery: gallery,
+            onChooseWallpaper: { [weak self] wallpaper, done in self?.chooseFirstWallpaper(wallpaper, done: done) },
+            onOpenControls: { [weak self] in self?.showControls(nil) },
+            onFinish: { [weak self] in self?.closeWelcome() })
+        let window = OnboardingWindow(contentRect: screen.frame, styleMask: [.borderless],
+                                      backing: .buffered, defer: false)
+        window.level = .statusBar
+        window.collectionBehavior = [.fullScreenAuxiliary, .canJoinAllSpaces]
+        window.backgroundColor = .black
+        window.isReleasedWhenClosed = false
+        window.contentView = NSHostingView(rootView: view)
+        window.setFrame(screen.frame, display: true)
+        window.alphaValue = 0
+        onboardingWindow = window
+        NSApp.activate()
+        window.makeKeyAndOrderFront(nil)
+        NSAnimationContext.runAnimationGroup { $0.duration = 0.6; window.animator().alphaValue = 1 }
+    }
+
+    private func closeWelcome() {
+        guard let window = onboardingWindow else { return }
+        onboardingWindow = nil
+        NSAnimationContext.runAnimationGroup({ $0.duration = 0.5; window.animator().alphaValue = 0 },
+                                             completionHandler: { [weak self] in
+            MainActor.assumeIsolated {
+                window.orderOut(nil)
+                self?.island?.isShown = self?.settings.showIsland ?? true
+            }
+        })
+    }
+
+    /// Download a gallery wallpaper into the library and put it on every
+    /// display, so the welcome's background and the desktop both show it.
+    private func chooseFirstWallpaper(_ wallpaper: GalleryWallpaper, done: @escaping (URL?) -> Void) {
+        let folder = settings.libraryFolder ?? AppSettings.defaultLibrary()
+        if settings.libraryFolder == nil { settings.libraryFolder = folder }
+        let existing = folder.appendingPathComponent(wallpaper.fileName)
+        let use = { [weak self] (file: URL) in
+            guard let self else { return }
+            settings.setVideo(file, forScreen: nil)
+            controller.apply()
+            done(file)
+        }
+        if FileManager.default.fileExists(atPath: existing.path) { use(existing); return }
+        gallery.download(wallpaper, into: folder) { [weak self] result in
+            guard let self, case .success(let file) = result else { done(nil); return }
+            let categories = CategoryStore()
+            categories.load(folder: folder)
+            for tag in wallpaper.tags {
+                let name = categories.addTag(tag) ?? tag
+                if !categories.has(name, file) { categories.toggle(name, for: file) }
+            }
+            gallery.recordDownload(wallpaper)
+            use(file)
+        }
     }
 
     // MARK: - Dynamic Island
@@ -301,6 +375,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         menu.addItem(.separator())
         menu.addItem(item("Wallpaper Controls…", key: ",") { [weak self] in self?.showControls(nil) })
+        menu.addItem(item("Show Welcome…") { [weak self] in self?.showWelcome() })
         menu.addItem(item("Show Dynamic Island", checked: settings.showIsland) { [weak self] in
             self?.settings.showIsland.toggle()
         })

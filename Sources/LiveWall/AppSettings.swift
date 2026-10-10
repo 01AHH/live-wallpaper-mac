@@ -38,6 +38,8 @@ final class AppSettings: ObservableObject {
     /// so each wallpaper remembers its own pace. Missing means 1×.
     @Published private(set) var speeds: [String: Double] { didSet { persist() } }
 
+    /// Set once the first-run welcome has been completed or skipped.
+    @Published var hasOnboarded: Bool { didSet { persist() } }
     /// Whether the Dynamic Island is shown at the top of the screen.
     @Published var showIsland: Bool { didSet { persist() } }
     /// Power rules: pause on battery (off by default — plugged-in desktops and
@@ -63,6 +65,7 @@ final class AppSettings: ObservableObject {
         fillMode      = FillMode(rawValue: defaults.string(forKey: Keys.fillMode) ?? "") ?? .fill
         speeds        = defaults.dictionary(forKey: Keys.speeds) as? [String: Double] ?? [:]
         showIsland    = defaults.object(forKey: Keys.showIsland) as? Bool ?? true
+        hasOnboarded  = defaults.bool(forKey: Keys.hasOnboarded)
         pauseOnBattery  = defaults.object(forKey: Keys.pauseOnBattery) as? Bool ?? false
         pauseInLowPower = defaults.object(forKey: Keys.pauseInLowPower) as? Bool ?? true
         pauseWhenHot    = defaults.object(forKey: Keys.pauseWhenHot) as? Bool ?? true
@@ -122,6 +125,7 @@ final class AppSettings: ObservableObject {
         defaults.set(fillMode.rawValue, forKey: Keys.fillMode)
         defaults.set(speeds, forKey: Keys.speeds)
         defaults.set(showIsland, forKey: Keys.showIsland)
+        defaults.set(hasOnboarded, forKey: Keys.hasOnboarded)
         defaults.set(pauseOnBattery, forKey: Keys.pauseOnBattery)
         defaults.set(pauseInLowPower, forKey: Keys.pauseInLowPower)
         defaults.set(pauseWhenHot, forKey: Keys.pauseWhenHot)
@@ -136,6 +140,7 @@ final class AppSettings: ObservableObject {
         static let fillMode      = "fillMode"
         static let speeds        = "videoSpeeds"
         static let showIsland    = "showDynamicIsland"
+        static let hasOnboarded  = "hasOnboarded"
         static let pauseOnBattery  = "pauseOnBattery"
         static let pauseInLowPower = "pauseInLowPower"
         static let pauseWhenHot    = "pauseWhenHot"
