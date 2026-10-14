@@ -121,10 +121,11 @@
     <div class="wrap split">
       <div>
         <p class="say">A Dynamic Island for your Mac. <span>Music, Claude Code and ChatGPT, right at the notch.</span></p>
-        <p class="body">It grows out of the MacBook notch, or sits at the top of an external display. When a song changes or an AI task finishes, it springs open for a moment. Hover it for controls.</p>
+        <p class="body">It grows out of the MacBook notch, or sits at the top of an external display. When a song changes or an AI task finishes, it springs open for a moment. Hover it for controls, and click a finished task to jump straight back to its chat.</p>
         <ul class="ticks">
           <li>Spotify and Apple Music, with play, pause and skip</li>
           <li>Claude Code, Codex and ChatGPT activity as it happens</li>
+          <li>Your Claude and ChatGPT limits, and when they reset</li>
           <li>A public hook so your own tools can post to it</li>
         </ul>
       </div>
@@ -141,14 +142,26 @@
                 <div class="spin"></div>
               </div>
               <div class="isl-card">
-                <div class="ic" style="background:linear-gradient(135deg,#f59e38,#b8452a)">♪</div>
-                <div class="t"><b>Golden Hour Drive</b><span>Lumen Fields · Spotify</span><div class="prog"><i></i></div></div>
-                <div class="ctl"><span>⏮</span><span>⏸</span><span>⏭</span></div>
-              </div>
-              <div class="isl-card">
                 <div class="ic" style="background:#10a37f;color:#fff">◎</div>
                 <div class="t"><b>Codex</b><span>Refactor finished · 3 files changed</span></div>
                 <span class="st" style="color:#5fd38d">Done</span>
+                <span class="go" title="Opens the chat">↗</span>
+              </div>
+              <div class="isl-card isl-limits">
+                <p class="lh">Plan limits</p>
+                <div class="lrow"><b>Claude</b>
+                  <div class="gauge"><span>5 hours<em>30% used</em></span><i style="--p:30%"></i><small>Resets 14:00</small></div>
+                  <div class="gauge"><span>Week<em>53% used</em></span><i style="--p:53%"></i><small>Resets Thu 19:00</small></div>
+                </div>
+                <div class="lrow"><b>ChatGPT</b>
+                  <div class="gauge"><span>Week<em>8% used</em></span><i style="--p:8%"></i><small>Resets Sun 09:30</small></div>
+                  <div></div>
+                </div>
+              </div>
+              <div class="isl-card">
+                <div class="ic" style="background:linear-gradient(135deg,#f59e38,#b8452a)">♪</div>
+                <div class="t"><b>Golden Hour Drive</b><span>Lumen Fields · Spotify</span><div class="prog"><i></i></div></div>
+                <div class="ctl"><span>⏮</span><span>⏸</span><span>⏭</span></div>
               </div>
             </div>
           </div>
