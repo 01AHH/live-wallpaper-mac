@@ -5,6 +5,9 @@
 #   livewall-claude-hook resume   (PostToolUse)      → back to "working" after
 #                                                    a permission prompt
 #   livewall-claude-hook stop     (Stop)             → "finished"
+# Clicking the activity brings back the app Claude Code runs in (macOS sets
+# __CFBundleIdentifier for anything launched from an app) and, where its
+# title shows the project, that window.
 # Always exits 0 so it can never block or fail Claude Code.
 event="$1"
 input=$(cat)
@@ -28,5 +31,6 @@ esac
 [ -z "$title" ] && [ "$event" != resume ] && title="Working"
 
 "$dir/livewall-activity" "$state" "$title" --source "Claude Code" --id "$id" \
-  ${project:+--detail "$project"} >/dev/null 2>&1
+  ${project:+--detail "$project"} ${project:+--window "$project"} \
+  ${__CFBundleIdentifier:+--app "$__CFBundleIdentifier"} >/dev/null 2>&1
 exit 0

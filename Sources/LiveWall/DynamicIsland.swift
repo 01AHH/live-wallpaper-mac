@@ -94,12 +94,24 @@ final class IslandModel: ObservableObject {
         static let musicCard: CGFloat = 64
         static let activityRow: CGFloat = 40
         static let wallpaperCard: CGFloat = 104
+        static let limitsHeader: CGFloat = 14
+        static let limitsRow: CGFloat = 34
         static let spacing: CGFloat = 10
         static let padding: CGFloat = 14
         static let maxActivities = 2
     }
 
-    var visibleActivities: [LiveActivity] { Array(activities.activities.prefix(Metrics.maxActivities)) }
+    var visibleActivities: [LiveActivity] { Array(activities.ordered.prefix(Metrics.maxActivities)) }
+
+    /// Tools with plan limits to show, in a steady order.
+    var limitTools: [LimitTool] {
+        activities.enabledSources.contains(.planLimits) ? LimitTool.allCases.filter { activities.limits[$0]?.isEmpty == false } : []
+    }
+
+    var limitsCardHeight: CGFloat {
+        let rows = CGFloat(limitTools.count)
+        return Metrics.limitsHeader + rows * Metrics.limitsRow + rows * 6
+    }
 
     /// The island's current size, which the window controller also uses to
     /// decide where clicks should land.
@@ -115,6 +127,7 @@ final class IslandModel: ObservableObject {
         case .expanded:
             var cards: [CGFloat] = [Metrics.wallpaperCard]
             if activities.nowPlaying != nil { cards.append(Metrics.musicCard) }
+            if !limitTools.isEmpty { cards.append(limitsCardHeight) }
             cards += visibleActivities.map { _ in Metrics.activityRow }
             let content = cards.reduce(0, +) + Metrics.spacing * CGFloat(cards.count - 1)
             return CGSize(width: 460, height: g.topInset + content + Metrics.padding * 2)
@@ -309,7 +322,10 @@ struct DynamicIslandView: View {
 
     private var expanded: some View {
         VStack(spacing: M.spacing) {
-            ForEach(model.visibleActivities) { activityRow($0) }
+            ForEach(model.visibleActivities) { activity in
+                ActivityRow(activity: activity) { activities.open(activity) }
+            }
+            if !model.limitTools.isEmpty { limitsCard }
             if activities.nowPlaying != nil { musicCard }
             wallpaperCard
         }
@@ -317,35 +333,28 @@ struct DynamicIslandView: View {
         .transition(.opacity.combined(with: .scale(scale: 0.94, anchor: .top)))
     }
 
-    private func activityRow(_ a: LiveActivity) -> some View {
-        HStack(spacing: 12) {
-            Group {
-                switch a.state {
-                case .running:   ProgressView().controlSize(.small).tint(Brand.accent)
-                case .done:      Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
-                case .attention: Image(systemName: "exclamationmark.bubble.fill").foregroundStyle(Brand.accent)
+    /// How much of each plan limit is used and when it resets.
+    private var limitsCard: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Plan limits")
+                .font(.system(size: 10, weight: .semibold))
+                .textCase(.uppercase)
+                .tracking(1)
+                .foregroundStyle(Brand.glow)
+                .frame(height: M.limitsHeader)
+            ForEach(model.limitTools) { tool in
+                HStack(alignment: .center, spacing: 14) {
+                    Text(tool.label)
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(.white)
+                        .frame(width: 64, alignment: .leading)
+                    ForEach(activities.limits[tool] ?? []) { LimitGauge(limit: $0) }
+                    if (activities.limits[tool] ?? []).count < 2 { Spacer(minLength: 0) }
                 }
+                .frame(height: M.limitsRow)
             }
-            .font(.system(size: 16))
-            .frame(width: 28, height: 28)
-            VStack(alignment: .leading, spacing: 1) {
-                Text(a.source)
-                    .font(.system(size: 10, weight: .semibold))
-                    .textCase(.uppercase)
-                    .tracking(1)
-                    .foregroundStyle(.white.opacity(0.5))
-                Text(a.detail.map { "\(a.title) — \($0)" } ?? a.title)
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(.white)
-                    .lineLimit(1)
-            }
-            Spacer(minLength: 0)
-            Text(a.updated, style: .relative)
-                .font(.system(size: 10))
-                .monospacedDigit()
-                .foregroundStyle(.white.opacity(0.4))
         }
-        .frame(height: M.activityRow)
+        .frame(height: model.limitsCardHeight, alignment: .top)
     }
 
     private var musicCard: some View {
@@ -470,6 +479,109 @@ struct DynamicIslandView: View {
     }
 }
 
+/// An activity in the expanded island. Clicking it brings forward the app
+/// and chat it came from, when that's known.
+private struct ActivityRow: View {
+    let activity: LiveActivity
+    let open: () -> Void
+    @State private var hovering = false
+
+    private var canOpen: Bool { activity.app != nil }
+
+    var body: some View {
+        let a = activity
+        Button(action: open) {
+            HStack(spacing: 12) {
+                Group {
+                    switch a.state {
+                    case .running:   ProgressView().controlSize(.small).tint(Brand.accent)
+                    case .done:      Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
+                    case .attention: Image(systemName: "exclamationmark.bubble.fill").foregroundStyle(Brand.accent)
+                    }
+                }
+                .font(.system(size: 16))
+                .frame(width: 28, height: 28)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(a.source)
+                        .font(.system(size: 10, weight: .semibold))
+                        .textCase(.uppercase)
+                        .tracking(1)
+                        .foregroundStyle(.white.opacity(0.5))
+                    Text(a.detail.map { "\(a.title) · \($0)" } ?? a.title)
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(.white)
+                        .lineLimit(1)
+                }
+                Spacer(minLength: 0)
+                if hovering && canOpen {
+                    Image(systemName: "arrow.up.forward.app")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(Brand.accent)
+                } else {
+                    Text(a.updated, style: .relative)
+                        .font(.system(size: 10))
+                        .monospacedDigit()
+                        .foregroundStyle(.white.opacity(0.4))
+                }
+            }
+            .padding(.horizontal, 6)
+            .frame(height: IslandModel.Metrics.activityRow)
+            .background(.white.opacity(hovering && canOpen ? 0.08 : 0),
+                        in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal, -6)
+        .onHover { hovering = $0 }
+        .help(canOpen ? "Open \(a.source)" : "")
+        .accessibilityLabel("\(a.source): \(a.title)")
+    }
+}
+
+/// One plan limit: its window, a bar of how much is used, and when it resets.
+private struct LimitGauge: View {
+    let limit: PlanLimit
+
+    var body: some View {
+        let used = limit.currentPercent
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 6) {
+                Text(limit.label)
+                    .font(.system(size: 10, weight: .semibold))
+                    .textCase(.uppercase)
+                    .tracking(1)
+                    .foregroundStyle(.white.opacity(0.5))
+                Spacer(minLength: 4)
+                Text("\(Int(used.rounded()))% used")
+                    .font(.system(size: 11, design: .monospaced))
+                    .foregroundStyle(used >= 90 ? Brand.accent : .white.opacity(0.8))
+            }
+            GeometryReader { proxy in
+                ZStack(alignment: .leading) {
+                    Capsule().fill(.white.opacity(0.12))
+                    Capsule().fill(Brand.accent)
+                        .frame(width: proxy.size.width * min(max(used, 0), 100) / 100)
+                }
+            }
+            .frame(height: 4)
+            Text(resetText)
+                .font(.system(size: 10, design: .monospaced))
+                .foregroundStyle(.white.opacity(0.45))
+                .lineLimit(1)
+        }
+        .frame(maxWidth: .infinity)
+        .help("Recorded \(limit.asOf.formatted(.relative(presentation: .named)))")
+    }
+
+    private var resetText: String {
+        if limit.hasReset { return "Reset, starting fresh" }
+        let soon = limit.resetsAt.timeIntervalSinceNow < 20 * 60 * 60
+        let when = soon ? limit.resetsAt.formatted(date: .omitted, time: .shortened)
+                        : limit.resetsAt.formatted(.dateTime.weekday(.abbreviated).hour().minute())
+        return "Resets \(when)"
+    }
+}
+
 /// A round icon button for the expanded island.
 private struct IslandButton: View {
     let icon: String
@@ -506,9 +618,10 @@ final class DynamicIslandController {
     let activities = ActivityCenter()
     private let codexWatcher = CodexSessionWatcher()
     private let chatAppWatcher = ChatAppWatcher()
+    private let limitsWatcher = PlanLimitsWatcher()
     private let panel: NSPanel
     private var monitors: [Any] = []
-    private static let canvas = CGSize(width: 560, height: 420)
+    private static let canvas = CGSize(width: 560, height: 620)
 
     /// The display with the menu bar — the external monitor when one is
     /// plugged in and set as main, otherwise the built-in screen.
@@ -539,6 +652,7 @@ final class DynamicIslandController {
 
         codexWatcher.onActivity = { [weak activities] in activities?.report($0) }
         chatAppWatcher.onActivity = { [weak activities] in activities?.report($0) }
+        limitsWatcher.onChange = { [weak activities] in activities?.limits = $0 }
 
         let track: (NSEvent) -> Void = { [weak self] _ in self?.trackMouse() }
         if let global = NSEvent.addGlobalMonitorForEvents(matching: .mouseMoved, handler: track) {
@@ -554,6 +668,7 @@ final class DynamicIslandController {
     func setSources(_ sources: Set<IslandSource>) {
         activities.enabledSources = sources
         if sources.contains(.chatGPT) { codexWatcher.start() } else { codexWatcher.stop() }
+        if sources.contains(.planLimits) { limitsWatcher.start() } else { limitsWatcher.stop() }
 
         var apps: [ChatAppWatcher.App] = []
         if sources.contains(.chatGPT) { apps.append(.init(bundleID: "com.openai.codex", source: "ChatGPT")) }

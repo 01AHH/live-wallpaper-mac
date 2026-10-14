@@ -35,6 +35,10 @@ struct LiveActivity: Equatable, Identifiable {
     var title: String
     var detail: String?
     var state: State
+    /// The app to bring forward when the activity is clicked (a bundle ID),
+    /// and a title to pick out its window, such as the chat's name.
+    var app: String?
+    var window: String?
     var updated = Date()
 }
 
@@ -43,7 +47,8 @@ struct LiveActivity: Equatable, Identifiable {
 ///
 /// Any tool can report an activity by posting the distributed notification
 /// `com.livewall.activity` with string keys `id`, `source`, `title`, `state`
-/// (`running` / `done` / `attention`) and optional `detail` — see
+/// (`running` / `done` / `attention`) and optional `detail`, `app` (bundle ID
+/// to open on click) and `window` (title of the window to raise) — see
 /// `scripts/livewall-activity`.
 @MainActor
 final class ActivityCenter: ObservableObject {
@@ -52,6 +57,8 @@ final class ActivityCenter: ObservableObject {
     @Published private(set) var nowPlaying: NowPlaying?
     @Published private(set) var artwork: NSImage?
     @Published private(set) var activities: [LiveActivity] = []
+    /// Claude and ChatGPT plan limits, when that source is on.
+    @Published var limits: [LimitTool: [PlanLimit]] = [:]
 
     /// Something worth announcing happened (new track, task finished…).
     var onEvent: ((IslandEvent) -> Void)?
@@ -192,7 +199,9 @@ final class ActivityCenter: ObservableObject {
             title = previous.title
         }
         let activity = LiveActivity(id: id, source: source, title: title,
-                                    detail: info["detail"] as? String ?? previous?.detail, state: state)
+                                    detail: info["detail"] as? String ?? previous?.detail, state: state,
+                                    app: nonEmpty(info["app"]) ?? previous?.app,
+                                    window: nonEmpty(info["window"]) ?? previous?.window)
 
         activities.removeAll { $0.id == id }
         activities.insert(activity, at: 0)
@@ -211,12 +220,40 @@ final class ActivityCenter: ObservableObject {
             }
         }
 
-        // Finished activities linger briefly, then clear.
+        // Finished activities stay a while so they can be clicked, then clear.
         if state == .done {
             Task {
-                try? await Task.sleep(for: .seconds(8))
+                try? await Task.sleep(for: .seconds(15 * 60))
                 activities.removeAll { $0.id == id && $0.state == .done }
             }
+        }
+    }
+
+    private func nonEmpty(_ value: Any?) -> String? {
+        (value as? String).flatMap { $0.isEmpty ? nil : $0 }
+    }
+
+    /// Activities in the order the island lists them: needing you, then
+    /// running, then finished; most recent first within each.
+    var ordered: [LiveActivity] {
+        let rank: [LiveActivity.State: Int] = [.attention: 0, .running: 1, .done: 2]
+        return activities.enumerated()
+            .sorted { (rank[$0.element.state]!, $0.offset) < (rank[$1.element.state]!, $1.offset) }
+            .map(\.element)
+    }
+
+    /// Bring forward the app (and, where known, the window) an activity came
+    /// from. A finished one is cleared once opened.
+    func open(_ activity: LiveActivity) {
+        if activity.state == .done { activities.removeAll { $0.id == activity.id } }
+        guard let bundleID = activity.app else { return }
+        if let running = NSRunningApplication.runningApplications(withBundleIdentifier: bundleID).first {
+            running.activate()
+            if let window = activity.window {
+                ChatAppWatcher.raiseWindow(titled: window, of: running.processIdentifier)
+            }
+        } else if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID) {
+            NSWorkspace.shared.openApplication(at: url, configuration: NSWorkspace.OpenConfiguration())
         }
     }
 }

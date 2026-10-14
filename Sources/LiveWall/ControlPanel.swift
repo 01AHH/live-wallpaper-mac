@@ -219,16 +219,11 @@ struct ControlPanelView: View {
         Menu {
             Toggle("Show Dynamic Island", isOn: $settings.showIsland)
             Section("Show activity from") {
-                ForEach(IslandSource.allCases) { source in
-                    Toggle(isOn: Binding(
-                        get: { settings.islandSources.contains(source) },
-                        set: { on in
-                            if on { settings.islandSources.insert(source) } else { settings.islandSources.remove(source) }
-                        })) {
-                        Label(source.label, systemImage: source.icon)
-                    }
-                    .disabled(!settings.showIsland)
-                }
+                ForEach(IslandSource.allCases.filter { $0 != .planLimits }) { sourceToggle($0) }
+            }
+            Section("Track") {
+                sourceToggle(.planLimits)
+                    .help("How much of your Claude and ChatGPT limits is used, and when they reset. Read from this Mac.")
             }
             if !ChatAppWatcher.isTrusted {
                 Section {
@@ -242,6 +237,17 @@ struct ControlPanelView: View {
             Label("Dynamic Island", systemImage: settings.showIsland ? "capsule.inset.filled" : "capsule")
         }
         .help("Dynamic Island: turn it on or off and choose what it shows")
+    }
+
+    private func sourceToggle(_ source: IslandSource) -> some View {
+        Toggle(isOn: Binding(
+            get: { settings.islandSources.contains(source) },
+            set: { on in
+                if on { settings.islandSources.insert(source) } else { settings.islandSources.remove(source) }
+            })) {
+            Label(source.label, systemImage: source.icon)
+        }
+        .disabled(!settings.showIsland)
     }
 
     @ToolbarContentBuilder

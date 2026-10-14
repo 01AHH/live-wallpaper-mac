@@ -4,6 +4,9 @@ import ApplicationServices
 /// Where an island activity comes from, so each can be switched on or off.
 enum IslandSource: String, CaseIterable, Identifiable {
     case music, claudeCode, chatGPT, claudeApp
+    /// Not a source of activities itself: how much of the Claude and ChatGPT
+    /// plan limits is used. Off unless chosen. (Saved as "usage".)
+    case planLimits = "usage"
 
     var id: String { rawValue }
 
@@ -13,6 +16,7 @@ enum IslandSource: String, CaseIterable, Identifiable {
         case .claudeCode: return "Claude Code"
         case .chatGPT:    return "ChatGPT & Codex"
         case .claudeApp:  return "Claude app chats"
+        case .planLimits: return "Claude & ChatGPT plan limits"
         }
     }
 
@@ -22,6 +26,7 @@ enum IslandSource: String, CaseIterable, Identifiable {
         case .claudeCode: return "terminal"
         case .chatGPT:    return "bubble.left.and.text.bubble.right"
         case .claudeApp:  return "sparkles"
+        case .planLimits: return "gauge.with.dots.needle.50percent"
         }
     }
 
@@ -132,15 +137,18 @@ final class CodexSessionWatcher {
         case "event_msg":
             let id = "codex-" + file.deletingPathExtension().lastPathComponent.suffix(12)
             let source = sources[file] ?? "Codex"
+            // Desktop sessions open the ChatGPT app on click; the CLI's
+            // terminal isn't recorded in the log, so those can't be opened.
+            let app = source == "ChatGPT" ? "com.openai.codex" : ""
             switch payload["type"] as? String {
             case "user_message":
                 if let text = payload["message"] as? String { lastPrompt[file] = text }
                 return nil
             case "task_started":
-                return ["id": id, "source": source, "state": "running",
+                return ["id": id, "source": source, "state": "running", "app": app,
                         "title": Self.snippet(lastPrompt[file]) ?? "Working on it"]
             case "task_complete":
-                return ["id": id, "source": source, "state": "done",
+                return ["id": id, "source": source, "state": "done", "app": app,
                         "title": Self.snippet(payload["last_agent_message"] as? String) ?? "Reply ready"]
             default:
                 return nil
@@ -233,16 +241,39 @@ final class ChatAppWatcher {
             let was = generating[app.bundleID]
             if let title {
                 if was == nil {
-                    onActivity?(["id": id, "source": app.source, "state": "running", "title": title])
+                    onActivity?(["id": id, "source": app.source, "state": "running", "title": title,
+                                 "app": app.bundleID, "window": title])
                 }
                 generating[app.bundleID] = title
             } else if let was {
                 generating[app.bundleID] = nil
-                onActivity?(["id": id, "source": app.source, "state": "done", "title": was])
+                onActivity?(["id": id, "source": app.source, "state": "done", "title": was,
+                             "app": app.bundleID, "window": was])
             }
         }
         // An app that quit mid-response just stops being tracked.
         for bundleID in generating.keys where !running.contains(bundleID) { generating[bundleID] = nil }
+    }
+
+    /// Raise the window whose title matches (or contains) `title`, so a
+    /// click lands on the right chat or terminal. Needs Accessibility; without
+    /// it the app just comes forward as it was.
+    static func raiseWindow(titled title: String, of pid: pid_t) {
+        guard isTrusted else { return }
+        let app = AXUIElementCreateApplication(pid)
+        var value: AnyObject?
+        guard AXUIElementCopyAttributeValue(app, "AXWindows" as CFString, &value) == .success,
+              let windows = value as? [AXUIElement] else { return }
+        let wanted = title.lowercased()
+        let titled = windows.map { window -> (AXUIElement, String) in
+            var name: AnyObject?
+            AXUIElementCopyAttributeValue(window, "AXTitle" as CFString, &name)
+            return (window, ((name as? String) ?? "").lowercased())
+        }
+        guard let match = titled.first(where: { $0.1 == wanted })
+                ?? titled.first(where: { !$0.1.isEmpty && $0.1.contains(wanted) }) else { return }
+        AXUIElementPerformAction(match.0, kAXRaiseAction as CFString)
+        AXUIElementSetAttributeValue(match.0, kAXMainAttribute as CFString, kCFBooleanTrue)
     }
 
     /// Labels both apps use on the button that stops a response in progress.

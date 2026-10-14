@@ -198,13 +198,14 @@ The menu-bar icon shows the current wallpaper and why it's paused (if it is), pl
 
 ### Dynamic Island
 
-Events (a new wallpaper, a finished AI task, a new song) spring it open for a few seconds; hover it to expand into cards with controls. Turn it off, or choose its sources, from the **Dynamic Island** button in the toolbar.
+Events (a new wallpaper, a finished AI task, a new song) spring it open for a few seconds; hover it to expand into cards with controls. Click a finished or running AI task to go back to its chat or terminal. Turn it off, or choose its sources, from the **Dynamic Island** button in the toolbar.
 
 | Source | How it's tracked | Needs |
 |---|---|---|
 | Claude Code (terminal and the Claude app's Code tab) | Claude Code hooks → `livewall-claude-hook` | Hooks in `~/.claude/settings.json` |
 | ChatGPT and Codex | Session logs in `~/.codex/sessions` | Nothing |
 | Claude app chats | The app's Stop button, via Accessibility | Accessibility permission |
+| Claude and ChatGPT plan limits (off by default) | `~/.claude/rate-limit-cache.json` and the `rate_limits` in Codex's session logs; as fresh as the last reply | Nothing |
 | Music (Spotify, Apple Music) | The apps' track-change notifications; controls via AppleScript | Automation permission, asked once |
 | Your wallpaper | Built in | Nothing |
 
