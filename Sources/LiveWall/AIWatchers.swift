@@ -187,6 +187,8 @@ final class ChatAppWatcher {
     var onActivity: (([AnyHashable: Any]) -> Void)?
     /// An activity this watcher reported no longer applies.
     var onClear: ((String) -> Void)?
+    /// Accessibility was missing and has now been allowed.
+    var onPermissionGranted: (() -> Void)?
     var apps: [App] = []
 
     private var generating: [String: (app: App, chat: String)] = [:]   // activity ID → chat
@@ -225,6 +227,7 @@ final class ChatAppWatcher {
         if reportedMissingPermission {
             reportedMissingPermission = false
             onClear?(Self.permissionActivityID)
+            onPermissionGranted?()
         }
         let targets = apps.compactMap { app -> (App, pid_t)? in
             NSRunningApplication.runningApplications(withBundleIdentifier: app.bundleID).first
@@ -258,6 +261,15 @@ final class ChatAppWatcher {
         onActivity?(["id": Self.permissionActivityID, "source": "Claude", "state": "attention",
                      "title": "Allow Accessibility to see your chats",
                      "url": "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"])
+    }
+
+    /// Once the person has gone to System Settings from the permission row,
+    /// offer a restart: macOS doesn't always pass a new permission on to an
+    /// app that's already running. (If it does, the row just goes away.)
+    func opened(_ activity: LiveActivity) {
+        guard activity.id == Self.permissionActivityID, !activity.relaunches, !Self.isTrusted else { return }
+        onActivity?(["id": Self.permissionActivityID, "source": "Claude", "state": "attention",
+                     "title": "Allowed it? Click to restart LiveWall", "relaunch": "true"])
     }
 
     private func update(_ results: [(App, [String])]) {

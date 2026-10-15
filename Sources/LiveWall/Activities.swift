@@ -41,6 +41,9 @@ struct LiveActivity: Equatable, Identifiable {
     var window: String?
     /// Opened instead of an app when clicked, such as a System Settings pane.
     var url: URL?
+    /// Clicking restarts LiveWall, so a permission just granted in System
+    /// Settings takes effect.
+    var relaunches = false
     var updated = Date()
 }
 
@@ -65,6 +68,8 @@ final class ActivityCenter: ObservableObject {
 
     /// Something worth announcing happened (new track, task finished…).
     var onEvent: ((IslandEvent) -> Void)?
+    /// An activity was clicked.
+    var onOpen: ((LiveActivity) -> Void)?
 
     private var observers: [NSObjectProtocol] = []
     private var artworkKey: String?
@@ -205,7 +210,8 @@ final class ActivityCenter: ObservableObject {
                                     detail: info["detail"] as? String ?? previous?.detail, state: state,
                                     app: nonEmpty(info["app"]) ?? previous?.app,
                                     window: nonEmpty(info["window"]) ?? previous?.window,
-                                    url: nonEmpty(info["url"]).flatMap(URL.init(string:)) ?? previous?.url)
+                                    url: nonEmpty(info["url"]).flatMap(URL.init(string:)) ?? previous?.url,
+                                    relaunches: info["relaunch"] as? String == "true")
 
         activities.removeAll { $0.id == id }
         activities.insert(activity, at: 0)
@@ -233,6 +239,15 @@ final class ActivityCenter: ObservableObject {
         }
     }
 
+    /// Start a fresh copy of LiveWall once this one has quit.
+    private static func relaunch() {
+        let task = Process()
+        task.executableURL = URL(fileURLWithPath: "/bin/sh")
+        task.arguments = ["-c", "sleep 1; open \"$0\"", Bundle.main.bundlePath]
+        try? task.run()
+        NSApp.terminate(nil)
+    }
+
     /// Drop an activity that no longer applies, without announcing it.
     func remove(id: String) {
         activities.removeAll { $0.id == id }
@@ -254,7 +269,9 @@ final class ActivityCenter: ObservableObject {
     /// Bring forward the app (and, where known, the window) an activity came
     /// from. A finished one is cleared once opened.
     func open(_ activity: LiveActivity) {
+        onOpen?(activity)
         if activity.state == .done { activities.removeAll { $0.id == activity.id } }
+        if activity.relaunches { Self.relaunch(); return }
         if let url = activity.url { NSWorkspace.shared.open(url); return }
         guard let bundleID = activity.app else { return }
         if let running = NSRunningApplication.runningApplications(withBundleIdentifier: bundleID).first {

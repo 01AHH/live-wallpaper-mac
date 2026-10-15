@@ -486,7 +486,7 @@ private struct ActivityRow: View {
     let open: () -> Void
     @State private var hovering = false
 
-    private var canOpen: Bool { activity.app != nil || activity.url != nil }
+    private var canOpen: Bool { activity.app != nil || activity.url != nil || activity.relaunches }
 
     var body: some View {
         let a = activity
@@ -533,7 +533,7 @@ private struct ActivityRow: View {
         .buttonStyle(.plain)
         .padding(.horizontal, -6)
         .onHover { hovering = $0 }
-        .help(a.url != nil ? "Open System Settings" : canOpen ? "Open \(a.source)" : "")
+        .help(a.relaunches ? "Restart LiveWall" : a.url != nil ? "Open System Settings" : canOpen ? "Open \(a.source)" : "")
         .accessibilityLabel("\(a.source): \(a.title)")
     }
 }
@@ -653,6 +653,11 @@ final class DynamicIslandController {
         codexWatcher.onActivity = { [weak activities] in activities?.report($0) }
         chatAppWatcher.onActivity = { [weak activities] in activities?.report($0) }
         chatAppWatcher.onClear = { [weak activities] in activities?.remove(id: $0) }
+        chatAppWatcher.onPermissionGranted = { [weak model] in
+            model?.announce(IslandEvent(icon: "checkmark.circle.fill", title: "Claude chats connected",
+                                        subtitle: "Accessibility allowed"))
+        }
+        activities.onOpen = { [weak chatAppWatcher] in chatAppWatcher?.opened($0) }
         limitsWatcher.onChange = { [weak activities] in activities?.limits = $0 }
 
         let track: (NSEvent) -> Void = { [weak self] _ in self?.trackMouse() }
