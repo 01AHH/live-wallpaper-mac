@@ -39,6 +39,8 @@ struct LiveActivity: Equatable, Identifiable {
     /// and a title to pick out its window, such as the chat's name.
     var app: String?
     var window: String?
+    /// Opened instead of an app when clicked, such as a System Settings pane.
+    var url: URL?
     var updated = Date()
 }
 
@@ -48,7 +50,8 @@ struct LiveActivity: Equatable, Identifiable {
 /// Any tool can report an activity by posting the distributed notification
 /// `com.livewall.activity` with string keys `id`, `source`, `title`, `state`
 /// (`running` / `done` / `attention`) and optional `detail`, `app` (bundle ID
-/// to open on click) and `window` (title of the window to raise) — see
+/// to open on click), `window` (title of the window to raise) and `url` (a
+/// link to open on click instead) — see
 /// `scripts/livewall-activity`.
 @MainActor
 final class ActivityCenter: ObservableObject {
@@ -201,7 +204,8 @@ final class ActivityCenter: ObservableObject {
         let activity = LiveActivity(id: id, source: source, title: title,
                                     detail: info["detail"] as? String ?? previous?.detail, state: state,
                                     app: nonEmpty(info["app"]) ?? previous?.app,
-                                    window: nonEmpty(info["window"]) ?? previous?.window)
+                                    window: nonEmpty(info["window"]) ?? previous?.window,
+                                    url: nonEmpty(info["url"]).flatMap(URL.init(string:)) ?? previous?.url)
 
         activities.removeAll { $0.id == id }
         activities.insert(activity, at: 0)
@@ -229,6 +233,11 @@ final class ActivityCenter: ObservableObject {
         }
     }
 
+    /// Drop an activity that no longer applies, without announcing it.
+    func remove(id: String) {
+        activities.removeAll { $0.id == id }
+    }
+
     private func nonEmpty(_ value: Any?) -> String? {
         (value as? String).flatMap { $0.isEmpty ? nil : $0 }
     }
@@ -246,11 +255,12 @@ final class ActivityCenter: ObservableObject {
     /// from. A finished one is cleared once opened.
     func open(_ activity: LiveActivity) {
         if activity.state == .done { activities.removeAll { $0.id == activity.id } }
+        if let url = activity.url { NSWorkspace.shared.open(url); return }
         guard let bundleID = activity.app else { return }
         if let running = NSRunningApplication.runningApplications(withBundleIdentifier: bundleID).first {
             running.activate()
             if let window = activity.window {
-                ChatAppWatcher.raiseWindow(titled: window, of: running.processIdentifier)
+                ChatAppWatcher.focus(chat: window, of: running.processIdentifier)
             }
         } else if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID) {
             NSWorkspace.shared.openApplication(at: url, configuration: NSWorkspace.OpenConfiguration())

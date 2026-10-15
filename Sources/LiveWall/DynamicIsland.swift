@@ -486,7 +486,7 @@ private struct ActivityRow: View {
     let open: () -> Void
     @State private var hovering = false
 
-    private var canOpen: Bool { activity.app != nil }
+    private var canOpen: Bool { activity.app != nil || activity.url != nil }
 
     var body: some View {
         let a = activity
@@ -533,7 +533,7 @@ private struct ActivityRow: View {
         .buttonStyle(.plain)
         .padding(.horizontal, -6)
         .onHover { hovering = $0 }
-        .help(canOpen ? "Open \(a.source)" : "")
+        .help(a.url != nil ? "Open System Settings" : canOpen ? "Open \(a.source)" : "")
         .accessibilityLabel("\(a.source): \(a.title)")
     }
 }
@@ -652,6 +652,7 @@ final class DynamicIslandController {
 
         codexWatcher.onActivity = { [weak activities] in activities?.report($0) }
         chatAppWatcher.onActivity = { [weak activities] in activities?.report($0) }
+        chatAppWatcher.onClear = { [weak activities] in activities?.remove(id: $0) }
         limitsWatcher.onChange = { [weak activities] in activities?.limits = $0 }
 
         let track: (NSEvent) -> Void = { [weak self] _ in self?.trackMouse() }

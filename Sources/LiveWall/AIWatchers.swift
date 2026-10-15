@@ -169,11 +169,14 @@ final class CodexSessionWatcher {
 
 // MARK: - Desktop chat apps (Accessibility)
 
-/// Watches the Claude and ChatGPT desktop apps for a response being written,
-/// by looking for their "Stop" button through the Accessibility API — the
-/// apps offer no other signal for plain chats. Requires Accessibility
-/// permission. Both apps are Chromium-based, which only builds its
-/// accessibility tree once asked to via `AXManualAccessibility`.
+/// Watches the Claude and ChatGPT desktop apps for chats writing a response,
+/// through the Accessibility API — the apps offer no other signal for plain
+/// chats. Claude's sidebar marks every chat that's writing as "Running", so
+/// each one shows, even those in the background; otherwise (ChatGPT, or
+/// Claude with its sidebar hidden) a "Stop" button gives away the chat on
+/// screen. Requires Accessibility permission. Both apps are Chromium-based,
+/// which only builds its accessibility tree once asked to via
+/// `AXManualAccessibility`.
 @MainActor
 final class ChatAppWatcher {
     struct App {
@@ -182,9 +185,12 @@ final class ChatAppWatcher {
     }
 
     var onActivity: (([AnyHashable: Any]) -> Void)?
+    /// An activity this watcher reported no longer applies.
+    var onClear: ((String) -> Void)?
     var apps: [App] = []
 
-    private var generating: [String: String] = [:]   // bundle ID → window title
+    private var generating: [String: (app: App, chat: String)] = [:]   // activity ID → chat
+    private var reportedMissingPermission = false
     private var timer: Timer?
     private let queue = DispatchQueue(label: "LiveWall.ChatAppWatcher", qos: .utility)
     private var enabledTrees = Set<pid_t>()
@@ -208,10 +214,18 @@ final class ChatAppWatcher {
         timer?.invalidate()
         timer = nil
         generating.removeAll()
+        reportedMissingPermission = false
     }
 
+    private static let permissionActivityID = "app-accessibility"
+
     private func poll() {
-        guard Self.isTrusted, !apps.isEmpty else { return }
+        guard !apps.isEmpty else { return }
+        guard Self.isTrusted else { reportMissingPermission(); return }
+        if reportedMissingPermission {
+            reportedMissingPermission = false
+            onClear?(Self.permissionActivityID)
+        }
         let targets = apps.compactMap { app -> (App, pid_t)? in
             NSRunningApplication.runningApplications(withBundleIdentifier: app.bundleID).first
                 .map { (app, $0.processIdentifier) }
@@ -221,12 +235,12 @@ final class ChatAppWatcher {
 
         // The tree walk can take tens of milliseconds; keep it off the main thread.
         queue.async { [weak self] in
-            let results = targets.map { app, pid -> (App, String?) in
+            let results = targets.map { app, pid -> (App, [String]) in
                 let element = AXUIElementCreateApplication(pid)
                 if newPIDs.contains(pid) {
                     AXUIElementSetAttributeValue(element, "AXManualAccessibility" as CFString, kCFBooleanTrue)
                 }
-                return (app, Self.generatingWindowTitle(in: element))
+                return (app, Self.generatingChats(in: element))
             }
             DispatchQueue.main.async {
                 MainActor.assumeIsolated { self?.update(results) }
@@ -234,42 +248,62 @@ final class ChatAppWatcher {
         }
     }
 
-    private func update(_ results: [(App, String?)]) {
-        let running = Set(results.map(\.0.bundleID))
-        for (app, title) in results {
-            let id = "app-" + app.bundleID
-            let was = generating[app.bundleID]
-            if let title {
-                if was == nil {
-                    onActivity?(["id": id, "source": app.source, "state": "running", "title": title,
-                                 "app": app.bundleID, "window": title])
+    /// Without Accessibility, Claude chats can't be seen at all. macOS also
+    /// drops the permission whenever an unsigned build of LiveWall changes,
+    /// while System Settings still shows it as on, so say so in the island
+    /// rather than going quiet. (ChatGPT works from its logs regardless.)
+    private func reportMissingPermission() {
+        guard !reportedMissingPermission, apps.contains(where: { $0.source == "Claude" }) else { return }
+        reportedMissingPermission = true
+        onActivity?(["id": Self.permissionActivityID, "source": "Claude", "state": "attention",
+                     "title": "Allow Accessibility to see your chats",
+                     "url": "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"])
+    }
+
+    private func update(_ results: [(App, [String])]) {
+        var seen = Set<String>()
+        for (app, chats) in results {
+            for chat in chats {
+                let id = "app-\(app.bundleID)-\(chat)"
+                seen.insert(id)
+                if generating[id] == nil {
+                    onActivity?(["id": id, "source": app.source, "state": "running", "title": chat,
+                                 "app": app.bundleID, "window": chat])
                 }
-                generating[app.bundleID] = title
-            } else if let was {
-                generating[app.bundleID] = nil
-                onActivity?(["id": id, "source": app.source, "state": "done", "title": was,
-                             "app": app.bundleID, "window": was])
+                generating[id] = (app, chat)
             }
         }
-        // An app that quit mid-response just stops being tracked.
-        for bundleID in generating.keys where !running.contains(bundleID) { generating[bundleID] = nil }
+        let running = Set(results.map(\.0.bundleID))
+        for (id, entry) in generating where !seen.contains(id) {
+            generating[id] = nil
+            if running.contains(entry.app.bundleID) {
+                onActivity?(["id": id, "source": entry.app.source, "state": "done", "title": entry.chat,
+                             "app": entry.app.bundleID, "window": entry.chat])
+            } else {
+                // The app quit mid-response, so the chat won't finish.
+                onClear?(id)
+            }
+        }
+    }
+
+    /// Bring a chat to the front: raise the window titled after it, and where
+    /// the chat is listed in the app's sidebar, open it from there. Needs
+    /// Accessibility; without it the app just comes forward as it was.
+    static func focus(chat: String, of pid: pid_t) {
+        guard isTrusted else { return }
+        let app = AXUIElementCreateApplication(pid)
+        raiseWindow(titled: chat, in: app)
+        if let row = sidebarRow(named: chat, in: app) {
+            AXUIElementPerformAction(row, kAXPressAction as CFString)
+        }
     }
 
     /// Raise the window whose title matches (or contains) `title`, so a
-    /// click lands on the right chat or terminal. Needs Accessibility; without
-    /// it the app just comes forward as it was.
-    static func raiseWindow(titled title: String, of pid: pid_t) {
-        guard isTrusted else { return }
-        let app = AXUIElementCreateApplication(pid)
-        var value: AnyObject?
-        guard AXUIElementCopyAttributeValue(app, "AXWindows" as CFString, &value) == .success,
-              let windows = value as? [AXUIElement] else { return }
+    /// click lands on the right chat or terminal.
+    private static func raiseWindow(titled title: String, in app: AXUIElement) {
+        let windows = (value(app, "AXWindows") as? [AXUIElement]) ?? []
         let wanted = title.lowercased()
-        let titled = windows.map { window -> (AXUIElement, String) in
-            var name: AnyObject?
-            AXUIElementCopyAttributeValue(window, "AXTitle" as CFString, &name)
-            return (window, ((name as? String) ?? "").lowercased())
-        }
+        let titled = windows.map { ($0, ((value($0, "AXTitle") as? String) ?? "").lowercased()) }
         guard let match = titled.first(where: { $0.1 == wanted })
                 ?? titled.first(where: { !$0.1.isEmpty && $0.1.contains(wanted) }) else { return }
         AXUIElementPerformAction(match.0, kAXRaiseAction as CFString)
@@ -278,31 +312,95 @@ final class ChatAppWatcher {
 
     /// Labels both apps use on the button that stops a response in progress.
     private nonisolated static let stopLabels = ["stop response", "stop generating", "stop streaming", "stop"]
+    /// What Claude's sidebar calls a chat that's writing a response.
+    private nonisolated static let runningStatus = "running"
+    /// Claude titles its chat page "<chat name> - Claude".
+    private nonisolated static let pageTitleSuffix = " - Claude"
 
-    /// If a window is showing a Stop button, that window's title (the
-    /// conversation name); otherwise nil.
-    private nonisolated static func generatingWindowTitle(in app: AXUIElement) -> String? {
-        func value(_ element: AXUIElement, _ attribute: String) -> AnyObject? {
-            var result: AnyObject?
-            return AXUIElementCopyAttributeValue(element, attribute as CFString, &result) == .success ? result : nil
-        }
+    private nonisolated static func value(_ element: AXUIElement, _ attribute: String) -> AnyObject? {
+        var result: AnyObject?
+        return AXUIElementCopyAttributeValue(element, attribute as CFString, &result) == .success ? result : nil
+    }
+
+    /// The chats writing a response right now, by name: every sidebar row
+    /// marked "Running", plus the chat on screen if it shows a Stop button
+    /// (named after its page, or failing that its window).
+    private nonisolated static func generatingChats(in app: AXUIElement) -> [String] {
+        var chats: [String] = []
         let windows = (value(app, "AXWindows") as? [AXUIElement]) ?? []
         for window in windows {
-            var queue = [window]
+            var queue = [(element: window, inSidebar: false)]
             var visited = 0
+            var pageTitle: String?
+            var showsStop = false
             while !queue.isEmpty && visited < 6000 {
-                let element = queue.removeLast()
+                let (element, inSidebar) = queue.removeLast()
                 visited += 1
-                if (value(element, "AXRole") as? String) == "AXButton" {
-                    let label = [value(element, "AXDescription"), value(element, "AXTitle")]
-                        .compactMap { ($0 as? String)?.lowercased() }
-                    if label.contains(where: { stopLabels.contains($0) }) {
-                        let title = (value(window, "AXTitle") as? String) ?? ""
-                        return title.isEmpty ? "Writing a response" : title
-                    }
+                let role = value(element, "AXRole") as? String
+                let title = (value(element, "AXTitle") as? String) ?? ""
+                if role == "AXWebArea", title.hasSuffix(pageTitleSuffix) {
+                    pageTitle = String(title.dropLast(pageTitleSuffix.count))
                 }
-                queue += (value(element, "AXChildren") as? [AXUIElement]) ?? []
+                if role == "AXButton" {
+                    if inSidebar, !title.isEmpty, let row = rowContents(element) {
+                        if row.status == runningStatus { chats.append(row.name) }
+                        continue
+                    }
+                    let label = [value(element, "AXDescription") as? String, title]
+                        .compactMap { $0?.lowercased() }
+                    if label.contains(where: { stopLabels.contains($0) }) { showsStop = true }
+                }
+                let isSidebar = (value(element, "AXSubrole") as? String) == "AXLandmarkComplementary"
+                    && (value(element, "AXDescription") as? String) == "Sidebar"
+                let children = (value(element, "AXChildren") as? [AXUIElement]) ?? []
+                queue += children.map { ($0, inSidebar || isSidebar) }
             }
+            if showsStop {
+                let windowTitle = (value(window, "AXTitle") as? String) ?? ""
+                let name = pageTitle ?? (windowTitle.isEmpty ? "Writing a response" : windowTitle)
+                if !chats.contains(name) { chats.append(name) }
+            }
+        }
+        return chats
+    }
+
+    /// A chat row in Claude's sidebar: a button holding a status icon
+    /// ("Running", "Done", "Unread response"…) and the chat's name as its
+    /// first text.
+    private nonisolated static func rowContents(_ row: AXUIElement) -> (name: String, status: String)? {
+        var name: String?
+        var status: String?
+        var queue = [(row, 0)]
+        while let (element, depth) = queue.popLast() {
+            let role = value(element, "AXRole") as? String
+            if role == "AXStaticText", name == nil, let text = value(element, "AXValue") as? String, !text.isEmpty {
+                name = text
+            }
+            if status == nil, role == "AXImage" || (value(element, "AXSubrole") as? String) == "AXApplicationStatus",
+               let label = value(element, "AXDescription") as? String, !label.isEmpty {
+                status = label.lowercased()
+            }
+            guard depth < 3 else { continue }
+            // Reversed so the first child is looked at first.
+            queue += ((value(element, "AXChildren") as? [AXUIElement]) ?? []).reversed().map { ($0, depth + 1) }
+        }
+        guard let name, let status else { return nil }
+        return (name, status)
+    }
+
+    /// The sidebar row for the chat called `name`, if the sidebar is showing.
+    private static func sidebarRow(named name: String, in app: AXUIElement) -> AXUIElement? {
+        var queue = (value(app, "AXWindows") as? [AXUIElement]) ?? []
+        var visited = 0
+        while !queue.isEmpty && visited < 6000 {
+            let element = queue.removeLast()
+            visited += 1
+            if (value(element, "AXRole") as? String) == "AXButton",
+               !((value(element, "AXTitle") as? String) ?? "").isEmpty,
+               rowContents(element)?.name == name {
+                return element
+            }
+            queue += (value(element, "AXChildren") as? [AXUIElement]) ?? []
         }
         return nil
     }
