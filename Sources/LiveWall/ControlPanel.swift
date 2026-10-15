@@ -74,8 +74,6 @@ struct ControlPanelView: View {
         // never re-fires; rescan whenever the window comes back to front.
         .onReceive(NotificationCenter.default.publisher(
             for: NSWindow.didBecomeKeyNotification)) { _ in reloadVideos() }
-        .onChange(of: settings.spanScreens) { onApply() }
-        .onChange(of: settings.fillMode) { onApply() }
         .onChange(of: settings.speeds) { onApply() }
         .alert("New Tag", isPresented: $showNewTag) {
             TextField("Tag name", text: $newTagName)
@@ -275,6 +273,14 @@ struct ControlPanelView: View {
             .help(settings.spanScreens ? "One video spans every display" : "Each display plays the full video")
         }
         ToolbarItem(placement: .primaryAction) { islandMenu }
+        ToolbarItem(placement: .primaryAction) {
+            Button {
+                (NSApp.delegate as? AppDelegate)?.showSettings()
+            } label: {
+                Label("Settings", systemImage: "gearshape")
+            }
+            .help("Settings")
+        }
         // Developer-only: shown on Macs where it's switched on with
         // `defaults write com.arthurhinton.LiveWall devTools -bool true`.
         if UserDefaults.standard.bool(forKey: "devTools") {

@@ -10,6 +10,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private lazy var controller = WallpaperController(settings: settings)
     private var statusItem: NSStatusItem!
     private var controlWindow: NSWindow?
+    private var settingsWindow: NSWindow?
     private var island: DynamicIslandController?
     private var subscriptions: Set<AnyCancellable> = []
     private let power = PowerMonitor()
@@ -31,6 +32,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if ApplicationsMover.moveIfNeeded() { return }
 
         controller.rebuild()
+        setupAppearance()
+        setupLayoutRules()
 
         NotificationCenter.default.addObserver(
             self, selector: #selector(screensChanged),
@@ -354,6 +357,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    // MARK: - Appearance
+
+    /// Light, dark or the system's choice for every LiveWall window.
+    private func setupAppearance() {
+        settings.$appearance
+            .removeDuplicates()
+            .sink { NSApp.appearance = $0.nsAppearance }
+            .store(in: &subscriptions)
+    }
+
+    /// Scaling and spanning can change from the library or from Settings.
+    private func setupLayoutRules() {
+        // @Published fires before the value changes, so apply on the next turn.
+        Publishers.Merge(settings.$spanScreens.map { _ in () }, settings.$fillMode.map { _ in () })
+            .dropFirst(2)
+            .sink { [weak self] in DispatchQueue.main.async { self?.controller.apply() } }
+            .store(in: &subscriptions)
+    }
+
     // MARK: - Power rules
 
     private func setupPowerRules() {
@@ -423,7 +445,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(speedItem)
 
         menu.addItem(.separator())
-        menu.addItem(item("Wallpaper Controls…", key: ",") { [weak self] in self?.showControls(nil) })
+        menu.addItem(item("Wallpaper Controls…", key: "l") { [weak self] in self?.showControls(nil) })
+        menu.addItem(item("Settings…", key: ",") { [weak self] in self?.showSettings() })
         menu.addItem(item("Show Welcome…") { [weak self] in self?.showWelcome() })
         menu.addItem(item("Show Dynamic Island", checked: settings.showIsland) { [weak self] in
             self?.settings.showIsland.toggle()
@@ -506,6 +529,28 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             controlWindow?.deminiaturize(nil)
         }
         controlWindow?.makeKeyAndOrderFront(nil)
+    }
+}
+
+extension AppDelegate {
+    func showSettings() {
+        if settingsWindow == nil {
+            let root = SettingsView(
+                settings: settings,
+                onCheckForUpdates: { [weak self] in self?.updates.checkForUpdates() },
+                onShowWelcome: { [weak self] in self?.showWelcome() })
+            let window = NSWindow(contentViewController: NSHostingController(rootView: root))
+            window.title = "LiveWall Settings"
+            window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
+            window.setContentSize(NSSize(width: 500, height: 640))
+            window.setFrameAutosaveName("LiveWallSettings")
+            window.center()
+            window.isReleasedWhenClosed = false
+            settingsWindow = window
+        }
+        NSApp.activate(ignoringOtherApps: true)
+        if settingsWindow?.isMiniaturized == true { settingsWindow?.deminiaturize(nil) }
+        settingsWindow?.makeKeyAndOrderFront(nil)
     }
 }
 

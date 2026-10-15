@@ -1,4 +1,4 @@
-import Foundation
+import AppKit
 
 /// How the video is scaled into each screen / the spanning canvas.
 enum FillMode: String, CaseIterable, Identifiable, Codable {
@@ -20,6 +20,30 @@ enum FillMode: String, CaseIterable, Identifiable, Codable {
         case .fill:    return "Fill (crop)"
         case .fit:     return "Fit (bars)"
         case .stretch: return "Stretch (distort)"
+        }
+    }
+}
+
+/// Light or dark for LiveWall's windows. The welcome, the Dynamic Island and
+/// anything laid over video stay dark either way.
+enum AppAppearance: String, CaseIterable, Identifiable {
+    case system, light, dark
+
+    var id: String { rawValue }
+    var title: String {
+        switch self {
+        case .system: return "Match System"
+        case .light:  return "Light"
+        case .dark:   return "Dark"
+        }
+    }
+
+    /// nil follows the system.
+    var nsAppearance: NSAppearance? {
+        switch self {
+        case .system: return nil
+        case .light:  return NSAppearance(named: .aqua)
+        case .dark:   return NSAppearance(named: .darkAqua)
         }
     }
 }
@@ -49,6 +73,7 @@ final class AppSettings: ObservableObject {
     @Published var pauseWhenHot: Bool    { didSet { persist() } }
     /// Which kinds of activity the island shows.
     @Published var islandSources: Set<IslandSource> { didSet { persist() } }
+    @Published var appearance: AppAppearance { didSet { persist() } }
 
     static let speedRange: ClosedRange<Double> = 0.25...1.5
 
@@ -72,6 +97,7 @@ final class AppSettings: ObservableObject {
         // Claude app chats need Accessibility permission, so new users opt in.
         islandSources = (defaults.stringArray(forKey: Keys.islandSources)?.compactMap(IslandSource.init(rawValue:)))
             .map(Set.init) ?? [.music, .claudeCode, .chatGPT]
+        appearance = AppAppearance(rawValue: defaults.string(forKey: Keys.appearance) ?? "") ?? .system
     }
 
     /// `~/Movies/LiveWall`, created if it doesn't exist yet.
@@ -130,6 +156,7 @@ final class AppSettings: ObservableObject {
         defaults.set(pauseInLowPower, forKey: Keys.pauseInLowPower)
         defaults.set(pauseWhenHot, forKey: Keys.pauseWhenHot)
         defaults.set(islandSources.map(\.rawValue).sorted(), forKey: Keys.islandSources)
+        defaults.set(appearance.rawValue, forKey: Keys.appearance)
     }
 
     private enum Keys {
@@ -145,5 +172,6 @@ final class AppSettings: ObservableObject {
         static let pauseInLowPower = "pauseInLowPower"
         static let pauseWhenHot    = "pauseWhenHot"
         static let islandSources = "islandSources"
+        static let appearance    = "appearance"
     }
 }

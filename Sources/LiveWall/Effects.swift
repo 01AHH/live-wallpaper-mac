@@ -42,6 +42,7 @@ enum AmbientPalette {
 /// wallpaper changes, which is the only time it should draw attention.
 struct AmbientBackground: View {
     let colors: [Color]
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         MeshGradient(width: 3, height: 3, points: [
@@ -49,7 +50,9 @@ struct AmbientBackground: View {
             [0, 0.5], [0.42, 0.55], [1, 0.5],
             [0, 1], [0.5, 1], [1, 1],
         ], colors: colors)
-        .overlay(Color.black.opacity(0.42))
+        // Dim the wallpaper's colours towards the window's own background,
+        // so light mode gets a pale wash rather than a dark stage.
+        .overlay(colorScheme == .dark ? Color.black.opacity(0.42) : Color.white.opacity(0.62))
         .drawingGroup()
     }
 }
