@@ -59,6 +59,10 @@ final class CodexSessionWatcher {
     private var offsets: [URL: UInt64] = [:]
     private var sources: [URL: String] = [:]
     private var lastPrompt: [URL: String] = [:]
+    /// Background helper sessions a chat starts, such as the "guardian" that
+    /// vets risky actions. Their turns aren't the person's, and their replies
+    /// are machine-readable verdicts, so they're left out.
+    private var subagentFiles = Set<URL>()
     private var timer: Timer?
 
     func start() {
@@ -126,6 +130,10 @@ final class CodexSessionWatcher {
         case "session_meta":
             let originator = payload["originator"] as? String ?? ""
             sources[file] = originator.contains("desktop") ? "ChatGPT" : "Codex"
+            let source = payload["source"] as? [String: Any]
+            if source?["subagent"] != nil || payload["parent_thread_id"] != nil {
+                subagentFiles.insert(file)
+            }
             return nil
         case "response_item":
             if payload["type"] as? String == "message", payload["role"] as? String == "user",
@@ -135,6 +143,7 @@ final class CodexSessionWatcher {
             }
             return nil
         case "event_msg":
+            guard !subagentFiles.contains(file) else { return nil }
             let id = "codex-" + file.deletingPathExtension().lastPathComponent.suffix(12)
             let source = sources[file] ?? "Codex"
             // Desktop sessions open the ChatGPT app on click; the CLI's

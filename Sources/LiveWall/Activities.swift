@@ -73,6 +73,9 @@ final class ActivityCenter: ObservableObject {
 
     private var observers: [NSObjectProtocol] = []
     private var artworkKey: String?
+    /// Activities the person cleared by hand, and the state they were in.
+    /// Repeat reports of that state stay hidden; a new state shows again.
+    private var dismissed: [String: LiveActivity.State] = [:]
 
     /// Sources the person has switched on. Turning one off clears whatever it
     /// was showing.
@@ -196,6 +199,8 @@ final class ActivityCenter: ObservableObject {
         guard isEnabled(source: source) else { return }
         let id = info["id"] as? String ?? source
         let state = LiveActivity.State(rawValue: info["state"] as? String ?? "") ?? .running
+        if dismissed[id] == state { return }
+        dismissed[id] = nil
         let previous = activities.first { $0.id == id }
 
         // An empty title means "same task, new state" — e.g. Claude Code
@@ -251,6 +256,20 @@ final class ActivityCenter: ObservableObject {
     /// Drop an activity that no longer applies, without announcing it.
     func remove(id: String) {
         activities.removeAll { $0.id == id }
+    }
+
+    /// Clear an activity the person no longer wants to see, such as one
+    /// that got stuck. It stays gone until its tool reports a new state.
+    func dismiss(id: String) {
+        guard let activity = activities.first(where: { $0.id == id }) else { return }
+        dismissed[id] = activity.state
+        activities.removeAll { $0.id == id }
+    }
+
+    /// Clear every activity the island is listing.
+    func dismissAll() {
+        for activity in activities { dismissed[activity.id] = activity.state }
+        activities.removeAll()
     }
 
     private func nonEmpty(_ value: Any?) -> String? {

@@ -98,10 +98,26 @@ final class IslandModel: ObservableObject {
         static let limitsRow: CGFloat = 34
         static let spacing: CGFloat = 10
         static let padding: CGFloat = 14
-        static let maxActivities = 2
+        static let maxActivities = 4
+        static let moreLine: CGFloat = 14
     }
 
-    var visibleActivities: [LiveActivity] { Array(activities.ordered.prefix(Metrics.maxActivities)) }
+    /// The activities the expanded island lists, most important first. Each
+    /// source gets its top activity in before any source gets a second, so
+    /// one busy tool (several Claude Code sessions waiting) can't crowd out
+    /// the rest.
+    var visibleActivities: [LiveActivity] {
+        let ordered = activities.ordered
+        var seenSources = Set<String>()
+        var picks = ordered.filter { seenSources.insert($0.source).inserted }.prefix(Metrics.maxActivities).map(\.id)
+        for activity in ordered where picks.count < Metrics.maxActivities && !picks.contains(activity.id) {
+            picks.append(activity.id)
+        }
+        return ordered.filter { picks.contains($0.id) }
+    }
+
+    /// Activities that didn't fit.
+    var hiddenActivityCount: Int { activities.ordered.count - visibleActivities.count }
 
     /// Tools with plan limits to show, in a steady order.
     var limitTools: [LimitTool] {
@@ -129,6 +145,7 @@ final class IslandModel: ObservableObject {
             if activities.nowPlaying != nil { cards.append(Metrics.musicCard) }
             if !limitTools.isEmpty { cards.append(limitsCardHeight) }
             cards += visibleActivities.map { _ in Metrics.activityRow }
+            if hiddenActivityCount > 0 { cards.append(Metrics.moreLine) }
             let content = cards.reduce(0, +) + Metrics.spacing * CGFloat(cards.count - 1)
             return CGSize(width: 460, height: g.topInset + content + Metrics.padding * 2)
         }
@@ -323,7 +340,17 @@ struct DynamicIslandView: View {
     private var expanded: some View {
         VStack(spacing: M.spacing) {
             ForEach(model.visibleActivities) { activity in
-                ActivityRow(activity: activity) { activities.open(activity) }
+                ActivityRow(activity: activity,
+                            open: { activities.open(activity) },
+                            clear: { activities.dismiss(id: activity.id) },
+                            clearAll: { activities.dismissAll() })
+            }
+            if model.hiddenActivityCount > 0 {
+                Text("+\(model.hiddenActivityCount) more")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.5))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(height: M.moreLine)
             }
             if !model.limitTools.isEmpty { limitsCard }
             if activities.nowPlaying != nil { musicCard }
@@ -480,16 +507,20 @@ struct DynamicIslandView: View {
 }
 
 /// An activity in the expanded island. Clicking it brings forward the app
-/// and chat it came from, when that's known.
+/// and chat it came from, when that's known. Hovering offers a button to
+/// clear it, for a chat that's stuck; right-clicking can clear them all.
 private struct ActivityRow: View {
     let activity: LiveActivity
     let open: () -> Void
+    let clear: () -> Void
+    let clearAll: () -> Void
     @State private var hovering = false
+    @State private var hoveringClear = false
 
     private var canOpen: Bool { activity.app != nil || activity.url != nil || activity.relaunches }
+    private var a: LiveActivity { activity }
 
-    var body: some View {
-        let a = activity
+    private var row: some View {
         Button(action: open) {
             HStack(spacing: 12) {
                 Group {
@@ -517,24 +548,49 @@ private struct ActivityRow: View {
                     Image(systemName: "arrow.up.forward.app")
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(Brand.accent)
-                } else {
+                } else if !hovering {
                     Text(a.updated, style: .relative)
                         .font(.system(size: 10))
                         .monospacedDigit()
                         .foregroundStyle(.white.opacity(0.4))
                 }
             }
-            .padding(.horizontal, 6)
+            .padding(.leading, 6)
             .frame(height: IslandModel.Metrics.activityRow)
-            .background(.white.opacity(hovering && canOpen ? 0.08 : 0),
-                        in: RoundedRectangle(cornerRadius: 10, style: .continuous))
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .padding(.horizontal, -6)
-        .onHover { hovering = $0 }
         .help(a.relaunches ? "Restart LiveWall" : a.url != nil ? "Open System Settings" : canOpen ? "Open \(a.source)" : "")
         .accessibilityLabel("\(a.source): \(a.title)")
+    }
+
+    var body: some View {
+        HStack(spacing: 4) {
+            row
+            if hovering {
+                Button(action: clear) {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundStyle(.white.opacity(hoveringClear ? 1 : 0.6))
+                        .frame(width: 22, height: 22)
+                        .background(.white.opacity(hoveringClear ? 0.2 : 0.1), in: .circle)
+                }
+                .buttonStyle(.plain)
+                .onHover { hoveringClear = $0 }
+                .help("Clear")
+                .accessibilityLabel("Clear \(a.source): \(a.title)")
+                .transition(.opacity)
+            }
+        }
+        .padding(.trailing, 6)
+        .background(.white.opacity(hovering ? 0.08 : 0),
+                    in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .padding(.horizontal, -6)
+        .onHover { hovering = $0 }
+        .contextMenu {
+            Button("Clear", action: clear)
+            Button("Clear All", action: clearAll)
+        }
     }
 }
 
